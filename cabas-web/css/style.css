@@ -1,0 +1,356 @@
+/* ============================================================
+   CABAS REALTOR — cabas.es
+   Identidad: negro + dorado RAL 1036 (#B28E44, extraído del logo)
+   Tipografía: Cormorant Garamond (display) + Inter (cuerpo)
+   ============================================================ */
+
+:root{
+  --negro:#0B0A08;
+  --negro-puro:#000000;
+  --panel:#14120E;
+  --oro:#B28E44;
+  --oro-claro:#CFAC66;
+  --hueso:#F2EFE7;
+  --gris:#A39C8D;
+  --linea:rgba(178,142,68,.28);
+  --rojo:#C0574F;
+  --verde:#7FA05B;
+  --ambar:#C99B3F;
+  --max:1120px;
+  --serif:'Cormorant Garamond', Georgia, serif;
+  --sans:'Inter', -apple-system, sans-serif;
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--negro);
+  color:var(--hueso);
+  font-family:var(--sans);
+  font-size:16px;
+  line-height:1.7;
+  -webkit-font-smoothing:antialiased;
+}
+img{max-width:100%;display:block}
+a{color:var(--oro);text-decoration:none}
+a:hover{color:var(--oro-claro)}
+:focus-visible{outline:2px solid var(--oro);outline-offset:3px}
+
+/* ---------- Tipografía ---------- */
+h1,h2,h3{font-family:var(--serif);font-weight:600;line-height:1.15;color:var(--hueso)}
+h1{font-size:clamp(2.4rem,6vw,4.2rem);letter-spacing:.01em}
+h2{font-size:clamp(1.8rem,4vw,2.6rem)}
+h3{font-size:1.35rem}
+.eyebrow{
+  font-family:var(--sans);
+  font-size:.72rem;
+  font-weight:600;
+  letter-spacing:.32em;
+  text-transform:uppercase;
+  color:var(--oro);
+  display:flex;
+  align-items:center;
+  gap:.9rem;
+  margin-bottom:1.1rem;
+}
+.eyebrow::before{content:"";width:34px;height:1px;background:var(--oro)}
+.lead{font-size:1.12rem;color:var(--gris);max-width:64ch}
+.oro{color:var(--oro)}
+
+/* ---------- Navegación ---------- */
+.nav{
+  position:sticky;top:0;z-index:100;
+  background:rgba(11,10,8,.92);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--linea);
+}
+.nav-inner{
+  max-width:var(--max);margin:0 auto;padding:.8rem 1.4rem;
+  display:flex;align-items:center;justify-content:space-between;gap:1rem;
+}
+.nav-logo{display:flex;align-items:center;gap:.7rem}
+.nav-logo img{height:40px;width:auto}
+.nav-logo span{
+  font-family:var(--serif);font-size:1.25rem;letter-spacing:.14em;color:var(--hueso);
+}
+.nav-links{display:flex;gap:1.6rem;list-style:none;align-items:center}
+.nav-links a{
+  color:var(--hueso);font-size:.86rem;font-weight:500;letter-spacing:.04em;
+  padding:.3rem 0;border-bottom:1px solid transparent;
+}
+.nav-links a:hover,.nav-links a[aria-current="page"]{color:var(--oro);border-bottom-color:var(--oro)}
+.nav-cta{
+  border:1px solid var(--oro);padding:.5rem 1.1rem !important;border-radius:2px;
+}
+.nav-toggle{
+  display:none;background:none;border:1px solid var(--linea);color:var(--oro);
+  font-size:1.3rem;padding:.25rem .7rem;border-radius:2px;cursor:pointer;
+}
+@media(max-width:900px){
+  .nav-toggle{display:block}
+  .nav-links{
+    display:none;position:absolute;top:100%;left:0;right:0;
+    flex-direction:column;background:var(--negro-puro);
+    padding:1.4rem;gap:1.1rem;border-bottom:1px solid var(--linea);
+  }
+  .nav-links.open{display:flex}
+}
+
+/* ---------- Secciones ---------- */
+.section{padding:5.5rem 1.4rem}
+.section-tight{padding:3.5rem 1.4rem}
+.section-negro{background:var(--negro-puro)}
+.inner{max-width:var(--max);margin:0 auto}
+.inner-narrow{max-width:760px;margin:0 auto}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:center}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:1.6rem}
+@media(max-width:820px){.grid-2,.grid-3{grid-template-columns:1fr}}
+
+/* ---------- Hero ---------- */
+.hero{
+  min-height:88vh;display:flex;align-items:center;
+  background:
+    radial-gradient(ellipse 60% 50% at 70% 20%, rgba(178,142,68,.09), transparent 60%),
+    var(--negro-puro);
+  border-bottom:1px solid var(--linea);
+  padding:5rem 1.4rem;
+}
+.hero .inner{display:grid;grid-template-columns:1.2fr .8fr;gap:3rem;align-items:center}
+.hero-logo{max-width:300px;margin:0 auto;opacity:.95}
+@media(max-width:820px){
+  .hero .inner{grid-template-columns:1fr}
+  .hero-logo{max-width:180px;order:-1}
+  .hero{min-height:auto}
+}
+.hero h1 em{font-style:italic;color:var(--oro)}
+.hero-ctas{display:flex;gap:1rem;flex-wrap:wrap;margin-top:2.2rem}
+
+/* ---------- Botones ---------- */
+.btn{
+  display:inline-block;font-family:var(--sans);font-size:.9rem;font-weight:600;
+  letter-spacing:.06em;padding:.85rem 1.8rem;border-radius:2px;cursor:pointer;
+  transition:all .2s ease;border:1px solid var(--oro);text-align:center;
+}
+.btn-oro{background:var(--oro);color:var(--negro-puro)}
+.btn-oro:hover{background:var(--oro-claro);color:var(--negro-puro)}
+.btn-linea{background:transparent;color:var(--oro)}
+.btn-linea:hover{background:rgba(178,142,68,.1);color:var(--oro-claro)}
+.btn-wide{width:100%}
+
+/* ---------- Cifras ---------- */
+.cifras{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--linea);border:1px solid var(--linea)}
+.cifra{background:var(--negro);padding:2rem 1.4rem;text-align:center}
+.cifra strong{font-family:var(--serif);font-size:2.4rem;color:var(--oro);display:block;line-height:1.1}
+.cifra span{font-size:.8rem;color:var(--gris);letter-spacing:.06em}
+@media(max-width:820px){.cifras{grid-template-columns:repeat(2,1fr)}}
+
+/* ---------- Tarjetas ---------- */
+.card{
+  background:var(--panel);border:1px solid var(--linea);padding:2.2rem 1.8rem;
+  display:flex;flex-direction:column;gap:.9rem;position:relative;
+  transition:border-color .25s ease, transform .25s ease;
+}
+.card:hover{border-color:var(--oro);transform:translateY(-3px)}
+.card h3{color:var(--hueso)}
+.card p{color:var(--gris);font-size:.95rem;flex-grow:1}
+.card .hex{width:34px;height:38px;margin-bottom:.4rem}
+.card a{font-size:.85rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase}
+
+/* Hexágono del logo como motivo estructural */
+.hex{fill:none;stroke:var(--oro);stroke-width:5}
+
+/* ---------- Método CABAS ---------- */
+.metodo{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--linea);border:1px solid var(--linea)}
+.metodo div{background:var(--negro-puro);padding:1.8rem 1.2rem}
+.metodo strong{
+  font-family:var(--serif);font-size:2rem;color:var(--oro);display:block;
+}
+.metodo span{font-size:.8rem;letter-spacing:.14em;text-transform:uppercase;color:var(--hueso);display:block;margin-top:.2rem}
+.metodo p{font-size:.82rem;color:var(--gris);margin-top:.5rem;line-height:1.5}
+@media(max-width:900px){.metodo{grid-template-columns:1fr 1fr}}
+@media(max-width:520px){.metodo{grid-template-columns:1fr}}
+
+/* ---------- Calculadoras ---------- */
+.calc{
+  background:var(--panel);border:1px solid var(--linea);
+  padding:2.4rem 2rem;max-width:760px;margin:0 auto;
+}
+.calc h3{display:flex;align-items:center;gap:.8rem;margin-bottom:1.6rem}
+.campo{margin-bottom:1.25rem}
+.campo label{display:block;font-size:.82rem;font-weight:600;letter-spacing:.05em;color:var(--hueso);margin-bottom:.45rem}
+.campo small{display:block;color:var(--gris);font-size:.76rem;margin-top:.3rem}
+.campo input[type=number],.campo input[type=text],.campo input[type=email],.campo input[type=tel],
+.campo input[type=date],.campo select,.campo textarea{
+  width:100%;background:var(--negro-puro);border:1px solid var(--linea);color:var(--hueso);
+  font-family:var(--sans);font-size:1rem;padding:.75rem .9rem;border-radius:2px;
+}
+.campo input:focus,.campo select:focus,.campo textarea:focus{border-color:var(--oro);outline:none}
+.campo-check{display:flex;gap:.7rem;align-items:flex-start;margin-bottom:.9rem}
+.campo-check input{accent-color:var(--oro);margin-top:.3rem;width:17px;height:17px;flex-shrink:0}
+.campo-check label{font-size:.88rem;color:var(--hueso);line-height:1.5}
+.fila-2{display:grid;grid-template-columns:1fr 1fr;gap:1.1rem}
+@media(max-width:560px){.fila-2{grid-template-columns:1fr}}
+
+.resultado{
+  margin-top:2rem;border-top:1px solid var(--oro);padding-top:1.6rem;display:none;
+}
+.resultado.visible{display:block}
+.res-linea{display:flex;justify-content:space-between;gap:1rem;padding:.5rem 0;font-size:.94rem;border-bottom:1px dashed rgba(178,142,68,.15)}
+.res-linea span:first-child{color:var(--gris)}
+.res-linea span:last-child{font-variant-numeric:tabular-nums;font-weight:600}
+.res-total{
+  display:flex;justify-content:space-between;align-items:baseline;gap:1rem;
+  margin-top:1.2rem;padding:1.1rem 1.2rem;background:var(--negro-puro);border:1px solid var(--oro);
+}
+.res-total span{font-size:.9rem;letter-spacing:.08em;text-transform:uppercase;color:var(--oro)}
+.res-total strong{font-family:var(--serif);font-size:2.2rem;color:var(--oro);font-variant-numeric:tabular-nums}
+.aviso{
+  margin-top:1rem;padding:.9rem 1.1rem;font-size:.86rem;border-left:2px solid var(--ambar);
+  background:rgba(201,155,63,.08);color:var(--hueso);
+}
+.aviso-rojo{border-left-color:var(--rojo);background:rgba(192,87,79,.08)}
+.aviso-verde{border-left-color:var(--verde);background:rgba(127,160,91,.08)}
+.semaforo{display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:.5rem;vertical-align:baseline}
+.disclaimer{font-size:.76rem;color:var(--gris);margin-top:1.4rem;line-height:1.5}
+
+/* ---------- FAQ ---------- */
+.faq details{border-bottom:1px solid var(--linea);padding:1.1rem 0}
+.faq summary{
+  font-family:var(--serif);font-size:1.15rem;cursor:pointer;color:var(--hueso);
+  list-style:none;display:flex;justify-content:space-between;gap:1rem;align-items:center;
+}
+.faq summary::after{content:"+";color:var(--oro);font-size:1.4rem;font-family:var(--sans)}
+.faq details[open] summary::after{content:"−"}
+.faq details p{color:var(--gris);font-size:.94rem;margin-top:.7rem;max-width:68ch}
+
+/* ---------- Proceso (pasos) ---------- */
+.pasos{counter-reset:paso;display:grid;gap:0;border-left:1px solid var(--linea);margin-left:.4rem}
+.paso{position:relative;padding:0 0 2.2rem 2.2rem}
+.paso::before{
+  counter-increment:paso;content:counter(paso,decimal-leading-zero);
+  position:absolute;left:-1.05rem;top:-.15rem;background:var(--negro);
+  font-family:var(--serif);font-size:1.15rem;color:var(--oro);
+  border:1px solid var(--oro);width:2.1rem;height:2.1rem;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+}
+.paso h3{margin-bottom:.3rem;font-size:1.2rem}
+.paso p{color:var(--gris);font-size:.94rem;max-width:62ch}
+
+/* ---------- Formularios de contacto/lead ---------- */
+.form-lead{background:var(--panel);border:1px solid var(--linea);padding:2rem}
+
+/* ---------- Oficinas ---------- */
+.oficina{background:var(--panel);border:1px solid var(--linea);padding:1.8rem}
+.oficina h3{color:var(--oro);font-size:1.2rem}
+.oficina p{color:var(--gris);font-size:.9rem;margin-top:.4rem}
+.pendiente{
+  border:1px dashed var(--oro);padding:1.2rem;color:var(--ambar);font-size:.85rem;
+  background:rgba(178,142,68,.05);
+}
+
+/* ---------- Footer ---------- */
+.footer{
+  border-top:1px solid var(--linea);background:var(--negro-puro);
+  padding:3.5rem 1.4rem 2rem;margin-top:0;
+}
+.footer-grid{
+  max-width:var(--max);margin:0 auto;display:grid;
+  grid-template-columns:1.2fr 1fr 1fr;gap:2.5rem;
+}
+@media(max-width:820px){.footer-grid{grid-template-columns:1fr}}
+.footer img{height:70px;margin-bottom:1rem}
+.footer h4{font-family:var(--sans);font-size:.75rem;letter-spacing:.24em;text-transform:uppercase;color:var(--oro);margin-bottom:1rem}
+.footer p,.footer a,.footer li{font-size:.87rem;color:var(--gris)}
+.footer ul{list-style:none}
+.footer li{margin-bottom:.5rem}
+.footer-legal{
+  max-width:var(--max);margin:2.5rem auto 0;padding-top:1.5rem;
+  border-top:1px solid rgba(178,142,68,.12);
+  font-size:.75rem;color:var(--gris);
+  display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;
+}
+.footer-legal a{color:var(--gris);margin-left:1rem}
+.footer-legal a:hover{color:var(--oro)}
+
+/* ---------- WhatsApp flotante ---------- */
+.whatsapp{
+  position:fixed;bottom:1.4rem;right:1.4rem;z-index:90;
+  background:var(--oro);color:var(--negro-puro);width:54px;height:54px;
+  border-radius:50%;display:flex;align-items:center;justify-content:center;
+  box-shadow:0 4px 20px rgba(0,0,0,.5);transition:transform .2s;
+}
+.whatsapp:hover{transform:scale(1.08)}
+.whatsapp svg{width:28px;height:28px;fill:var(--negro-puro)}
+
+/* ---------- Animación scroll ---------- */
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .7s ease,transform .7s ease}
+.reveal.in{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){
+  .reveal{opacity:1;transform:none;transition:none}
+  html{scroll-behavior:auto}
+}
+
+/* ---------- Página legal ---------- */
+.legal h2{margin:2.2rem 0 .8rem;font-size:1.5rem}
+.legal p,.legal li{color:var(--gris);font-size:.93rem;margin-bottom:.8rem}
+.legal ul{padding-left:1.4rem}
+
+/* ---------- v2: ajustes de revisión ---------- */
+/* Calendario nativo visible en los campos de fecha sobre fondo oscuro */
+input,select,textarea{color-scheme:dark}
+
+/* Huecos de fotografía */
+.foto-slot{
+  position:relative;border:1px solid var(--linea);background:
+    linear-gradient(160deg, rgba(178,142,68,.08), transparent 55%), var(--panel);
+  display:flex;align-items:center;justify-content:center;overflow:hidden;
+}
+.foto-slot img{width:100%;height:100%;object-fit:cover}
+.foto-slot .foto-etiqueta{
+  color:var(--ambar);font-size:.8rem;letter-spacing:.06em;text-align:center;padding:1rem;
+  border:1px dashed var(--oro);margin:1rem;
+}
+.foto-retrato{aspect-ratio:4/5}
+.foto-apaisada{aspect-ratio:16/9;margin-top:2rem}
+.foto-marco{box-shadow:inset 0 0 0 8px var(--negro-puro), inset 0 0 0 9px var(--linea)}
+
+/* Redes sociales */
+.social{display:flex;gap:.9rem;margin-top:1.2rem}
+.social a{
+  width:38px;height:38px;border:1px solid var(--linea);border-radius:2px;
+  display:flex;align-items:center;justify-content:center;transition:all .2s;
+}
+.social a:hover{border-color:var(--oro);background:rgba(178,142,68,.1)}
+.social svg{width:18px;height:18px;fill:var(--oro)}
+
+/* Selector de idioma */
+.idioma{display:flex;align-items:center;gap:.4rem}
+.idioma select{
+  background:var(--negro-puro);color:var(--hueso);border:1px solid var(--linea);
+  font-size:.8rem;padding:.35rem .5rem;border-radius:2px;cursor:pointer;
+}
+.idioma svg{width:16px;height:16px;fill:var(--oro)}
+
+/* Ocultar la barra que inyecta Google Translate */
+body{top:0 !important}
+.goog-te-banner-frame,#goog-gt-tt,.goog-te-balloon-frame{display:none !important}
+body > .skiptranslate{display:none !important}
+font{background:transparent !important;box-shadow:none !important}
+
+/* Adquisiciones múltiples en la calculadora del neto */
+.tramo{
+  border:1px solid var(--linea);padding:1.2rem 1.2rem .3rem;margin-bottom:1.2rem;position:relative;
+}
+.tramo legend{
+  font-size:.75rem;letter-spacing:.18em;text-transform:uppercase;color:var(--oro);padding:0 .5rem;
+}
+.tramo .quitar{
+  position:absolute;top:.6rem;right:.6rem;background:none;border:1px solid var(--linea);
+  color:var(--gris);font-size:.75rem;padding:.15rem .55rem;cursor:pointer;border-radius:2px;
+}
+.tramo .quitar:hover{border-color:var(--rojo);color:var(--rojo)}
+.btn-anadir{
+  background:none;border:1px dashed var(--oro);color:var(--oro);width:100%;
+  padding:.7rem;font-size:.85rem;cursor:pointer;margin-bottom:1.4rem;border-radius:2px;
+}
+.btn-anadir:hover{background:rgba(178,142,68,.08)}
