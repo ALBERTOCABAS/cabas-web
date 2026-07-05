@@ -17,11 +17,19 @@ const io = new IntersectionObserver((entries) => {
 document.querySelectorAll('.reveal').forEach(el => io.observe(el));
 
 // Formato de moneda (compartido por las calculadoras)
+// Separador de miles SIEMPRE (el formato es-ES nativo no lo pone en cifras de 4 dígitos)
+function _miles(entero) {
+  return entero.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+}
 function eur(n) {
-  return new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(n);
+  const neg = n < 0 ? '−' : '';
+  return neg + _miles(String(Math.round(Math.abs(n)))) + '\u00A0€';
 }
 function eur2(n) {
-  return new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR', minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(n);
+  const neg = n < 0 ? '−' : '';
+  const abs = Math.abs(n).toFixed(2);
+  const [ent, dec] = abs.split('.');
+  return neg + _miles(ent) + ',' + dec + '\u00A0€';
 }
 function num(id) {
   const v = parseFloat(document.getElementById(id)?.value);

@@ -160,10 +160,10 @@ document.getElementById('v-calcular').addEventListener('click', () => {
   const neto = venta - gVenta - plusvalia - irpf;
 
   document.getElementById('r-venta').textContent = eur(venta);
-  document.getElementById('r-gventa').textContent = gVenta ? '− ' + eur(gVenta) : eur(0);
-  document.getElementById('r-plusvalia').textContent = plusvalia ? '− ' + eur2(plusvalia) : eur(0);
+  document.getElementById('r-gventa').textContent = gVenta ? '−\u00A0' + eur(gVenta) : eur(0);
+  document.getElementById('r-plusvalia').textContent = plusvalia ? '−\u00A0' + eur2(plusvalia) : eur(0);
   document.getElementById('r-ganancia').textContent = eur2(Math.max(0, exenta ? 0 : ganancia));
-  document.getElementById('r-irpf').textContent = irpf ? '− ' + eur2(irpf) : eur(0);
+  document.getElementById('r-irpf').textContent = irpf ? '−\u00A0' + eur2(irpf) : eur(0);
   document.getElementById('r-neto').textContent = eur(neto);
 
   const cont = document.getElementById('r-avisos');
