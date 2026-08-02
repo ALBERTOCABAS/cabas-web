@@ -1,9 +1,15 @@
 // ============================================================
-// Calculadora del Neto del Vendedor — Madrid capital (v2)
+// Calculadora del Neto del Vendedor — válida para toda España (v3)
 // Soporta hasta 3 adquisiciones (compra/herencia en varias veces),
 // cada una con su valor, gastos, fecha y % de propiedad.
 // 1) Plusvalía municipal (IIVTNU) por tramo — gasto deducible en IRPF.
-// 2) IRPF sobre la ganancia total en la base del ahorro.
+//    Los coeficientes son los máximos estatales (RDL 8/2023), aplicables
+//    en toda España salvo que el ayuntamiento tenga aprobados otros
+//    inferiores. El TIPO (0-30%) lo fija cada ayuntamiento; usamos el
+//    estimado de la capital de la CCAA elegida (tabla PLUSVALIA_CCAA en
+//    js/datos-cabas.js) — no hay campo manual para no complicar el flujo.
+// 2) IRPF sobre la ganancia total en la base del ahorro (tramos estatales,
+//    iguales en toda España).
 // REVISAR ANUALMENTE: coeficientes IIVTNU y tramos IRPF.
 // ============================================================
 
@@ -12,13 +18,14 @@ const COEF_IIVTNU = {
   7: 0.18, 8: 0.15, 9: 0.12, 10: 0.10, 11: 0.09, 12: 0.09, 13: 0.09,
   14: 0.09, 15: 0.10, 16: 0.13, 17: 0.17, 18: 0.23, 19: 0.31, 20: 0.45
 };
-const TIPO_IIVTNU_MADRID = 0.29;
 const TRAMOS_IRPF = [
   { hasta: 6000, tipo: 0.19 }, { hasta: 50000, tipo: 0.21 },
   { hasta: 200000, tipo: 0.23 }, { hasta: 300000, tipo: 0.27 },
   { hasta: Infinity, tipo: 0.30 }
 ];
 const MAX_TRAMOS = 3;
+
+const ccaaSel = document.getElementById('v-ccaa');
 
 // ---------- UI de adquisiciones ----------
 const contAdq = document.getElementById('v-adquisiciones');
@@ -104,6 +111,8 @@ function calcIRPF(g) {
 }
 
 document.getElementById('v-calcular').addEventListener('click', () => {
+  const oficinaSlug = document.getElementById('v-oficina').value;
+  if (!oficinaSlug) { alert('Selecciona primero tu oficina Cabas Realtor — es obligatorio para poder generar el informe.'); return; }
   const venta = num('v-venta');
   const gVenta = num('v-gastos-venta');
   const vcTotal = num('v-vc-total');
@@ -111,6 +120,8 @@ document.getElementById('v-calcular').addEventListener('click', () => {
   const fVenta = document.getElementById('v-fecha-venta').value;
   const mayor65 = document.getElementById('v-mayor65').checked;
   const reinv = document.getElementById('v-reinversion').checked;
+  const tipoIIVTNUpct = PLUSVALIA_CCAA[ccaaSel.value] ?? 30; // estimado según la capital de la comunidad
+  const tipoIIVTNU = Math.min(30, Math.max(0, tipoIIVTNUpct)) / 100;
 
   // Leer tramos activos
   const tramos = [];
@@ -142,7 +153,7 @@ document.getElementById('v-calcular').addEventListener('click', () => {
     const a = Math.min(Math.max(aniosCompletos(t.fecha, fVenta), 0), 20);
     const baseObjetiva = vcSuelo * share * (COEF_IIVTNU[a] ?? 0.45);
     const baseReal = gananciaTramo * (vcSuelo / vcTotal);
-    plusvalia += Math.max(0, Math.min(baseObjetiva, baseReal)) * TIPO_IIVTNU_MADRID;
+    plusvalia += Math.max(0, Math.min(baseObjetiva, baseReal)) * tipoIIVTNU;
   });
   if (faltanDatosPV) avisos.push({ t: 'ambar', txt: 'Faltan fechas o valores catastrales en alguna adquisición: la plusvalía municipal de ese tramo no está incluida en el resultado.' });
 
@@ -161,6 +172,7 @@ document.getElementById('v-calcular').addEventListener('click', () => {
 
   document.getElementById('r-venta').textContent = eur(venta);
   document.getElementById('r-gventa').textContent = gVenta ? '−\u00A0' + eur(gVenta) : eur(0);
+  document.getElementById('r-plusvalia-label').textContent = `Plusvalía municipal (IIVTNU, tipo ${(tipoIIVTNU * 100).toFixed(1).replace(/\.0$/, '')}%)`;
   document.getElementById('r-plusvalia').textContent = plusvalia ? '−\u00A0' + eur2(plusvalia) : eur(0);
   document.getElementById('r-ganancia').textContent = eur2(Math.max(0, exenta ? 0 : ganancia));
   document.getElementById('r-irpf').textContent = irpf ? '−\u00A0' + eur2(irpf) : eur(0);
@@ -178,7 +190,66 @@ document.getElementById('v-calcular').addEventListener('click', () => {
   document.getElementById('v-lead-resumen').value =
     `Venta ${eur(venta)} | Adquisiciones ${tramos.length} (${eur(totalAdquisicion)}) | Plusvalía ${eur2(plusvalia)} | IRPF ${eur2(irpf)} | Neto ${eur(neto)}`;
 
+  // Guardamos el cálculo completo — lo usa el botón "Descargar informe en PDF"
+  ultimoCalculoVenta = {
+    oficinaSlug, venta, gVenta, tramos, totalAdquisicion, ccaaSlug: ccaaSel.value,
+    tipoIIVTNUpct: tipoIIVTNU * 100, plusvalia, ganancia: Math.max(0, exenta ? 0 : ganancia),
+    irpf, neto, exenta, mayor65, reinv, avisos
+  };
+  document.getElementById('v-descargar-pdf').disabled = false;
+
   const res = document.getElementById('v-resultado');
   res.classList.add('visible');
   res.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+});
+
+// ---------- Descargar informe en PDF ----------
+let ultimoCalculoVenta = null;
+document.getElementById('v-descargar-pdf').addEventListener('click', () => {
+  if (!ultimoCalculoVenta) { alert('Primero pulsa "Calcular mi neto" para hacer la simulación.'); return; }
+  const c = ultimoCalculoVenta;
+  const oficina = OFICINAS[c.oficinaSlug];
+  const nombreCliente = document.getElementById('v-lead-nombre').value.trim();
+  const ccaaNombre = (DATOS_CCAA[c.ccaaSlug] || DATOS_CCAA.madrid).nombre;
+
+  document.getElementById('pdfv-ccaa').textContent = `Vivienda en ${ccaaNombre}`;
+  document.getElementById('pdfv-fecha').textContent = new Date().toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' });
+  document.getElementById('pdfv-para').textContent = nombreCliente ? `Documento para ${nombreCliente}` : 'Documento para cliente';
+
+  document.getElementById('pdfv-venta').textContent = eur(c.venta);
+  document.getElementById('pdfv-plusvalia').textContent = eur2(c.plusvalia);
+  document.getElementById('pdfv-plusvalia-cap').textContent = `IIVTNU, tipo ${c.tipoIIVTNUpct.toFixed(1).replace(/\.0$/, '').replace('.', ',')}%`;
+  document.getElementById('pdfv-irpf').textContent = c.exenta ? 'Exento' : eur2(c.irpf);
+  document.getElementById('pdfv-neto').textContent = eur(c.neto);
+
+  const filas = [
+    ['Precio de venta', eur(c.venta)],
+    ['Gastos de la venta', eur2(c.gVenta)],
+    ['Valor de adquisición (total)', eur2(c.totalAdquisicion)],
+    [`Plusvalía municipal (IIVTNU, tipo ${c.tipoIIVTNUpct.toFixed(1).replace(/\.0$/, '').replace('.', ',')}%)`, eur2(c.plusvalia)],
+    ['Ganancia patrimonial a efectos de IRPF', eur2(c.ganancia)],
+    [c.exenta ? 'IRPF (exento)' : 'IRPF sobre la ganancia', c.exenta ? eur(0) : eur2(c.irpf)],
+    ['Neto estimado', eur(c.neto)]
+  ];
+  document.getElementById('pdfv-tabla-body').innerHTML = filas.map(([label, val], i) =>
+    `<tr${i === filas.length - 1 ? ' class="recomendada"' : ''}><td>${label}</td><td class="num">${val}</td></tr>`
+  ).join('');
+
+  const avisosBox = document.getElementById('pdfv-avisos-box');
+  const avisosTexto = (c.avisos || []).map(a => a.txt).join(' ');
+  if (avisosTexto) {
+    avisosBox.style.display = '';
+    document.getElementById('pdfv-avisos-texto').textContent = avisosTexto;
+  } else {
+    avisosBox.style.display = 'none';
+  }
+
+  document.getElementById('pdfv-hipotesis').innerHTML =
+    `<strong>Hipótesis del cálculo:</strong> Vivienda en ${ccaaNombre}. Plusvalía municipal calculada con los coeficientes máximos estatales (RDL 8/2023) y un tipo de gravamen del ${c.tipoIIVTNUpct.toFixed(1).replace(/\.0$/, '').replace('.', ',')}% (estimado para la capital de la comunidad). ` +
+    `IRPF calculado sobre la base del ahorro estatal (19-30%), igual en toda España. ${c.mayor65 ? 'Ganancia exenta por mayor de 65 años en vivienda habitual.' : c.reinv ? 'Exención por reinversión en vivienda habitual aplicada.' : ''}`;
+
+  document.getElementById('pdfv-oficina-nombre').textContent = oficina.nombre;
+  document.getElementById('pdfv-oficina-contacto').textContent = `${oficina.direccion} · ${oficina.telefono} · ${oficina.email}`;
+
+  imprimirInforme();
 });

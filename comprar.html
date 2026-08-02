@@ -4,12 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Simulador de hipoteca y gastos de compra | Alberto Cabas</title>
-<meta name="description" content="Simulador de hipoteca con gastos reales de compra en Madrid: ITP o IVA, notaría, registro, gestoría y tasa de esfuerzo. Cambio de vivienda con estrategia.">
+<meta name="description" content="Simulador de hipoteca con los gastos reales de comprar en cualquier Comunidad Autónoma de España: ITP o IVA, notaría, registro, gestoría y tasa de esfuerzo.">
 <link rel="icon" type="image/png" href="assets/logo-sello.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/informe.css">
 </head>
 <body>
 <nav class="nav" aria-label="Navegación principal">
@@ -29,6 +30,7 @@
       <li><a href="oficinas.html">Oficinas</a></li>
       <li class="idioma"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm7.9 9h-3a15.6 15.6 0 0 0-1.2-5.3A8 8 0 0 1 19.9 11zM12 4c.9 1.2 1.7 3.3 1.9 7h-3.8c.2-3.7 1-5.8 1.9-7zM4.1 13h3c.1 1.9.5 3.7 1.2 5.3A8 8 0 0 1 4.1 13zm3-2h-3a8 8 0 0 1 4.2-5.3A15.6 15.6 0 0 0 7.1 11zm4.9 9c-.9-1.2-1.7-3.3-1.9-7h3.8c-.2 3.7-1 5.8-1.9 7zm3.7-1.7c.7-1.6 1.1-3.4 1.2-5.3h3a8 8 0 0 1-4.2 5.3z"/></svg><select id="selector-idioma" aria-label="Idioma / Language">
         <option value="">ES</option>
+        <option value="ca">CA</option>
         <option value="en">EN</option>
         <option value="fr">FR</option>
         <option value="de">DE</option>
@@ -45,21 +47,39 @@
   <div class="inner-narrow">
     <p class="eyebrow">Comprar · Cambio de vivienda</p>
     <h1 style="font-size:clamp(2rem,5vw,3.2rem)">¿Qué te cuesta comprar, <em class="oro" style="font-style:italic">de verdad</em>?</h1>
-    <p class="lead" style="margin-top:1.2rem">La cuota de la hipoteca es solo una parte. Este simulador te dice la cuota, todos los gastos reales de comprar en Madrid — impuestos, notaría, registro, gestoría, tasación — y si tu ahorro y tus ingresos aguantan la operación.</p>
+    <p class="lead" style="margin-top:1.2rem">La cuota de la hipoteca es solo una parte. Este simulador te dice la cuota, todos los gastos reales de comprar en cualquier punto de España — impuestos, notaría, registro, gestoría, tasación — y si tu ahorro y tus ingresos aguantan la operación.</p>
   </div>
 </header>
 
 <section class="section">
   <div class="inner">
     <div class="calc reveal" id="simulador">
-      <h3><svg class="hex" viewBox="0 0 100 110" width="26" height="30"><polygon points="50,5 95,30 95,80 50,105 5,80 5,30"/></svg> Simulador de compra · Madrid</h3>
+      <h3><img src="assets/logo-c.png" alt="" style="height:28px;width:auto;vertical-align:-6px;margin-right:6px"> Simulador de compra</h3>
+
+      <div class="fila-2">
+        <div class="campo">
+          <label for="h-oficina">Oficina Cabas Realtor <span style="color:var(--oro)">*</span></label>
+          <select id="h-oficina">
+            <option value="" selected disabled>Selecciona tu oficina</option>
+            <option value="alberto">Alberto Cabas (Gerente)</option>
+            <option value="chamberi">Chamberí</option>
+            <option value="sanbernardo">San Bernardo · Malasaña · Chamberí</option>
+            <option value="almagro">Chamberí · Almagro</option>
+            <option value="vallehermoso">Chamberí · Vallehermoso</option>
+            <option value="riosrosas">Ríos Rosas · Chamberí</option>
+            <option value="chamartin">Chamartín · Nueva España</option>
+          </select>
+          <small>Obligatorio — sus datos aparecerán en el informe descargable.</small>
+        </div>
+        <div class="campo"></div>
+      </div>
 
       <div class="fila-2">
         <div class="campo">
           <label for="h-precio">Precio de la vivienda (€)</label>
           <input type="number" id="h-precio" min="0" step="1000" placeholder="350000">
         </div>
-        <div class="campo">
+        <div class="campo" id="h-campo-ahorro">
           <label for="h-ahorro">Ahorro que aportas (€)</label>
           <input type="number" id="h-ahorro" min="0" step="1000" placeholder="90000">
         </div>
@@ -67,19 +87,55 @@
 
       <div class="fila-2">
         <div class="campo">
-          <label for="h-tipo-vivienda">Tipo de vivienda</label>
-          <select id="h-tipo-vivienda">
-            <option value="usada">Segunda mano (ITP 6% Madrid)</option>
-            <option value="nueva">Obra nueva (IVA 10% + AJD 0,75%)</option>
+          <label for="h-ccaa">Comunidad Autónoma de la vivienda</label>
+          <select id="h-ccaa">
+            <option value="madrid" selected>Comunidad de Madrid</option>
+            <option value="andalucia">Andalucía</option>
+            <option value="aragon">Aragón</option>
+            <option value="asturias">Asturias</option>
+            <option value="baleares">Illes Balears</option>
+            <option value="canarias">Canarias</option>
+            <option value="cantabria">Cantabria</option>
+            <option value="castillayleon">Castilla y León</option>
+            <option value="castillalamancha">Castilla-La Mancha</option>
+            <option value="cataluna">Cataluña</option>
+            <option value="valencia">Comunitat Valenciana</option>
+            <option value="extremadura">Extremadura</option>
+            <option value="galicia">Galicia</option>
+            <option value="murcia">Región de Murcia</option>
+            <option value="navarra">Navarra</option>
+            <option value="paisvasco">País Vasco</option>
+            <option value="larioja">La Rioja</option>
+            <option value="ceuta">Ceuta</option>
+            <option value="melilla">Melilla</option>
           </select>
+          <small>El ITP y el AJD los fija cada comunidad — cambia mucho el resultado.</small>
         </div>
         <div class="campo">
+          <label for="h-tipo-vivienda">Tipo de vivienda</label>
+          <select id="h-tipo-vivienda">
+            <option value="usada">Segunda mano (ITP autonómico)</option>
+            <option value="nueva">Obra nueva (IVA 10% + AJD autonómico)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="fila-2">
+        <div class="campo">
+          <label for="h-financia">¿Vas a pedir hipoteca?</label>
+          <select id="h-financia">
+            <option value="si" selected>Sí, con hipoteca</option>
+            <option value="no">No, pago al contado</option>
+            <option value="comparador">Quiero comparar varias opciones (aportación, interés, plazo)</option>
+          </select>
+        </div>
+        <div class="campo" id="h-campo-plazo">
           <label for="h-plazo">Plazo (años)</label>
           <input type="number" id="h-plazo" min="5" max="40" step="1" value="30">
         </div>
       </div>
 
-      <div class="fila-2">
+      <div class="fila-2" id="h-fila-financiacion">
         <div class="campo">
           <label for="h-tin">Tipo de interés anual — TIN (%)</label>
           <input type="number" id="h-tin" min="0" max="15" step="0.05" placeholder="2.80">
@@ -92,6 +148,39 @@
         </div>
       </div>
 
+      <div id="h-bloque-honorarios">
+        <div class="campo-check">
+          <input type="checkbox" id="h-honorarios-check">
+          <label for="h-honorarios-check">Hay honorarios de intermediación a cargo del comprador <small style="display:inline;color:var(--gris)">(no siempre los hay)</small></label>
+        </div>
+        <div id="h-honorarios-detalle" style="display:none">
+          <div class="fila-2">
+            <div class="campo">
+              <label for="h-honorarios-tipo">¿Cómo se calculan?</label>
+              <select id="h-honorarios-tipo">
+                <option value="fijo">Importe fijo pactado (€)</option>
+                <option value="porcentaje">Porcentaje sobre el precio (%)</option>
+              </select>
+            </div>
+            <div class="campo" id="h-honorarios-fijo-campo">
+              <label for="h-honorarios-importe">Importe pactado (€)</label>
+              <input type="number" id="h-honorarios-importe" min="0" step="100" placeholder="3000">
+            </div>
+            <div class="campo" id="h-honorarios-pct-campo" style="display:none">
+              <label for="h-honorarios-pct">Porcentaje sobre el precio (%)</label>
+              <input type="number" id="h-honorarios-pct" min="0" max="10" step="0.1" placeholder="3">
+            </div>
+          </div>
+          <div class="campo-check" id="h-honorarios-iva-campo" style="display:none">
+            <input type="checkbox" id="h-honorarios-iva-incluido">
+            <label for="h-honorarios-iva-incluido">El IVA ya está incluido en ese porcentaje <small style="display:inline;color:var(--gris)">(si no, se suma un 21% aparte)</small></label>
+          </div>
+          <p style="color:var(--gris);font-size:.8rem;margin-top:.2rem">Si los hay, estos honorarios van a tu cargo y el banco no los financia — deben salir de tu ahorro, aparte del resto de la operación.</p>
+        </div>
+      </div>
+
+      <p id="h-nota-comparador" class="nota-comparador" style="display:none">Vas a pasar al comparador de escenarios: podrás simular hasta 3 aportaciones, 3 tipos de interés y 3 plazos a la vez, con un informe descargable en PDF. Es gratuito y no necesitas registrarte.</p>
+
       <button class="btn btn-oro btn-wide" id="h-calcular" type="button">Simular mi compra</button>
 
       <div class="resultado" id="h-resultado" aria-live="polite">
@@ -100,13 +189,16 @@
         <div class="res-linea"><span>Notaría (estimación)</span><span id="h-r-notaria">—</span></div>
         <div class="res-linea"><span>Registro de la Propiedad (estimación)</span><span id="h-r-registro">—</span></div>
         <div class="res-linea"><span>Gestoría (estimación)</span><span id="h-r-gestoria">—</span></div>
-        <div class="res-linea"><span>Tasación</span><span id="h-r-tasacion">—</span></div>
+        <div class="res-linea" id="h-linea-tasacion"><span>Tasación (para la hipoteca)</span><span id="h-r-tasacion">—</span></div>
+        <div class="res-linea" id="h-linea-honorarios" style="display:none"><span>Honorarios de intermediación <small id="h-honorarios-sublabel" style="display:block;color:var(--gris);font-weight:400"></small></span><span id="h-r-honorarios">—</span></div>
         <div class="res-linea" style="border-bottom:1px solid var(--oro)"><span><strong>Coste total de la operación</strong></span><span id="h-r-total">—</span></div>
-        <div class="res-linea"><span>Hipoteca necesaria</span><span id="h-r-hipoteca">—</span></div>
-        <div class="res-linea"><span>Porcentaje financiado (LTV)</span><span id="h-r-ltv">—</span></div>
-        <div class="res-total"><span>Cuota mensual</span><strong id="h-r-cuota">—</strong></div>
+        <div class="res-linea" id="h-linea-hipoteca"><span>Hipoteca necesaria</span><span id="h-r-hipoteca">—</span></div>
+        <div class="res-linea" id="h-linea-ltv"><span>Porcentaje financiado (LTV)</span><span id="h-r-ltv">—</span></div>
+        <div class="res-total" id="h-linea-cuota"><span>Cuota mensual</span><strong id="h-r-cuota">—</strong></div>
         <div class="res-linea" id="h-r-esfuerzo-linea" style="display:none"><span>Tasa de esfuerzo</span><span id="h-r-esfuerzo">—</span></div>
         <div id="h-avisos"></div>
+
+        <button class="btn btn-linea btn-wide" id="h-descargar-pdf" type="button" style="margin-top:1.2rem" disabled>Descargar informe en PDF</button>
 
         <div class="form-lead" style="margin-top:2rem">
           <h3 style="font-size:1.15rem;margin-bottom:.4rem">¿Quieres el desglose completo por email?</h3>
@@ -129,10 +221,64 @@
         </div>
       </div>
 
-      <p class="disclaimer">Simulación orientativa para la Comunidad de Madrid: ITP 6% en vivienda usada; IVA 10% más AJD 0,75% en obra nueva. Notaría, registro y gestoría son estimaciones habituales según el precio; las condiciones de la hipoteca dependen de cada entidad. No constituye asesoramiento financiero.</p>
+      <p class="disclaimer">Simulación orientativa con el tipo general de ITP y AJD de cada Comunidad Autónoma (algunas aplican escalas progresivas por tramos de precio, que esta calculadora ya tiene en cuenta en Cataluña y la Comunitat Valenciana). No incluye los tipos reducidos por edad, familia numerosa, discapacidad, VPO o zona rural que existen en la mayoría de comunidades — pregúntame si tu caso encaja en alguno. Notaría, registro y gestoría son estimaciones habituales según el precio; las condiciones de la hipoteca dependen de cada entidad. No constituye asesoramiento financiero.</p>
     </div>
   </div>
 </section>
+
+<div class="hoja-imprimible-wrap">
+  <div class="hoja" id="pdf-hoja">
+    <div class="i-header">
+      <div class="i-logo-box"><img src="assets/logo-completo.png" alt="CABAS Realtor"></div>
+      <div class="i-header-main">
+        <div class="i-eyebrow">Simulación financiera</div>
+        <h1 class="i-titulo">Compra de vivienda</h1>
+        <div class="i-subtitulo" id="pdf-subtitulo">Simulación de la operación</div>
+        <div class="i-vivienda" id="pdf-vivienda">—</div>
+      </div>
+      <div class="i-fecha">
+        <strong id="pdf-fecha">—</strong>
+        <span id="pdf-para">Documento para cliente</span>
+      </div>
+    </div>
+    <div class="i-body">
+      <div class="i-seccion-titulo">Datos de partida</div>
+      <div class="i-stats">
+        <div class="i-stat"><div class="i-stat-label">Precio de compra</div><div class="i-stat-valor" id="pdf-precio">—</div><div class="i-stat-cap">Precio de la vivienda</div></div>
+        <div class="i-stat"><div class="i-stat-label">Gastos estimados</div><div class="i-stat-valor" id="pdf-gastos">—</div><div class="i-stat-cap">Impuestos y gastos de la operación</div></div>
+        <div class="i-stat"><div class="i-stat-label">Coste total</div><div class="i-stat-valor" id="pdf-costetotal">—</div><div class="i-stat-cap">Compra más gastos</div></div>
+        <div class="i-stat"><div class="i-stat-label" id="pdf-cuarto-label">Cuota mensual</div><div class="i-stat-valor" id="pdf-cuarto-valor">—</div><div class="i-stat-cap" id="pdf-cuarto-cap">Sistema francés</div></div>
+      </div>
+
+      <div class="i-seccion-titulo">Desglose de la operación</div>
+      <table class="i-tabla">
+        <tbody id="pdf-tabla-body"></tbody>
+      </table>
+
+      <div id="pdf-hipoteca-box" class="i-dos-col" style="display:none">
+        <div class="i-lectura">
+          <div class="i-seccion-titulo" style="margin-top:0">Financiación</div>
+          <ul id="pdf-lectura"></ul>
+        </div>
+        <div class="i-equilibrado">
+          <div class="lbl">Cuota mensual</div>
+          <div class="cifra" id="pdf-cuota-grande">—</div>
+          <div class="cap" id="pdf-plazo-cap">a 30 años</div>
+          <div class="fila"><span>Hipoteca</span><strong id="pdf-hipoteca-valor">—</strong></div>
+          <div class="fila"><span>% Financiado (LTV)</span><strong id="pdf-ltv-valor">—</strong></div>
+          <div class="fila" id="pdf-esfuerzo-fila"><span>Esfuerzo</span><strong id="pdf-esfuerzo-valor">—</strong></div>
+        </div>
+      </div>
+
+      <div class="i-hipotesis" id="pdf-hipotesis"></div>
+      <p class="i-disclaimer" id="pdf-disclaimer">Simulación orientativa. La aprobación y las condiciones finales dependen de la entidad, la tasación, la estabilidad de ingresos y otras deudas. No constituye oferta vinculante ni asesoramiento financiero.</p>
+    </div>
+    <div class="i-footer">
+      <div><strong>CABAS REALTOR</strong> &nbsp; <span id="pdf-oficina-nombre">—</span></div>
+      <div class="contacto" id="pdf-oficina-contacto">—</div>
+    </div>
+  </div>
+</div>
 
 <section class="section section-negro">
   <div class="inner">
@@ -196,7 +342,7 @@
 </a>
 <div id="google_translate_element" style="display:none"></div>
 <script>
-function googleTranslateElementInit(){new google.translate.TranslateElement({pageLanguage:'es',includedLanguages:'en,fr,de,it,pt,zh-CN,ar',autoDisplay:false},'google_translate_element');}
+function googleTranslateElementInit(){new google.translate.TranslateElement({pageLanguage:'es',includedLanguages:'ca,en,fr,de,it,pt,zh-CN,ar',autoDisplay:false},'google_translate_element');}
 document.getElementById('selector-idioma').addEventListener('change', function(){
   var lang=this.value;
   if(!lang){ // volver a español: borrar cookie y recargar
@@ -211,6 +357,7 @@ document.getElementById('selector-idioma').addEventListener('change', function()
 </script>
 <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit" defer></script>
 <script src="js/main.js"></script>
+<script src="js/datos-cabas.js"></script>
 <script src="js/calc-hipoteca.js"></script>
 </body>
 </html>

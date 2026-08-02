@@ -1,0 +1,92 @@
+/* ============================================================
+   CABAS REALTOR — estilo de documento/informe descargable
+   Compartido por comprar.html (informe de 1 escenario) e
+   informe-compra.html (comparativa multiescenario). Un único
+   sitio para el diseño del PDF que ven los clientes.
+   ============================================================ */
+
+.hoja{background:#FFFFFF;color:#1A1712;max-width:900px;margin:0 auto;box-shadow:0 20px 60px rgba(0,0,0,.4)}
+.i-header{background:#000;color:#F2EFE7;padding:2.2rem 2.4rem;display:flex;justify-content:space-between;gap:2rem;border-bottom:4px solid var(--oro)}
+.i-logo-box{flex:0 0 auto;border:1px solid var(--oro);border-radius:4px;padding:.7rem;width:110px;height:110px;display:flex;align-items:center;justify-content:center}
+.i-logo-box img{width:100%}
+.i-header-main{flex:1}
+.i-eyebrow{color:var(--oro);text-transform:uppercase;letter-spacing:.14em;font-size:.72rem;font-weight:700}
+.i-titulo{font-size:2.1rem;margin:.25rem 0 .35rem;color:#fff;font-family:var(--serif);font-weight:600}
+.i-subtitulo{color:#D8D2C4;font-size:.98rem}
+.i-vivienda{color:var(--oro-claro);font-size:.86rem;margin-top:.6rem;font-weight:600}
+.i-fecha{text-align:right;flex:0 0 auto;font-size:.78rem;color:#B9B3A4;white-space:nowrap}
+.i-fecha strong{display:block;color:#fff;font-size:.85rem;margin-bottom:.2rem}
+
+.i-body{padding:2rem 2.4rem}
+.i-seccion-titulo{color:var(--oro);text-transform:uppercase;letter-spacing:.1em;font-size:.76rem;font-weight:700;border-bottom:1px solid #E3D9C2;padding-bottom:.5rem;margin-bottom:1.1rem;margin-top:1.8rem}
+.i-seccion-titulo:first-child{margin-top:0}
+
+.i-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:0}
+.i-stat{padding:0 1.2rem;border-left:1px solid #E3D9C2}
+.i-stat:first-child{border-left:none;padding-left:0}
+.i-stat-label{color:var(--oro);text-transform:uppercase;letter-spacing:.06em;font-size:.68rem;font-weight:700;margin-bottom:.3rem}
+.i-stat-valor{font-family:var(--sans);font-size:1.7rem;font-weight:700;color:#000;font-variant-numeric:tabular-nums}
+.i-stat-cap{color:#8A8272;font-size:.74rem;margin-top:.15rem}
+@media (max-width:640px){.i-stats{grid-template-columns:1fr 1fr;row-gap:1rem}.i-stat{border-left:none;padding-left:0}}
+
+.i-tabla-cab{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:.6rem}
+.i-tabla-cab .plazo-label{font-weight:700;font-size:.9rem}
+.i-tabla-cab .tin-label{color:#8A8272;font-size:.78rem}
+table.i-tabla{width:100%;border-collapse:collapse;margin-bottom:.5rem}
+table.i-tabla th{background:#000;color:#F2EFE7;text-align:left;font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;padding:.6rem .7rem;font-weight:600}
+table.i-tabla th.num,table.i-tabla td.num{text-align:right}
+table.i-tabla th.centro,table.i-tabla td.centro{text-align:center}
+table.i-tabla td{padding:.65rem .7rem;font-size:.86rem;border-bottom:1px solid #EDE7D8;color:#1A1712}
+table.i-tabla tr:nth-child(even) td{background:#FAF8F2}
+table.i-tabla tr.recomendada td{background:var(--oro-suave);color:#6B5115;font-weight:700}
+table.i-tabla td.aportacion{font-weight:700}
+.i-tabla-nota{font-style:italic;color:#8A8272;font-size:.78rem;margin-bottom:1.4rem}
+
+.i-dos-col{display:grid;grid-template-columns:1.3fr 1fr;gap:1.5rem;margin-top:1.6rem}
+@media (max-width:640px){.i-dos-col{grid-template-columns:1fr}}
+.i-lectura ul{list-style:none}
+.i-lectura li{position:relative;padding-left:1.1rem;margin-bottom:.65rem;font-size:.88rem;line-height:1.5;color:#1A1712}
+.i-lectura li::before{content:'';position:absolute;left:0;top:.5em;width:5px;height:5px;border-radius:50%;background:var(--oro)}
+.i-equilibrado{background:#000;color:#fff;border-radius:6px;padding:1.4rem 1.5rem}
+.i-equilibrado .lbl{color:var(--oro);text-transform:uppercase;letter-spacing:.08em;font-size:.68rem;font-weight:700}
+.i-equilibrado .cifra{font-family:var(--sans);font-size:2.3rem;font-weight:700;color:var(--oro-claro);margin:.3rem 0;font-variant-numeric:tabular-nums}
+.i-equilibrado .cap{color:#B9B3A4;font-size:.78rem;margin-bottom:.9rem}
+.i-equilibrado .fila{display:flex;justify-content:space-between;border-top:1px solid rgba(178,142,68,.3);padding-top:.7rem;font-size:.82rem;margin:0}
+.i-equilibrado .fila strong{color:#fff}
+
+.i-callout{background:var(--oro-suave);border-left:4px solid var(--oro);padding:1rem 1.3rem;border-radius:4px;margin-top:1.6rem;font-size:.86rem;color:#1A1712}
+.i-callout strong.tit{display:block;color:var(--oro);text-transform:uppercase;letter-spacing:.08em;font-size:.72rem;font-weight:700;margin-bottom:.4rem}
+
+.i-hipotesis{color:#6B6558;font-size:.78rem;line-height:1.6;margin-top:1.6rem}
+.i-hipotesis strong{color:#1A1712}
+.i-disclaimer{color:#8A8272;font-size:.74rem;font-style:italic;margin-top:.7rem;line-height:1.5}
+
+.i-footer{background:#000;color:#fff;padding:1rem 2.4rem;display:flex;flex-direction:column;gap:.35rem;font-size:.8rem}
+.i-footer strong{color:var(--oro)}
+.i-footer .contacto{color:#D8D2C4}
+
+/* ---------- Impresión: solo se ve la hoja marcada, el resto de la
+   página (nav, secciones, formularios) queda oculto ---------- */
+body.modo-impresion-informe > *:not(.hoja-imprimible-wrap){display:none !important}
+.hoja-imprimible-wrap{display:none}
+body.modo-impresion-informe .hoja-imprimible-wrap{display:block !important}
+
+@media print{
+  body{background:#fff}
+  nav.nav, footer.footer, header.section-negro, .pantalla-solo, #pantalla-form{display:none !important}
+  .hoja{box-shadow:none;max-width:none}
+  @page{size:A4;margin:0}
+  .i-header{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  table.i-tabla th{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .i-equilibrado{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .i-footer{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  table.i-tabla tr.recomendada td{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .i-callout{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .i-tabla-grupo{page-break-inside:avoid}
+  .i-stats{page-break-inside:avoid}
+  .i-dos-col{page-break-inside:avoid}
+  .i-equilibrado{page-break-inside:avoid}
+  .i-callout{page-break-inside:avoid}
+  .i-footer{page-break-inside:avoid}
+  .i-seccion-titulo{page-break-after:avoid}
+}

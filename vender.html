@@ -4,12 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Calcula tu neto al vender | Alberto Cabas Realtor</title>
-<meta name="description" content="Calculadora gratuita: cuánto te queda de verdad al vender tu vivienda en Madrid después de plusvalía municipal e IRPF. Representación del vendedor.">
+<meta name="description" content="Calculadora gratuita: cuánto te queda de verdad al vender tu vivienda en cualquier punto de España después de plusvalía municipal e IRPF. Representación del vendedor.">
 <link rel="icon" type="image/png" href="assets/logo-sello.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/informe.css">
 </head>
 <body>
 <nav class="nav" aria-label="Navegación principal">
@@ -29,6 +30,7 @@
       <li><a href="oficinas.html">Oficinas</a></li>
       <li class="idioma"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm7.9 9h-3a15.6 15.6 0 0 0-1.2-5.3A8 8 0 0 1 19.9 11zM12 4c.9 1.2 1.7 3.3 1.9 7h-3.8c.2-3.7 1-5.8 1.9-7zM4.1 13h3c.1 1.9.5 3.7 1.2 5.3A8 8 0 0 1 4.1 13zm3-2h-3a8 8 0 0 1 4.2-5.3A15.6 15.6 0 0 0 7.1 11zm4.9 9c-.9-1.2-1.7-3.3-1.9-7h3.8c-.2 3.7-1 5.8-1.9 7zm3.7-1.7c.7-1.6 1.1-3.4 1.2-5.3h3a8 8 0 0 1-4.2 5.3z"/></svg><select id="selector-idioma" aria-label="Idioma / Language">
         <option value="">ES</option>
+        <option value="ca">CA</option>
         <option value="en">EN</option>
         <option value="fr">FR</option>
         <option value="de">DE</option>
@@ -52,7 +54,25 @@
 <section class="section">
   <div class="inner">
     <div class="calc reveal" id="calculadora">
-      <h3><svg class="hex" viewBox="0 0 100 110" width="26" height="30"><polygon points="50,5 95,30 95,80 50,105 5,80 5,30"/></svg> Calculadora del neto del vendedor · Madrid capital</h3>
+      <h3><img src="assets/logo-c.png" alt="" style="height:28px;width:auto;vertical-align:-6px;margin-right:6px"> Calculadora del neto del vendedor</h3>
+
+      <div class="fila-2">
+        <div class="campo">
+          <label for="v-oficina">Oficina Cabas Realtor <span style="color:var(--oro)">*</span></label>
+          <select id="v-oficina">
+            <option value="" selected disabled>Selecciona tu oficina</option>
+            <option value="alberto">Alberto Cabas (Gerente)</option>
+            <option value="chamberi">Chamberí</option>
+            <option value="sanbernardo">San Bernardo · Malasaña · Chamberí</option>
+            <option value="almagro">Chamberí · Almagro</option>
+            <option value="vallehermoso">Chamberí · Vallehermoso</option>
+            <option value="riosrosas">Ríos Rosas · Chamberí</option>
+            <option value="chamartin">Chamartín · Nueva España</option>
+          </select>
+          <small>Obligatorio — sus datos aparecerán en el informe descargable.</small>
+        </div>
+        <div class="campo"></div>
+      </div>
 
       <div class="fila-2">
         <div class="campo">
@@ -88,6 +108,32 @@
         </div>
       </div>
 
+      <div class="campo">
+        <label for="v-ccaa">Comunidad Autónoma de la vivienda</label>
+        <select id="v-ccaa">
+          <option value="madrid" selected>Comunidad de Madrid</option>
+          <option value="andalucia">Andalucía</option>
+          <option value="aragon">Aragón</option>
+          <option value="asturias">Asturias</option>
+          <option value="baleares">Illes Balears</option>
+          <option value="canarias">Canarias</option>
+          <option value="cantabria">Cantabria</option>
+          <option value="castillayleon">Castilla y León</option>
+          <option value="castillalamancha">Castilla-La Mancha</option>
+          <option value="cataluna">Cataluña</option>
+          <option value="valencia">Comunitat Valenciana</option>
+          <option value="extremadura">Extremadura</option>
+          <option value="galicia">Galicia</option>
+          <option value="murcia">Región de Murcia</option>
+          <option value="navarra">Navarra</option>
+          <option value="paisvasco">País Vasco</option>
+          <option value="larioja">La Rioja</option>
+          <option value="ceuta">Ceuta</option>
+          <option value="melilla">Melilla</option>
+        </select>
+        <small>Usamos el tipo de plusvalía estimado de la capital de tu comunidad — la plusvalía la fija cada ayuntamiento, así que puede variar respecto al de tu municipio exacto.</small>
+      </div>
+
       <div class="campo-check">
         <input type="checkbox" id="v-mayor65">
         <label for="v-mayor65">Tengo más de 65 años y es mi vivienda habitual <small style="display:inline;color:var(--gris)">(ganancia exenta de IRPF)</small></label>
@@ -102,11 +148,13 @@
       <div class="resultado" id="v-resultado" aria-live="polite">
         <div class="res-linea"><span>Precio de venta</span><span id="r-venta">—</span></div>
         <div class="res-linea"><span>Gastos de la venta</span><span id="r-gventa">—</span></div>
-        <div class="res-linea"><span>Plusvalía municipal (IIVTNU, Madrid 29%)</span><span id="r-plusvalia">—</span></div>
+        <div class="res-linea"><span id="r-plusvalia-label">Plusvalía municipal (IIVTNU)</span><span id="r-plusvalia">—</span></div>
         <div class="res-linea"><span>Ganancia patrimonial a efectos de IRPF</span><span id="r-ganancia">—</span></div>
         <div class="res-linea"><span>IRPF sobre la ganancia</span><span id="r-irpf">—</span></div>
         <div class="res-total"><span>Tu neto estimado</span><strong id="r-neto">—</strong></div>
         <div id="r-avisos"></div>
+
+        <button class="btn btn-linea btn-wide" id="v-descargar-pdf" type="button" style="margin-top:1.2rem" disabled>Descargar informe en PDF</button>
 
         <div class="form-lead" style="margin-top:2rem">
           <h3 style="font-size:1.15rem;margin-bottom:.4rem">¿Quieres el desglose completo y afinado a tu caso?</h3>
@@ -129,10 +177,54 @@
         </div>
       </div>
 
-      <p class="disclaimer">Cálculo orientativo para viviendas en Madrid capital (tipo IIVTNU del 29%, coeficientes máximos estatales vigentes y tramos de la base del ahorro del IRPF). No sustituye al asesoramiento fiscal personalizado; casos con abatimiento (adquisiciones anteriores a 1995), reinversión parcial o titularidad compartida requieren un cálculo a medida — pídemelo.</p>
+      <p class="disclaimer">Cálculo orientativo válido para toda España: usa los coeficientes máximos estatales de la plusvalía municipal (RDL 8/2023) y los tramos estatales del IRPF sobre la base del ahorro (19-30%), iguales en toda España — a diferencia de las rentas del trabajo, las ganancias patrimoniales por venta de vivienda no tienen tramo autonómico, así que la Comunidad Autónoma elegida arriba solo se usa para estimar el tipo de la plusvalía municipal, no el IRPF. El tipo de gravamen de la plusvalía lo fija cada ayuntamiento — usamos el de la capital de la comunidad como estimación; si conoces el de tu municipio exacto, pídeme el cálculo afinado. No sustituye al asesoramiento fiscal personalizado; casos con abatimiento (adquisiciones anteriores a 1995), reinversión parcial o titularidad compartida requieren un cálculo a medida — pídemelo.</p>
     </div>
   </div>
 </section>
+
+<div class="hoja-imprimible-wrap">
+  <div class="hoja" id="pdf-hoja-venta">
+    <div class="i-header">
+      <div class="i-logo-box"><img src="assets/logo-completo.png" alt="CABAS Realtor"></div>
+      <div class="i-header-main">
+        <div class="i-eyebrow">Simulación financiera</div>
+        <h1 class="i-titulo">Venta de vivienda</h1>
+        <div class="i-subtitulo">Cálculo del neto del vendedor</div>
+        <div class="i-vivienda" id="pdfv-ccaa">—</div>
+      </div>
+      <div class="i-fecha">
+        <strong id="pdfv-fecha">—</strong>
+        <span id="pdfv-para">Documento para cliente</span>
+      </div>
+    </div>
+    <div class="i-body">
+      <div class="i-seccion-titulo">Datos de partida</div>
+      <div class="i-stats">
+        <div class="i-stat"><div class="i-stat-label">Precio de venta</div><div class="i-stat-valor" id="pdfv-venta">—</div><div class="i-stat-cap">Precio estimado</div></div>
+        <div class="i-stat"><div class="i-stat-label">Plusvalía municipal</div><div class="i-stat-valor" id="pdfv-plusvalia">—</div><div class="i-stat-cap" id="pdfv-plusvalia-cap">IIVTNU</div></div>
+        <div class="i-stat"><div class="i-stat-label">IRPF</div><div class="i-stat-valor" id="pdfv-irpf">—</div><div class="i-stat-cap">Sobre la ganancia</div></div>
+        <div class="i-stat"><div class="i-stat-label">Neto estimado</div><div class="i-stat-valor" id="pdfv-neto">—</div><div class="i-stat-cap">Lo que te llevas</div></div>
+      </div>
+
+      <div class="i-seccion-titulo">Desglose de la operación</div>
+      <table class="i-tabla">
+        <tbody id="pdfv-tabla-body"></tbody>
+      </table>
+
+      <div class="i-callout" id="pdfv-avisos-box" style="display:none">
+        <strong class="tit">A tener en cuenta</strong>
+        <span id="pdfv-avisos-texto"></span>
+      </div>
+
+      <div class="i-hipotesis" id="pdfv-hipotesis"></div>
+      <p class="i-disclaimer">Simulación orientativa. No sustituye al asesoramiento fiscal personalizado; casos con abatimiento (adquisiciones anteriores a 1995), reinversión parcial o titularidad compartida requieren un cálculo a medida.</p>
+    </div>
+    <div class="i-footer">
+      <div><strong>CABAS REALTOR</strong> &nbsp; <span id="pdfv-oficina-nombre">—</span></div>
+      <div class="contacto" id="pdfv-oficina-contacto">—</div>
+    </div>
+  </div>
+</div>
 
 <section class="section section-negro">
   <div class="inner">
@@ -193,7 +285,7 @@
 </a>
 <div id="google_translate_element" style="display:none"></div>
 <script>
-function googleTranslateElementInit(){new google.translate.TranslateElement({pageLanguage:'es',includedLanguages:'en,fr,de,it,pt,zh-CN,ar',autoDisplay:false},'google_translate_element');}
+function googleTranslateElementInit(){new google.translate.TranslateElement({pageLanguage:'es',includedLanguages:'ca,en,fr,de,it,pt,zh-CN,ar',autoDisplay:false},'google_translate_element');}
 document.getElementById('selector-idioma').addEventListener('change', function(){
   var lang=this.value;
   if(!lang){ // volver a español: borrar cookie y recargar
@@ -208,6 +300,7 @@ document.getElementById('selector-idioma').addEventListener('change', function()
 </script>
 <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit" defer></script>
 <script src="js/main.js"></script>
+<script src="js/datos-cabas.js"></script>
 <script src="js/calc-vendedor.js"></script>
 </body>
 </html>

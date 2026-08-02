@@ -35,3 +35,12 @@ function num(id) {
   const v = parseFloat(document.getElementById(id)?.value);
   return isNaN(v) ? 0 : v;
 }
+
+// Imprimir/descargar el informe de marca (comprar.html e informe-compra.html):
+// oculta el resto de la página y deja solo la hoja marcada con
+// class="hoja-imprimible-wrap" — ver css/informe.css
+function imprimirInforme() {
+  document.body.classList.add('modo-impresion-informe');
+  window.print();
+}
+window.addEventListener('afterprint', () => document.body.classList.remove('modo-impresion-informe'));

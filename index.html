@@ -29,6 +29,7 @@
       <li><a href="oficinas.html">Oficinas</a></li>
       <li class="idioma"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm7.9 9h-3a15.6 15.6 0 0 0-1.2-5.3A8 8 0 0 1 19.9 11zM12 4c.9 1.2 1.7 3.3 1.9 7h-3.8c.2-3.7 1-5.8 1.9-7zM4.1 13h3c.1 1.9.5 3.7 1.2 5.3A8 8 0 0 1 4.1 13zm3-2h-3a8 8 0 0 1 4.2-5.3A15.6 15.6 0 0 0 7.1 11zm4.9 9c-.9-1.2-1.7-3.3-1.9-7h3.8c-.2 3.7-1 5.8-1.9 7zm3.7-1.7c.7-1.6 1.1-3.4 1.2-5.3h3a8 8 0 0 1-4.2 5.3z"/></svg><select id="selector-idioma" aria-label="Idioma / Language">
         <option value="">ES</option>
+        <option value="ca">CA</option>
         <option value="en">EN</option>
         <option value="fr">FR</option>
         <option value="de">DE</option>
@@ -41,7 +42,13 @@
     </ul>
   </div>
 </nav>
-<header class="hero">
+<header class="hero video-header">
+  <div class="hero-media" style="background-image:url('assets/video/poster-portada.jpg')">
+    <video autoplay muted loop playsinline poster="assets/video/poster-portada.jpg">
+      <source src="assets/video/hero-portada.webm" type="video/webm">
+      <source src="assets/video/hero-portada.mp4" type="video/mp4">
+    </video>
+  </div>
   <div class="inner">
     <div>
       <p class="eyebrow">Alberto Cabas · Realtor desde 2010</p>
@@ -52,7 +59,7 @@
         <a class="btn btn-linea" href="vender.html">Calcula tu neto si vendes</a>
       </div>
     </div>
-    <figure class="foto-slot foto-retrato foto-marco" style="max-width:380px;margin:0 auto;width:100%">
+    <figure class="foto-slot foto-retrato foto-hero-blend" style="max-width:380px;margin:0 auto;width:100%">
       <img src="assets/alberto-retrato.jpg" alt="Alberto Cabas, agente inmobiliario en Madrid" style="object-position:center 30%">
     </figure>
   </div>
@@ -62,7 +69,7 @@
   <div class="inner">
     <div class="cifras reveal">
       <div class="cifra"><strong>2010</strong><span>Realtor desde</span></div>
-      <div class="cifra"><strong>6</strong><span>Oficinas Redpiso en Madrid</span></div>
+      <div class="cifra"><strong>6</strong><span>Oficinas en Madrid</span></div>
       <div class="cifra"><strong>+100</strong><span>Herencias tramitadas al año</span></div>
       <div class="cifra"><strong>&gt;80%</strong><span>De acuerdos alcanzados</span></div>
     </div>
@@ -75,19 +82,19 @@
     <h2 style="margin-bottom:2.4rem">Tres situaciones, un mismo objetivo:<br>que llegues a buen puerto</h2>
     <div class="grid-3">
       <article class="card reveal">
-        <svg class="hex" viewBox="0 0 100 110"><polygon points="50,5 95,30 95,80 50,105 5,80 5,30"/></svg>
+        <img class="hex" src="assets/logo-c.png" alt="">
         <h3>Herencias claras</h3>
         <p>Te ayudo a valorar, organizar y vender una vivienda heredada con claridad, rapidez y seguridad jurídica. Documentación, impuestos y venta, de principio a fin.</p>
         <a href="herencias.html">Cómo lo hago →</a>
       </article>
       <article class="card reveal">
-        <svg class="hex" viewBox="0 0 100 110"><polygon points="50,5 95,30 95,80 50,105 5,80 5,30"/></svg>
+        <img class="hex" src="assets/logo-c.png" alt="">
         <h3>Coherederos sin acuerdo</h3>
         <p>Heredar no siempre es fácil. Si los coherederos no conseguís poneros de acuerdo, tenéis un problema — y es exactamente el que llevo años resolviendo mediante negociación.</p>
         <a href="herencias.html#coherederos">Desbloquear la herencia →</a>
       </article>
       <article class="card reveal">
-        <svg class="hex" viewBox="0 0 100 110"><polygon points="50,5 95,30 95,80 50,105 5,80 5,30"/></svg>
+        <img class="hex" src="assets/logo-c.png" alt="">
         <h3>Cambio de vivienda</h3>
         <p>Comprar y vender bien empieza por elegir bien. Acompaño a propietarios que cambian de residencia con estrategia y un servicio ajustado a cada familia.</p>
         <a href="comprar.html">Planificar el cambio →</a>
@@ -123,7 +130,7 @@
       </article>
       <article class="card reveal">
         <h3>¿Qué me cuesta comprar de verdad?</h3>
-        <p>Cuota de hipoteca más todos los gastos reales de compra en Madrid: impuestos, notaría, registro y gestoría.</p>
+        <p>Cuota de hipoteca más todos los gastos reales de compra en cualquier Comunidad Autónoma: impuestos, notaría, registro y gestoría.</p>
         <a href="comprar.html">Simular mi compra →</a>
       </article>
       <article class="card reveal">
@@ -190,7 +197,7 @@
 </a>
 <div id="google_translate_element" style="display:none"></div>
 <script>
-function googleTranslateElementInit(){new google.translate.TranslateElement({pageLanguage:'es',includedLanguages:'en,fr,de,it,pt,zh-CN,ar',autoDisplay:false},'google_translate_element');}
+function googleTranslateElementInit(){new google.translate.TranslateElement({pageLanguage:'es',includedLanguages:'ca,en,fr,de,it,pt,zh-CN,ar',autoDisplay:false},'google_translate_element');}
 document.getElementById('selector-idioma').addEventListener('change', function(){
   var lang=this.value;
   if(!lang){ // volver a español: borrar cookie y recargar

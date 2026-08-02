@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Generador de informe de compra | CABAS Realtor</title>
+<meta name="description" content="Herramienta interna para asesores CABAS Realtor: genera un informe de financiación comparando hasta 3 aportaciones, TIN y plazos, listo para el cliente.">
+<link rel="icon" type="image/png" href="assets/logo-sello.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/informe.css">
+</head>
+<body>
+<nav class="nav" aria-label="Navegación principal">
+  <div class="nav-inner">
+    <a class="nav-logo" href="index.html">
+      <img src="assets/logo-c.png" alt="Cabas Realtor">
+      <span>CABAS</span>
+    </a>
+    <button class="nav-toggle" aria-expanded="false" aria-label="Abrir menú">☰</button>
+    <ul class="nav-links">
+      <li><a href="index.html">Inicio</a></li>
+      <li><a href="herencias.html">Herencias</a></li>
+      <li><a href="vender.html">Vender</a></li>
+      <li><a href="comprar.html">Comprar</a></li>
+      <li><a href="valoracion.html">Valoración</a></li>
+      <li><a href="quien-soy.html">Quién soy</a></li>
+      <li><a href="oficinas.html">Oficinas</a></li>
+      <li class="idioma"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm7.9 9h-3a15.6 15.6 0 0 0-1.2-5.3A8 8 0 0 1 19.9 11zM12 4c.9 1.2 1.7 3.3 1.9 7h-3.8c.2-3.7 1-5.8 1.9-7zM4.1 13h3c.1 1.9.5 3.7 1.2 5.3A8 8 0 0 1 4.1 13zm3-2h-3a8 8 0 0 1 4.2-5.3A15.6 15.6 0 0 0 7.1 11zm4.9 9c-.9-1.2-1.7-3.3-1.9-7h3.8c-.2 3.7-1 5.8-1.9 7zm3.7-1.7c.7-1.6 1.1-3.4 1.2-5.3h3a8 8 0 0 1-4.2 5.3z"/></svg><select id="selector-idioma" aria-label="Idioma / Language">
+        <option value="">ES</option>
+        <option value="ca">CA</option>
+        <option value="en">EN</option>
+        <option value="fr">FR</option>
+        <option value="de">DE</option>
+        <option value="it">IT</option>
+        <option value="pt">PT</option>
+        <option value="zh-CN">中文</option>
+        <option value="ar">AR</option>
+      </select></li>
+      <li><a class="nav-cta" href="contacto.html">Contacto</a></li>
+    </ul>
+  </div>
+</nav>
+
+<header class="section section-negro">
+  <div class="inner-narrow">
+    <p class="eyebrow">Herramienta interna · Asesores CABAS Realtor</p>
+    <h1 style="font-size:clamp(2rem,5vw,3.2rem)">Generador de informe de compra</h1>
+    <p class="lead" style="margin-top:1.2rem">Rellena los datos con el cliente delante y genera un informe con nuestra marca al momento — hasta 3 aportaciones × 3 tipos de interés × 3 plazos comparados a la vez.</p>
+  </div>
+</header>
+
+<section class="section" id="pantalla-form">
+  <div class="inner-narrow" style="max-width:760px">
+
+    <div class="calc" style="margin-bottom:1.4rem">
+      <h3>Oficina</h3>
+      <div class="campo">
+        <label for="f-oficina">Oficina Cabas Realtor <span style="color:var(--oro)">*</span></label>
+        <select id="f-oficina">
+          <option value="" selected disabled>Selecciona tu oficina</option>
+          <option value="alberto">Alberto Cabas (Gerente)</option>
+          <option value="chamberi">Chamberí</option>
+          <option value="sanbernardo">San Bernardo · Malasaña · Chamberí</option>
+          <option value="almagro">Chamberí · Almagro</option>
+          <option value="vallehermoso">Chamberí · Vallehermoso</option>
+          <option value="riosrosas">Ríos Rosas · Chamberí</option>
+          <option value="chamartin">Chamartín · Nueva España</option>
+        </select>
+        <small>Obligatorio — sus datos (dirección, teléfono, email) aparecen en el pie del informe.</small>
+      </div>
+    </div>
+
+    <div class="calc" style="margin-bottom:1.4rem">
+      <h3>Datos de la vivienda</h3>
+      <div class="fila-2">
+        <div class="campo">
+          <label for="f-precio">Precio de compra (€)</label>
+          <input type="number" id="f-precio" min="0" step="1000" placeholder="300000">
+        </div>
+        <div class="campo">
+          <label for="f-ccaa">Comunidad Autónoma</label>
+          <select id="f-ccaa">
+            <option value="madrid" selected>Comunidad de Madrid</option>
+            <option value="andalucia">Andalucía</option>
+            <option value="aragon">Aragón</option>
+            <option value="asturias">Asturias</option>
+            <option value="baleares">Illes Balears</option>
+            <option value="canarias">Canarias</option>
+            <option value="cantabria">Cantabria</option>
+            <option value="castillayleon">Castilla y León</option>
+            <option value="castillalamancha">Castilla-La Mancha</option>
+            <option value="cataluna">Cataluña</option>
+            <option value="valencia">Comunitat Valenciana</option>
+            <option value="extremadura">Extremadura</option>
+            <option value="galicia">Galicia</option>
+            <option value="murcia">Región de Murcia</option>
+            <option value="navarra">Navarra</option>
+            <option value="paisvasco">País Vasco</option>
+            <option value="larioja">La Rioja</option>
+            <option value="ceuta">Ceuta</option>
+            <option value="melilla">Melilla</option>
+          </select>
+        </div>
+      </div>
+      <div class="fila-2">
+        <div class="campo">
+          <label for="f-tipo">Tipo de vivienda</label>
+          <select id="f-tipo">
+            <option value="usada">Segunda mano (ITP)</option>
+            <option value="nueva">Obra nueva (IVA + AJD)</option>
+          </select>
+        </div>
+        <div class="campo">
+          <label for="f-cliente">Nombre del cliente <small style="color:var(--gris)">(opcional)</small></label>
+          <input type="text" id="f-cliente" placeholder="Para personalizar el documento">
+        </div>
+      </div>
+    </div>
+
+    <div class="calc" style="margin-bottom:1.4rem">
+      <h3>Datos del comprador</h3>
+      <div class="campo">
+        <label for="f-ingresos">Ingresos netos mensuales del hogar (€) <small style="color:var(--gris)">— opcional, para la tasa de esfuerzo</small></label>
+        <input type="number" id="f-ingresos" min="0" step="100" placeholder="3500">
+      </div>
+    </div>
+
+    <div class="calc" style="margin-bottom:1.4rem">
+      <h3>Honorarios de intermediación <small style="display:block;color:var(--gris);font-weight:400;font-size:.78rem;margin-top:.3rem">Marca solo si el comprador los paga a él — no siempre los hay</small></h3>
+      <div class="campo-check">
+        <input type="checkbox" id="f-hon-check">
+        <label for="f-hon-check">Incluir honorarios de intermediación a cargo del comprador</label>
+      </div>
+      <div id="f-hon-detalle" style="display:none">
+        <div class="fila-2">
+          <div class="campo">
+            <label for="f-hon-tipo">¿Cómo se calculan?</label>
+            <select id="f-hon-tipo">
+              <option value="fijo">Importe fijo pactado (€)</option>
+              <option value="porcentaje">Porcentaje sobre el precio (%)</option>
+            </select>
+          </div>
+          <div class="campo" id="f-hon-fijo-campo">
+            <label for="f-hon-importe">Importe pactado (€)</label>
+            <input type="number" id="f-hon-importe" min="0" step="100" placeholder="3000">
+          </div>
+          <div class="campo" id="f-hon-pct-campo" style="display:none">
+            <label for="f-hon-pct">Porcentaje sobre el precio (%)</label>
+            <input type="number" id="f-hon-pct" min="0" max="10" step="0.1" placeholder="3">
+          </div>
+        </div>
+        <div class="campo-check" id="f-hon-iva-campo" style="display:none">
+          <input type="checkbox" id="f-hon-iva">
+          <label for="f-hon-iva">El IVA ya está incluido en ese porcentaje (si no, se suma un 21% aparte)</label>
+        </div>
+      </div>
+    </div>
+
+    <div class="calc" style="margin-bottom:1.4rem">
+      <h3>Escenarios a comparar <small style="display:block;color:var(--gris);font-weight:400;font-size:.78rem;margin-top:.3rem">Deja en blanco los que no necesites — con uno solo en cada fila ya funciona</small></h3>
+      <p style="color:var(--oro-claro);font-size:.85rem;font-weight:600;margin-bottom:.6rem">Aportación del cliente (€)</p>
+      <div class="fila-3">
+        <div class="campo"><input type="number" id="f-ap1" min="0" step="1000" placeholder="Aportación 1"></div>
+        <div class="campo"><input type="number" id="f-ap2" min="0" step="1000" placeholder="Aportación 2 (opcional)"></div>
+        <div class="campo"><input type="number" id="f-ap3" min="0" step="1000" placeholder="Aportación 3 (opcional)"></div>
+      </div>
+      <p style="color:var(--oro-claro);font-size:.85rem;font-weight:600;margin-bottom:.6rem">Tipo de interés — TIN (%)</p>
+      <div class="fila-3">
+        <div class="campo"><input type="number" id="f-tin1" min="0" max="15" step="0.05" placeholder="TIN 1"></div>
+        <div class="campo"><input type="number" id="f-tin2" min="0" max="15" step="0.05" placeholder="TIN 2 (opcional)"></div>
+        <div class="campo"><input type="number" id="f-tin3" min="0" max="15" step="0.05" placeholder="TIN 3 (opcional)"></div>
+      </div>
+      <p style="color:var(--oro-claro);font-size:.85rem;font-weight:600;margin-bottom:.6rem">Plazo (años)</p>
+      <div class="fila-3">
+        <div class="campo"><input type="number" id="f-pl1" min="5" max="40" step="1" placeholder="Plazo 1" value="30"></div>
+        <div class="campo"><input type="number" id="f-pl2" min="5" max="40" step="1" placeholder="Plazo 2 (opcional)"></div>
+        <div class="campo"><input type="number" id="f-pl3" min="5" max="40" step="1" placeholder="Plazo 3 (opcional)"></div>
+      </div>
+    </div>
+
+    <div id="f-avisos"></div>
+
+    <div style="text-align:center;margin-top:1.5rem">
+      <button class="btn btn-oro" id="f-generar" type="button">Generar informe</button>
+    </div>
+  </div>
+</section>
+
+<div id="pantalla-informe" style="display:none">
+  <div class="pantalla-solo" style="text-align:center;margin:2.4rem auto;display:flex;gap:.8rem;justify-content:center;flex-wrap:wrap">
+    <button class="btn btn-linea" id="btn-editar" type="button">← Editar datos</button>
+    <button class="btn btn-oro" id="btn-pdf" type="button">Descargar / Imprimir PDF</button>
+  </div>
+
+  <div class="hoja" id="hoja">
+    <div class="i-header">
+      <div class="i-logo-box"><img src="assets/logo-completo.png" alt="CABAS Realtor"></div>
+      <div class="i-header-main">
+        <div class="i-eyebrow">Simulación financiera</div>
+        <h1 class="i-titulo">Compra de vivienda</h1>
+        <div class="i-subtitulo" id="i-subtitulo">Comparativa de financiación</div>
+        <div class="i-vivienda" id="i-vivienda">—</div>
+      </div>
+      <div class="i-fecha">
+        <strong id="i-fecha">—</strong>
+        <span id="i-para">Documento para cliente</span>
+      </div>
+    </div>
+
+    <div class="i-body">
+      <div class="i-seccion-titulo">Datos de partida</div>
+      <div class="i-stats">
+        <div class="i-stat"><div class="i-stat-label">Precio de compra</div><div class="i-stat-valor" id="i-precio">—</div><div class="i-stat-cap">Precio de la vivienda</div></div>
+        <div class="i-stat"><div class="i-stat-label">Gastos estimados</div><div class="i-stat-valor" id="i-gastos">—</div><div class="i-stat-cap" id="i-gastos-cap">Impuestos y operación</div></div>
+        <div class="i-stat"><div class="i-stat-label">Coste total</div><div class="i-stat-valor" id="i-costetotal">—</div><div class="i-stat-cap">Compra más gastos</div></div>
+        <div class="i-stat"><div class="i-stat-label" id="i-ingresos-label">Ingresos del hogar</div><div class="i-stat-valor" id="i-ingresos">—</div><div class="i-stat-cap">Netos mensuales</div></div>
+      </div>
+
+      <div class="i-seccion-titulo">Comparativa de escenarios</div>
+      <div id="i-tablas"></div>
+      <p class="i-tabla-nota" id="i-tabla-nota">La fila resaltada es el escenario recomendado.</p>
+
+      <div class="i-dos-col">
+        <div class="i-lectura">
+          <div class="i-seccion-titulo" style="margin-top:0">Lectura profesional</div>
+          <ul id="i-lectura"></ul>
+        </div>
+        <div class="i-equilibrado">
+          <div class="lbl">Escenario equilibrado</div>
+          <div class="cifra" id="i-eq-cuota">—</div>
+          <div class="cap">cuota mensual</div>
+          <div class="fila"><span>Aportación</span><strong id="i-eq-aportacion">—</strong></div>
+          <div class="fila"><span>TIN / plazo</span><strong id="i-eq-detalle">—</strong></div>
+          <div class="fila" id="i-eq-esfuerzo-fila"><span>Esfuerzo</span><strong id="i-eq-esfuerzo">—</strong></div>
+        </div>
+      </div>
+
+      <div class="i-callout" id="i-efecto-box" style="display:none">
+        <strong class="tit">Efecto de aportar más</strong>
+        <span id="i-efecto-texto"></span>
+      </div>
+
+      <div class="i-hipotesis" id="i-hipotesis"></div>
+      <p class="i-disclaimer">Simulación orientativa. La aprobación y las condiciones finales dependen de la entidad, la tasación, la estabilidad de ingresos y otras deudas. No constituye oferta vinculante ni asesoramiento financiero.</p>
+    </div>
+
+    <div class="i-footer">
+      <div><strong>CABAS REALTOR</strong> &nbsp; <span id="i-footer-oficina">—</span></div>
+      <div class="contacto" id="i-footer-contacto">—</div>
+    </div>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="footer-grid">
+    <div>
+      <img src="assets/logo-completo.png" alt="Cabas Realtor">
+      <p>Experto en herencias y cambios de vivienda en Madrid. Realtor desde 2010. Franquiciado del grupo Redpiso.</p>
+      <div class="social">
+        <a href="https://www.instagram.com/cabas995" aria-label="Instagram" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M12 2.2c3.2 0 3.6 0 4.8.1 1.2.1 1.8.2 2.2.4.6.2 1 .5 1.4.9.4.4.7.8.9 1.4.2.4.4 1 .4 2.2.1 1.2.1 1.6.1 4.8s0 3.6-.1 4.8c-.1 1.2-.2 1.8-.4 2.2-.2.6-.5 1-.9 1.4-.4.4-.8.7-1.4.9-.4.2-1 .4-2.2.4-1.2.1-1.6.1-4.8.1s-3.6 0-4.8-.1c-1.2-.1-1.8-.2-2.2-.4-.6-.2-1-.5-1.4-.9-.4-.4-.7-.8-.9-1.4-.2-.4-.4-1-.4-2.2C2.2 15.6 2.2 15.2 2.2 12s0-3.6.1-4.8c.1-1.2.2-1.8.4-2.2.2-.6.5-1 .9-1.4.4-.4.8-.7 1.4-.9.4-.2 1-.4 2.2-.4C8.4 2.2 8.8 2.2 12 2.2zm0 1.8c-3.1 0-3.5 0-4.7.1-1.1.1-1.5.2-1.9.4-.5.2-.8.4-1.1.7-.3.3-.5.6-.7 1.1-.2.4-.3.8-.4 1.9-.1 1.2-.1 1.6-.1 4.7s0 3.5.1 4.7c.1 1.1.2 1.5.4 1.9.2.5.4.8.7 1.1.3.3.6.5 1.1.7.4.2.8.3 1.9.4 1.2.1 1.6.1 4.7.1s3.5 0 4.7-.1c1.1-.1 1.5-.2 1.9-.4.5-.2.8-.4 1.1-.7.3-.3.5-.6.7-1.1.2-.4.3-.8.4-1.9.1-1.2.1-1.6.1-4.7s0-3.5-.1-4.7c-.1-1.1-.2-1.5-.4-1.9-.2-.5-.4-.8-.7-1.1-.3-.3-.6-.5-1.1-.7-.4-.2-.8-.3-1.9-.4-1.2-.1-1.6-.1-4.7-.1zm0 3.1a5 5 0 1 1 0 10 5 5 0 0 1 0-10zm0 1.8a3.2 3.2 0 1 0 0 6.4 3.2 3.2 0 0 0 0-6.4zm5.2-2.9a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4z"/></svg></a>
+        <a href="https://www.linkedin.com/in/cabas995" aria-label="LinkedIn" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M4.98 3.5C4.98 4.88 3.87 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5zM.22 8.09h4.56V23H.22V8.09zM8.34 8.09h4.37v2.04h.06c.61-1.15 2.1-2.37 4.32-2.37 4.62 0 5.47 3.04 5.47 7v8.24h-4.55v-7.3c0-1.74-.03-3.98-2.43-3.98-2.43 0-2.8 1.9-2.8 3.86V23H8.34V8.09z"/></svg></a>
+        <a href="https://www.facebook.com/share/1Db59MYHj7/" aria-label="Facebook" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M22 12a10 10 0 1 0-11.6 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.5h-1.3c-1.2 0-1.6.8-1.6 1.6V12h2.8l-.4 2.9h-2.4v7A10 10 0 0 0 22 12z"/></svg></a>
+        <a href="https://www.tiktok.com/@cabas995" aria-label="TikTok" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M19.6 6.7a5.6 5.6 0 0 1-3.4-3.5c-.1-.4-.2-.8-.2-1.2h-3.7v14.3a3 3 0 1 1-2.1-2.9V9.6a6.7 6.7 0 1 0 5.8 6.7V8.9a9.2 9.2 0 0 0 4.6 1.2V6.9c-.3 0-.7-.1-1-.2z"/></svg></a>
+        <a href="https://youtube.com/@cabas995" aria-label="YouTube" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.2C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.5A3 3 0 0 0 .5 6.2 31.6 31.6 0 0 0 0 12a31.6 31.6 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.2c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.2A31.6 31.6 0 0 0 24 12a31.6 31.6 0 0 0-.5-5.8zM9.6 15.6V8.4L15.8 12l-6.2 3.6z"/></svg></a>
+      </div>
+    </div>
+    <div>
+      <h4>Herramientas gratuitas</h4>
+      <ul>
+        <li><a href="vender.html">Calcula tu neto al vender</a></li>
+        <li><a href="comprar.html">Simulador de hipoteca y gastos</a></li>
+        <li><a href="valoracion.html">¿Cuánto vale mi casa?</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Contacto</h4>
+      <ul>
+        <li><a href="tel:+34662669014">+34 662 669 014</a></li>
+        <li><a href="mailto:alberto@cabas.es">alberto@cabas.es</a></li>
+        <li>Calle Bravo Murillo 23, 28015 Madrid</li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-legal">
+    <span>© Alberto Cabas Ortiz. Todos los derechos reservados.</span>
+    <span>
+      <a href="aviso-legal.html">Aviso legal</a>
+      <a href="privacidad.html">Privacidad</a>
+      <a href="cookies.html">Cookies</a>
+    </span>
+  </div>
+</footer>
+
+<script>
+function googleTranslateElementInit(){new google.translate.TranslateElement({pageLanguage:'es',includedLanguages:'ca,en,fr,de,it,pt,zh-CN,ar',autoDisplay:false},'google_translate_element');}
+document.getElementById('selector-idioma').addEventListener('change', function(){
+  var lang=this.value;
+  if(!lang){
+    document.cookie='googtrans=;path=/;expires=Thu, 01 Jan 1970 00:00:00 GMT';
+    document.cookie='googtrans=;path=/;domain=.'+location.hostname+';expires=Thu, 01 Jan 1970 00:00:00 GMT';
+    location.reload(); return;
+  }
+  document.cookie='googtrans=/es/'+lang+';path=/';
+  var combo=document.querySelector('select.goog-te-combo');
+  if(combo){combo.value=lang;combo.dispatchEvent(new Event('change'));}else{location.reload();}
+});
+</script>
+<script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit" defer></script>
+<script src="js/main.js"></script>
+<script src="js/datos-cabas.js"></script>
+<script src="js/informe-logic.js"></script>
+<script src="js/informe-ui.js"></script>
+</body>
+</html>
