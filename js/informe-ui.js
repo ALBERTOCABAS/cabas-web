@@ -39,9 +39,19 @@ actualizarHonorariosUI();
 
 // ---------- Lectura profesional (bullets automáticos) ----------
 function generarLectura(r, ctx) {
-  const { ingresos, aportaciones, tins, plazos } = ctx;
+  const { ingresos, aportaciones, tins, plazos, edadRef, edad2Dado } = ctx;
   const bullets = [];
   const todas = r.todas;
+
+  if (edadRef) {
+    const plazosSuperan = [...new Set(todas.filter(f => r.plazoMaxEdad !== null && f.plazo > r.plazoMaxEdad && !r.grupos.find(g => g.plazo === f.plazo)?.autoAnadido).map(f => f.plazo))].sort((a, b) => a - b);
+    const hayExtra = r.grupos.some(g => g.autoAnadido);
+    if (plazosSuperan.length) {
+      bullets.push(`Con ${edadRef} años${edad2Dado ? ' (el mayor de los titulares)' : ''}, el criterio habitual "edad + plazo ≤ 75" (algunas entidades llegan a 80) deja un plazo orientativo de ${r.plazoMaxEdad} años — el o los plazos de ${plazosSuperan.join(', ')} años comparados podrían no estar disponibles en todas las entidades.${hayExtra ? ` Por eso se ha añadido una comparativa extra a ${r.plazoMaxEdad} años, la alternativa que sí encajaría.` : ''}`);
+    } else {
+      bullets.push(`Con ${edadRef} años${edad2Dado ? ' (el mayor de los titulares)' : ''}, todos los plazos comparados entran dentro del criterio habitual de edad de la mayoría de entidades.`);
+    }
+  }
 
   if (ingresos > 0) {
     const dentro = todas.filter(f => f.esfuerzo <= 30).length;
@@ -83,6 +93,10 @@ document.getElementById('f-generar').addEventListener('click', () => {
   const tipoViv = document.getElementById('f-tipo').value;
   const cliente = document.getElementById('f-cliente').value.trim();
   const ingresos = num('f-ingresos');
+  const edad1 = num('f-edad1');
+  const edad2 = num('f-edad2');
+  const edadRef = Math.max(edad1, edad2) || null;
+  const edad2Dado = !!edad2;
 
   const honorariosCfg = honCheck.checked ? {
     activo: true, tipo: honTipo.value,
@@ -106,7 +120,7 @@ document.getElementById('f-generar').addEventListener('click', () => {
     return;
   }
 
-  const r = generarEscenarios({ precio, ccaaSlug, tipoViv, ingresos, honorariosCfg, aportaciones, tins, plazos });
+  const r = generarEscenarios({ precio, ccaaSlug, tipoViv, ingresos, honorariosCfg, aportaciones, tins, plazos, edadRef });
   const efecto = efectoAportarMas(r, aportaciones, tins);
 
   // ---- Cabecera ----
@@ -152,7 +166,7 @@ document.getElementById('f-generar').addEventListener('click', () => {
     });
     div.innerHTML = `
       <div class="i-tabla-cab">
-        <span class="plazo-label">Plazo: ${g.plazo} años</span>
+        <span class="plazo-label">Plazo: ${g.plazo} años${g.autoAnadido ? ' <span style="color:var(--oro);font-weight:600">· máximo recomendado por tu edad</span>' : g.superaEdad ? ' <span style="color:var(--ambar);font-weight:600">· puede superar el límite habitual por edad</span>' : ''}</span>
         <span class="tin-label">${g.plazo * 12} cuotas mensuales</span>
       </div>
       <table class="i-tabla">
@@ -168,7 +182,7 @@ document.getElementById('f-generar').addEventListener('click', () => {
     'La fila resaltada es el escenario recomendado: el mejor equilibrio entre esfuerzo mensual y financiación dentro del límite habitual del 80%. LTV = porcentaje del precio de la vivienda que cubre la hipoteca; el resto lo aporta el comprador.';
 
   // ---- Lectura profesional ----
-  const lectura = generarLectura(r, { ingresos, aportaciones, tins, plazos });
+  const lectura = generarLectura(r, { ingresos, aportaciones, tins, plazos, edadRef, edad2Dado });
   document.getElementById('i-lectura').innerHTML = lectura.map(t => `<li>${t}</li>`).join('');
 
   // ---- Escenario equilibrado ----

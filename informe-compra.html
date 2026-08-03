@@ -126,6 +126,17 @@
         <label for="f-ingresos">Ingresos netos mensuales del hogar (€) <small style="color:var(--gris)">— opcional, para la tasa de esfuerzo</small></label>
         <input type="number" id="f-ingresos" min="0" step="100" placeholder="3500">
       </div>
+      <div class="fila-2">
+        <div class="campo">
+          <label for="f-edad1">Edad del comprador <small style="color:var(--gris)">(opcional)</small></label>
+          <input type="number" id="f-edad1" min="18" max="90" step="1" placeholder="35">
+        </div>
+        <div class="campo">
+          <label for="f-edad2">Edad del 2º comprador <small style="color:var(--gris)">(opcional, si compráis entre 2)</small></label>
+          <input type="number" id="f-edad2" min="18" max="90" step="1" placeholder="33">
+        </div>
+      </div>
+      <small style="display:block;margin-top:.3rem">Los bancos suelen exigir liquidar la hipoteca antes de los 75-80 años — con dos titulares, cuenta la edad del mayor. Si lo indicas, marcamos qué plazos comparados podrían no estar disponibles.</small>
     </div>
 
     <div class="calc" style="margin-bottom:1.4rem">
@@ -242,14 +253,17 @@
         <strong class="tit">Efecto de aportar más</strong>
         <span id="i-efecto-texto"></span>
       </div>
-
-      <div class="i-hipotesis" id="i-hipotesis"></div>
-      <p class="i-disclaimer">Simulación orientativa. La aprobación y las condiciones finales dependen de la entidad, la tasación, la estabilidad de ingresos y otras deudas. No constituye oferta vinculante ni asesoramiento financiero.</p>
     </div>
 
-    <div class="i-footer">
-      <div><strong>CABAS REALTOR</strong> &nbsp; <span id="i-footer-oficina">—</span></div>
-      <div class="contacto" id="i-footer-contacto">—</div>
+    <div class="i-cierre">
+      <div class="i-cierre-texto">
+        <div class="i-hipotesis" id="i-hipotesis"></div>
+        <p class="i-disclaimer">Simulación orientativa. La aprobación y las condiciones finales dependen de la entidad, la tasación, la estabilidad de ingresos y otras deudas. No constituye oferta vinculante ni asesoramiento financiero.</p>
+      </div>
+      <div class="i-footer">
+        <div><strong>CABAS REALTOR</strong> &nbsp; <span id="i-footer-oficina">—</span></div>
+        <div class="contacto" id="i-footer-contacto">—</div>
+      </div>
     </div>
   </div>
 </div>

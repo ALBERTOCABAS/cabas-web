@@ -148,6 +148,18 @@
         </div>
       </div>
 
+      <div class="fila-2" id="h-fila-edad">
+        <div class="campo">
+          <label for="h-edad1">Edad del comprador <small style="color:var(--gris)">(opcional)</small></label>
+          <input type="number" id="h-edad1" min="18" max="90" step="1" placeholder="35">
+        </div>
+        <div class="campo">
+          <label for="h-edad2">Edad del 2º comprador <small style="color:var(--gris)">(opcional, si compráis entre 2)</small></label>
+          <input type="number" id="h-edad2" min="18" max="90" step="1" placeholder="33">
+          <small>Los bancos suelen exigir liquidar la hipoteca antes de los 75-80 años — con dos titulares, cuenta la edad del mayor.</small>
+        </div>
+      </div>
+
       <div id="h-bloque-honorarios">
         <div class="campo-check">
           <input type="checkbox" id="h-honorarios-check">
@@ -196,6 +208,10 @@
         <div class="res-linea" id="h-linea-ltv"><span>Porcentaje financiado (LTV)</span><span id="h-r-ltv">—</span></div>
         <div class="res-total" id="h-linea-cuota"><span>Cuota mensual</span><strong id="h-r-cuota">—</strong></div>
         <div class="res-linea" id="h-r-esfuerzo-linea" style="display:none"><span>Tasa de esfuerzo</span><span id="h-r-esfuerzo">—</span></div>
+        <div id="h-caja-plazo-edad" style="display:none;background:rgba(178,142,68,.08);border:1px solid var(--linea);border-radius:6px;padding:.9rem 1.1rem;margin-top:.8rem">
+          <div style="color:var(--oro);font-weight:600;font-size:.78rem;letter-spacing:.04em;text-transform:uppercase;margin-bottom:.4rem">Con el plazo máximo recomendado por tu edad (<span id="h-plazo-edad-anios">—</span> años)</div>
+          <div class="res-linea" style="border:none;padding:.15rem 0"><span>Cuota mensual estimada</span><strong id="h-r-cuota-edad">—</strong></div>
+        </div>
         <div id="h-avisos"></div>
 
         <button class="btn btn-linea btn-wide" id="h-descargar-pdf" type="button" style="margin-top:1.2rem" disabled>Descargar informe en PDF</button>
@@ -269,13 +285,17 @@
           <div class="fila" id="pdf-esfuerzo-fila"><span>Esfuerzo</span><strong id="pdf-esfuerzo-valor">—</strong></div>
         </div>
       </div>
-
-      <div class="i-hipotesis" id="pdf-hipotesis"></div>
-      <p class="i-disclaimer" id="pdf-disclaimer">Simulación orientativa. La aprobación y las condiciones finales dependen de la entidad, la tasación, la estabilidad de ingresos y otras deudas. No constituye oferta vinculante ni asesoramiento financiero.</p>
     </div>
-    <div class="i-footer">
-      <div><strong>CABAS REALTOR</strong> &nbsp; <span id="pdf-oficina-nombre">—</span></div>
-      <div class="contacto" id="pdf-oficina-contacto">—</div>
+
+    <div class="i-cierre">
+      <div class="i-cierre-texto">
+        <div class="i-hipotesis" id="pdf-hipotesis"></div>
+        <p class="i-disclaimer" id="pdf-disclaimer">Simulación orientativa. La aprobación y las condiciones finales dependen de la entidad, la tasación, la estabilidad de ingresos y otras deudas. No constituye oferta vinculante ni asesoramiento financiero.</p>
+      </div>
+      <div class="i-footer">
+        <div><strong>CABAS REALTOR</strong> &nbsp; <span id="pdf-oficina-nombre">—</span></div>
+        <div class="contacto" id="pdf-oficina-contacto">—</div>
+      </div>
     </div>
   </div>
 </div>

@@ -40,13 +40,25 @@ function cuotaFrancesa(hipoteca, tinPct, anios) {
 
 // Genera la matriz completa de escenarios: un grupo (tabla) por plazo,
 // y dentro de cada grupo, una fila por combinación aportación x TIN.
-function generarEscenarios({ precio, ccaaSlug, tipoViv, ingresos, honorariosCfg, aportaciones, tins, plazos }) {
+const LIMITE_EDAD_BANCO = 75; // criterio general edad+plazo; algunas entidades llegan a 80
+
+function generarEscenarios({ precio, ccaaSlug, tipoViv, ingresos, honorariosCfg, aportaciones, tins, plazos, edadRef }) {
   const gastos = gastosCompra(precio, ccaaSlug, tipoViv);
   const honorarios = calcularHonorarios(precio, honorariosCfg);
   const costeBase = precio + gastos.total; // financiable
   const costeTotal = costeBase + honorarios; // coste real de la operación
+  const plazoMaxEdad = edadRef ? Math.max(0, LIMITE_EDAD_BANCO - edadRef) : null;
 
-  const grupos = plazos.map(plazo => {
+  // Si algún plazo pedido supera el máximo recomendado por edad, añadimos
+  // automáticamente ese plazo máximo como comparativa extra — así, además
+  // de avisar de que un plazo puede no estar disponible, se ve ya calculada
+  // la alternativa real que sí encajaría.
+  let plazosFinal = plazos.map(p => ({ plazo: p, autoAnadido: false }));
+  const necesitaExtra = plazoMaxEdad !== null && plazoMaxEdad >= 5 &&
+    plazos.some(p => p > plazoMaxEdad) && !plazos.includes(plazoMaxEdad);
+  if (necesitaExtra) plazosFinal.push({ plazo: plazoMaxEdad, autoAnadido: true });
+
+  const grupos = plazosFinal.map(({ plazo, autoAnadido }) => {
     const filas = [];
     aportaciones.forEach(aportacion => {
       tins.forEach(tin => {
@@ -59,15 +71,20 @@ function generarEscenarios({ precio, ccaaSlug, tipoViv, ingresos, honorariosCfg,
         filas.push({ aportacion, tin, plazo, hipoteca, ltv, cuota, interesesTotales, esfuerzo });
       });
     });
-    return { plazo, filas };
+    return { plazo, filas, autoAnadido, superaEdad: !autoAnadido && plazoMaxEdad !== null && plazo > plazoMaxEdad };
   });
 
   // Escenario equilibrado: entre los que cumplen LTV<=80%, el de menor
   // esfuerzo (o menor LTV si no hay ingresos); si ninguno cumple, el de
-  // menor LTV de todos. Empates: menor interés total pagado.
+  // menor LTV de todos. Si hay edad indicada, se prefieren además los
+  // plazos dentro del límite habitual por edad, cuando existe alguno así.
+  // Empates: menor interés total pagado.
   const todas = grupos.flatMap(g => g.filas);
   const elegibles = todas.filter(f => f.ltv <= 80);
-  const pool = elegibles.length ? elegibles : todas;
+  let pool = elegibles.length ? elegibles : todas;
+  if (plazoMaxEdad !== null && pool.some(f => f.plazo <= plazoMaxEdad)) {
+    pool = pool.filter(f => f.plazo <= plazoMaxEdad);
+  }
   const key = f => (ingresos > 0 ? f.esfuerzo : f.ltv);
   let recomendado = pool[0];
   pool.forEach(f => {
@@ -76,7 +93,7 @@ function generarEscenarios({ precio, ccaaSlug, tipoViv, ingresos, honorariosCfg,
     }
   });
 
-  return { gastos, honorarios, costeBase, costeTotal, grupos, recomendado, todas };
+  return { gastos, honorarios, costeBase, costeTotal, grupos, recomendado, todas, plazoMaxEdad };
 }
 
 // Efecto de aportar más: compara la aportación más baja vs la más alta,

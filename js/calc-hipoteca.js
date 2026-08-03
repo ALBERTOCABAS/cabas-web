@@ -3,9 +3,13 @@
 // Gastos: ITP (usada) | IVA 10% + AJD (obra nueva) — ambos varían por CCAA
 // Cuota: sistema francés. LTV máx. habitual: 80%.
 // Tasa de esfuerzo: semáforo 30–35% (criterio bancario habitual).
+// Edad: criterio general "edad + plazo ≤ 75" (algunas entidades llegan a
+// 80); con 2 titulares cuenta la edad del mayor. Es orientativo, no un
+// límite legal — varía por entidad.
 // La tabla fiscal por CCAA y las oficinas viven en js/datos-cabas.js
 // (compartido con informe-compra.html) — no dupliques datos aquí.
 // ============================================================
+const LIMITE_EDAD_BANCO = 75;
 
 function gastosFijos(precio, incluyeTasacion) {
   // Estimaciones habituales escaladas por precio
@@ -40,6 +44,7 @@ function actualizarFinancia() {
 
   document.getElementById('h-campo-plazo').style.display = conHipoteca ? '' : 'none';
   document.getElementById('h-fila-financiacion').style.display = conHipoteca ? '' : 'none';
+  document.getElementById('h-fila-edad').style.display = conHipoteca ? '' : 'none';
   // Al contado o en modo comparador no hace falta preguntar el ahorro
   document.getElementById('h-campo-ahorro').style.display = conHipoteca ? '' : 'none';
   // En modo comparador los honorarios se configuran en la siguiente pantalla
@@ -85,6 +90,10 @@ document.getElementById('h-calcular').addEventListener('click', () => {
   const plazo = num('h-plazo');
   const tin = num('h-tin');
   const ingresos = num('h-ingresos');
+  const edad1 = num('h-edad1');
+  const edad2 = num('h-edad2');
+  const edadRef = Math.max(edad1, edad2) || null; // null si no se ha indicado ninguna
+  const plazoMaxEdad = edadRef ? Math.max(0, LIMITE_EDAD_BANCO - edadRef) : null;
 
   if (!precio) { alert('Necesito al menos el precio de la vivienda.'); return; }
   if (conHipoteca && (!plazo || !tin)) { alert('Para calcular la hipoteca necesito el plazo y el tipo de interés. Si vas a pagar al contado, cambia "¿Vas a pedir hipoteca?" a "No".'); return; }
@@ -136,6 +145,11 @@ document.getElementById('h-calcular').addEventListener('click', () => {
     } else {
       avisos.push({ t: 'verde', txt: `Financiación del ${ltv.toFixed(0)}% — dentro del límite habitual del 80%. Operación viable a priori.` });
     }
+    if (edadRef) {
+      if (plazo > plazoMaxEdad) {
+        avisos.push({ t: 'ambar', txt: `Con ${edadRef} años${edad2 ? ' (el mayor de los dos titulares)' : ''}, el criterio habitual de "edad + plazo ≤ 75" (algunas entidades llegan a 80) deja un plazo máximo orientativo de ${plazoMaxEdad} años — por debajo de los ${plazo} que has puesto. Varía según la entidad, conviene confirmarlo con la tuya.` });
+      }
+    }
   }
 
   // 4) Tasa de esfuerzo — solo tiene sentido si hay cuota
@@ -151,6 +165,21 @@ document.getElementById('h-calcular').addEventListener('click', () => {
     avisos.push({ t: esf <= 30 ? 'verde' : esf <= 35 ? 'ambar' : 'rojo', txt: 'Tasa de esfuerzo — ' + txt });
   } else {
     linEsf.style.display = 'none';
+  }
+
+  // 4b) Si el plazo elegido supera el máximo recomendado por edad, se
+  // calcula además la cuota que resultaría con ese plazo máximo — misma
+  // hipoteca, mismo TIN, solo cambia el plazo.
+  const cajaEdad = document.getElementById('h-caja-plazo-edad');
+  if (conHipoteca && edadRef && plazo > plazoMaxEdad && plazoMaxEdad >= 5) {
+    const i = tin / 100 / 12;
+    const n = plazoMaxEdad * 12;
+    const cuotaEdad = i > 0 ? hipoteca * i / (1 - Math.pow(1 + i, -n)) : hipoteca / n;
+    document.getElementById('h-plazo-edad-anios').textContent = plazoMaxEdad;
+    document.getElementById('h-r-cuota-edad').textContent = eur2(cuotaEdad) + ' /mes';
+    cajaEdad.style.display = '';
+  } else {
+    cajaEdad.style.display = 'none';
   }
 
   // 5) Pintar resultados
@@ -200,7 +229,8 @@ document.getElementById('h-calcular').addEventListener('click', () => {
   // Guardamos el cálculo completo — lo usa el botón "Descargar informe en PDF"
   ultimoCalculo = {
     oficinaSlug, precio, tipoViv, ccaaNombre: datos.nombre, conHipoteca, ahorro, plazo, tin, ingresos,
-    impuestos, impLabel, gastos: g, honorarios, gastosTotales, costeTotal, hipoteca, ltv, cuota
+    impuestos, impLabel, gastos: g, honorarios, gastosTotales, costeTotal, hipoteca, ltv, cuota,
+    edadRef, edad2Dado: !!edad2, plazoMaxEdad
   };
   document.getElementById('h-descargar-pdf').disabled = false;
 
@@ -231,7 +261,7 @@ document.getElementById('h-descargar-pdf').addEventListener('click', () => {
     document.getElementById('pdf-cuarto-cap').textContent = `${c.plazo} años · TIN ${c.tin}%`;
   } else {
     document.getElementById('pdf-cuarto-label').textContent = 'Forma de pago';
-    document.getElementById('pdf-cuarto-valor').textContent = 'Al contado';
+    document.getElementById('pdf-cuarto-valor').textContent = 'Contado';
     document.getElementById('pdf-cuarto-cap').textContent = 'Sin financiación';
   }
 
@@ -268,6 +298,17 @@ document.getElementById('h-descargar-pdf').addEventListener('click', () => {
     if (c.ingresos > 0) {
       const esf = (c.cuota / c.ingresos) * 100;
       puntos.push(esf <= 30 ? 'La cuota queda por debajo del 30% de los ingresos del hogar — esfuerzo cómodo.' : esf <= 35 ? 'La cuota está entre el 30% y el 35% de los ingresos — esfuerzo justo.' : 'La cuota supera el 35% de los ingresos — esfuerzo elevado, conviene revisar la operación.');
+    }
+    if (c.edadRef) {
+      const plazoMaxEdad = c.plazoMaxEdad;
+      if (c.plazo > plazoMaxEdad) {
+        const i = c.tin / 100 / 12;
+        const n = plazoMaxEdad * 12;
+        const cuotaEdad = plazoMaxEdad >= 5 ? (i > 0 ? c.hipoteca * i / (1 - Math.pow(1 + i, -n)) : c.hipoteca / n) : null;
+        puntos.push(`Con ${c.edadRef} años${c.edad2Dado ? ' (el mayor de los titulares)' : ''}, el criterio habitual "edad + plazo ≤ 75" (algunas entidades llegan a 80) deja un plazo orientativo de ${plazoMaxEdad} años — por confirmar con la entidad, ya que varía.${cuotaEdad !== null ? ` A ese plazo, la cuota estimada sería de ${eur2(cuotaEdad)}/mes en vez de ${eur2(c.cuota)}/mes.` : ''}`);
+      } else {
+        puntos.push(`Con ${c.edadRef} años${c.edad2Dado ? ' (el mayor de los titulares)' : ''}, el plazo de ${c.plazo} años entra dentro del criterio habitual de edad de la mayoría de entidades.`);
+      }
     }
     document.getElementById('pdf-lectura').innerHTML = puntos.map(p => `<li>${p}</li>`).join('');
   } else {

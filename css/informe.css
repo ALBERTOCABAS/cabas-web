@@ -65,6 +65,10 @@ table.i-tabla td.aportacion{font-weight:700}
 .i-footer strong{color:var(--oro)}
 .i-footer .contacto{color:#D8D2C4}
 
+/* Agrupa hipótesis + disclaimer + pie para que se muevan juntos entre
+   páginas al imprimir, en vez de quedar el pie solo y aislado. */
+.i-cierre-texto{padding:0 2.4rem}
+
 /* ---------- Impresión: solo se ve la hoja marcada, el resto de la
    página (nav, secciones, formularios) queda oculto ---------- */
 body.modo-impresion-informe > *:not(.hoja-imprimible-wrap){display:none !important}
@@ -75,7 +79,7 @@ body.modo-impresion-informe .hoja-imprimible-wrap{display:block !important}
   body{background:#fff}
   nav.nav, footer.footer, header.section-negro, .pantalla-solo, #pantalla-form{display:none !important}
   .hoja{box-shadow:none;max-width:none}
-  @page{size:A4;margin:0}
+  @page{size:A4;margin:12mm}
   .i-header{-webkit-print-color-adjust:exact;print-color-adjust:exact}
   table.i-tabla th{-webkit-print-color-adjust:exact;print-color-adjust:exact}
   .i-equilibrado{-webkit-print-color-adjust:exact;print-color-adjust:exact}
@@ -89,4 +93,26 @@ body.modo-impresion-informe .hoja-imprimible-wrap{display:block !important}
   .i-callout{page-break-inside:avoid}
   .i-footer{page-break-inside:avoid}
   .i-seccion-titulo{page-break-after:avoid}
+  /* Evita que la hipótesis, el disclaimer o el pie queden huérfanos,
+     separados del bloque al que pertenecen, al pasar de página. */
+  .i-cierre{page-break-inside:avoid}
+  .i-hipotesis{page-break-before:avoid;page-break-inside:avoid}
+  .i-disclaimer{page-break-before:avoid}
+  /* Espaciado algo más ajustado en impresión: menos probabilidad de que
+     un informe corto se desborde una segunda hoja por poco margen. */
+  .i-body{padding:1.4rem .8rem}
+  .i-header{padding:1.5rem .8rem}
+  .i-footer{padding:1rem .8rem}
+  .i-cierre-texto{padding:0 .8rem}
+  .i-stat-label{font-size:.64rem;letter-spacing:.03em}
+  .i-seccion-titulo{margin-top:1.1rem;margin-bottom:.7rem}
+  .i-dos-col{margin-top:1rem;gap:1rem}
+  .i-callout{margin-top:1rem}
+  .i-hipotesis{margin-top:.9rem}
+  .i-equilibrado{padding:.6rem .9rem}
+  .i-equilibrado .cifra{font-size:1.7rem;margin:.15rem 0}
+  .i-equilibrado .cap{margin-bottom:.5rem}
+  .i-equilibrado .fila{padding-top:.4rem;font-size:.76rem}
+  .i-tabla-nota{margin-bottom:.7rem}
+  table.i-tabla td{padding:.42rem .6rem}
 }
