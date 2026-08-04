@@ -1,10 +1,20 @@
 // ============================================================
 // CABAS REALTOR — datos compartidos
-// Usado por comprar.html (calc-hipoteca.js) e informe-compra.html
-// (informe-logic.js). Un único sitio donde actualizar impuestos
-// y oficinas — evita que las dos herramientas den números o datos
-// de contacto distintos.
-// REVISAR ANUALMENTE: tipos impositivos por CCAA.
+// Usado por comprar.html (calc-hipoteca.js), vender.html
+// (calc-vendedor.js), informe-compra.html (informe-logic.js) y el
+// chatbot (cabas-chatbot.js), todos a través de js/calc-core.js.
+// Un único sitio donde actualizar impuestos, coeficientes y
+// oficinas — evita que la web y el bot den números o datos de
+// contacto distintos.
+//
+// >>> ESTE ES EL ÚNICO ARCHIVO QUE HAY QUE TOCAR CUANDO CAMBIE
+//     LA FISCALIDAD. La skill "actualizar-fiscalidad" edita aquí.
+//
+// REVISAR ANUALMENTE:
+//   · DATOS_CCAA        → tipos ITP y AJD por comunidad
+//   · PLUSVALIA_CCAA    → tipo de gravamen IIVTNU por comunidad
+//   · COEF_IIVTNU       → coeficientes máximos estatales (RDL 8/2023)
+//   · TRAMOS_IRPF       → tramos de la base del ahorro
 // ============================================================
 
 // ITP (vivienda usada): número = tipo fijo (%); función = escala progresiva
@@ -139,3 +149,25 @@ const PLUSVALIA_CCAA = {
   ceuta: 27,                                 // estimado
   melilla: 27                                 // estimado
 };
+
+// ---------- Plusvalía municipal (IIVTNU) — coeficientes por años ----------
+// Coeficientes MÁXIMOS estatales (RDL 8/2023), aplicables en toda España
+// salvo que el ayuntamiento apruebe otros inferiores. Se aplican al valor
+// catastral del suelo en el método objetivo. Índice = años completos de
+// tenencia (0 a 20+). REVISAR ANUALMENTE (los actualiza la Ley de
+// Presupuestos / orden ministerial cada ejercicio).
+const COEF_IIVTNU = {
+  0: 0.15, 1: 0.15, 2: 0.14, 3: 0.15, 4: 0.17, 5: 0.18, 6: 0.19,
+  7: 0.18, 8: 0.15, 9: 0.12, 10: 0.10, 11: 0.09, 12: 0.09, 13: 0.09,
+  14: 0.09, 15: 0.10, 16: 0.13, 17: 0.17, 18: 0.23, 19: 0.31, 20: 0.45
+};
+
+// ---------- IRPF — tramos de la base del ahorro (ganancia patrimonial) ----
+// Tipos estatales, iguales en toda España. REVISAR ANUALMENTE.
+const TRAMOS_IRPF = [
+  { hasta: 6000,     tipo: 0.19 },
+  { hasta: 50000,    tipo: 0.21 },
+  { hasta: 200000,   tipo: 0.23 },
+  { hasta: 300000,   tipo: 0.27 },
+  { hasta: Infinity, tipo: 0.30 }
+];

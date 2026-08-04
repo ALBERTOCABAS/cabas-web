@@ -10,19 +10,11 @@
 //    js/datos-cabas.js) — no hay campo manual para no complicar el flujo.
 // 2) IRPF sobre la ganancia total en la base del ahorro (tramos estatales,
 //    iguales en toda España).
-// REVISAR ANUALMENTE: coeficientes IIVTNU y tramos IRPF.
 // ============================================================
+// NOTA: COEF_IIVTNU y TRAMOS_IRPF viven ahora en js/datos-cabas.js
+// (fuente única de datos fiscales, compartida con el chatbot). No los
+// redeclares aquí. REVISARLOS ANUALMENTE en datos-cabas.js.
 
-const COEF_IIVTNU = {
-  0: 0.15, 1: 0.15, 2: 0.14, 3: 0.15, 4: 0.17, 5: 0.18, 6: 0.19,
-  7: 0.18, 8: 0.15, 9: 0.12, 10: 0.10, 11: 0.09, 12: 0.09, 13: 0.09,
-  14: 0.09, 15: 0.10, 16: 0.13, 17: 0.17, 18: 0.23, 19: 0.31, 20: 0.45
-};
-const TRAMOS_IRPF = [
-  { hasta: 6000, tipo: 0.19 }, { hasta: 50000, tipo: 0.21 },
-  { hasta: 200000, tipo: 0.23 }, { hasta: 300000, tipo: 0.27 },
-  { hasta: Infinity, tipo: 0.30 }
-];
 const MAX_TRAMOS = 3;
 
 const ccaaSel = document.getElementById('v-ccaa');
