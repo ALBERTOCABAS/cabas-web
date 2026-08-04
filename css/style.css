@@ -71,7 +71,7 @@ h3{font-size:1.35rem}
 .nav-logo{display:flex;align-items:center;gap:.7rem}
 .nav-logo img{height:40px;width:auto}
 .nav-logo span{
-  font-family:var(--serif);font-size:1.25rem;letter-spacing:.14em;color:var(--hueso);
+  font-family:var(--serif);font-size:1.25rem;letter-spacing:.14em;color:var(--oro);
 }
 .nav-links{display:flex;gap:1.6rem;list-style:none;align-items:center}
 .nav-links a{
