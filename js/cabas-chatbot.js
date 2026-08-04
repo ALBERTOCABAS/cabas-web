@@ -1,13 +1,16 @@
 // ============================================================
 // CABAS REALTOR — "Kitty", asistente y captador de leads
 // ------------------------------------------------------------
-// Widget flotante autocontenido. Se aísla en un Shadow DOM para
-// no chocar con el CSS de la web. Usa el MISMO motor de cálculo
-// que las páginas (js/calc-core.js) → las cifras del chat son
-// idénticas a las de la web. Al terminar, prepara un WhatsApp /
-// email a Alberto con el lead ya cualificado (con los números) y,
-// si se configura CFG.leadEndpoint, también lo envía en segundo
-// plano para que a Alberto le llegue aunque el cliente no pulse.
+// Widget flotante autocontenido. Se monta en el DOM normal (NO en
+// Shadow DOM) para que el traductor de Google de la web lo traduzca
+// igual que el resto de la página. Para no chocar con el CSS de la
+// web, TODO va bajo el contenedor #kitty-root y sus clases llevan
+// prefijo "k-".
+//
+// Usa el MISMO motor de cálculo que las páginas (js/calc-core.js)
+// → las cifras del chat son idénticas a las de la web. Al terminar,
+// prepara un WhatsApp/email a Alberto con el lead cualificado y, si
+// hay CFG.leadKey, lo envía en segundo plano (Web3Forms).
 //
 // Requiere, cargados antes:  datos-cabas.js  →  calc-core.js
 // Incluir al final de cada página:
@@ -26,13 +29,9 @@
     telShow: '662 669 014',
     wa: '34662669014',
     email: (typeof OFICINAS !== 'undefined' && OFICINAS.alberto) ? OFICINAS.alberto.email : 'alberto@cabas.es',
-    // --- Aviso automático del lead a Alberto por email (Web3Forms) ---
-    // Setup (5 min, gratis): entra en https://web3forms.com, pon tu email
-    // alberto@cabas.es y copia el "Access Key". Pégalo en leadKey y listo:
-    // cada lead te llegará por email en cuanto el cliente deje su teléfono.
-    // Mientras leadKey esté vacío, el bot NO envía nada (solo botones WhatsApp/email).
+    // Aviso automático del lead por email (Web3Forms). Ver web3forms.com.
     leadEndpoint: 'https://api.web3forms.com/submit',
-    leadKey: '00c2dba0-ec58-4fa8-b849-3a5839f3fd86',   // Access Key de Web3Forms (email → alberto@cabas.es)
+    leadKey: '00c2dba0-ec58-4fa8-b849-3a5839f3fd86',
     privacidadURL: 'privacidad.html'
   };
 
@@ -51,32 +50,40 @@
   const telOk = s => { const d = soloDigitos(s); const t = d.length === 11 && d.startsWith('34') ? d.slice(2) : d; return /^[6-9]\d{8}$/.test(t); };
 
   // ============================================================
-  // ESTILOS — TEMA CLARO (invertido respecto a la web negra)
+  // ESTILOS — todo bajo #kitty-root, clases con prefijo k-
+  // (aislado del CSS de la web por scope + prefijo; sin Shadow DOM
+  //  para que el traductor de Google pueda traducir el texto)
   // ============================================================
   const CSS = `
-  :host{ all: initial; }
-  *{ box-sizing:border-box; margin:0; padding:0; font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; }
-  .wrap{
+  #kitty-root, #kitty-root *{ box-sizing:border-box; }
+  #kitty-root *{ margin:0; padding:0; }
+  #kitty-root button{ font-family:inherit; border:none; background:none; cursor:pointer; color:inherit; }
+  #kitty-root input, #kitty-root select{ font-family:inherit; }
+  #kitty-root a{ text-decoration:none; color:inherit; }
+  #kitty-root svg{ display:inline-block; vertical-align:middle; }
+  #kitty-root p, #kitty-root h4, #kitty-root h5, #kitty-root form{ margin:0; }
+  #kitty-root{
     --tinta:#1B1712; --tinta2:#5C5446; --crema:#F6F2E9; --sup:#FFFFFF; --sup2:#FBF8F1;
     --oro:#8A6B27; --oro-br:#B28E44; --oro-cl:#725722; --negro:#0B0A08;
     --linea:rgba(150,116,46,.30); --linea-sutil:rgba(27,23,18,.10);
     --verde:#5E7D3B; --ambar:#9A7529; --rojo:#B23B32; --wa:#25D366;
     position:fixed; right:20px; bottom:20px; z-index:2147483000;
-    color:var(--tinta); font-size:15px; line-height:1.5;
+    color:var(--tinta); font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+    font-size:15px; line-height:1.5; text-align:left; font-weight:400;
   }
-  .launcher{
-    display:flex; align-items:center; gap:.6rem; cursor:pointer; border:none;
-    background:var(--oro-br); color:var(--negro); padding:.75rem 1.15rem .75rem .85rem;
-    border-radius:999px; box-shadow:0 8px 30px rgba(0,0,0,.45), 0 0 0 1px rgba(207,172,102,.5);
+  #kitty-root .k-launcher{
+    display:flex; align-items:center; gap:.6rem; background:var(--oro-br); color:var(--negro);
+    padding:.75rem 1.15rem .75rem .85rem; border-radius:999px;
+    box-shadow:0 8px 30px rgba(0,0,0,.45), 0 0 0 1px rgba(207,172,102,.5);
     font-weight:600; font-size:.95rem; letter-spacing:.01em; position:relative;
     transition:transform .18s ease, box-shadow .18s ease;
   }
-  .launcher:hover{ transform:translateY(-2px); box-shadow:0 12px 34px rgba(0,0,0,.55),0 0 0 1px #CFAC66; }
-  .launcher svg{ width:26px; height:26px; flex:0 0 auto; }
-  .launcher .lb-txt{ white-space:nowrap; }
-  .launcher .pulse{ position:absolute; top:-2px; right:-2px; width:12px; height:12px; background:var(--verde); border-radius:50%; border:2px solid #fff; }
-  .launcher.oculto{ display:none; }
-  .panel{
+  #kitty-root .k-launcher:hover{ transform:translateY(-2px); box-shadow:0 12px 34px rgba(0,0,0,.55),0 0 0 1px #CFAC66; }
+  #kitty-root .k-launcher svg{ width:26px; height:26px; flex:0 0 auto; }
+  #kitty-root .k-launcher .k-lb{ white-space:nowrap; }
+  #kitty-root .k-pulse{ position:absolute; top:-2px; right:-2px; width:12px; height:12px; background:var(--verde); border-radius:50%; border:2px solid #fff; }
+  #kitty-root .k-launcher.k-oculto{ display:none; }
+  #kitty-root .k-panel{
     position:absolute; right:0; bottom:0; width:min(384px, calc(100vw - 32px));
     height:min(640px, calc(100vh - 40px));
     background:var(--crema); border:1px solid var(--linea); border-radius:16px;
@@ -84,124 +91,120 @@
     display:none; flex-direction:column; opacity:0; transform:translateY(14px) scale(.98);
     transition:opacity .22s ease, transform .22s ease;
   }
-  .panel.abierto{ display:flex; opacity:1; transform:none; }
-  .head{ display:flex; align-items:center; gap:.7rem; padding:.85rem 1rem;
+  #kitty-root .k-panel.k-abierto{ display:flex; opacity:1; transform:none; }
+  #kitty-root .k-head{ display:flex; align-items:center; gap:.7rem; padding:.85rem 1rem;
     background:linear-gradient(180deg,var(--sup2),var(--crema)); border-bottom:1px solid var(--linea); }
-  .ac{ width:42px; height:42px; flex:0 0 auto; border-radius:50%; display:grid; place-items:center;
+  #kitty-root .k-ac{ width:42px; height:42px; flex:0 0 auto; border-radius:50%; display:grid; place-items:center;
     background:radial-gradient(120% 120% at 30% 20%, #fff, #F1E9D6);
     border:1.5px solid var(--oro-br); color:var(--oro); font-family:'Cormorant Garamond',Georgia,serif;
     font-weight:600; font-size:1.4rem; letter-spacing:.02em; }
-  .head-txt{ flex:1; min-width:0; }
-  .head-txt h4{ font-family:'Cormorant Garamond',Georgia,serif; font-weight:600; font-size:1.32rem; color:var(--tinta); line-height:1.1; }
-  .head-txt p{ font-size:.73rem; color:var(--tinta2); letter-spacing:.02em; display:flex; align-items:center; gap:.35rem; }
-  .head-txt .dot{ width:7px; height:7px; border-radius:50%; background:var(--verde); box-shadow:0 0 0 3px rgba(94,125,59,.18); }
-  .head button{ background:none; border:none; color:var(--tinta2); cursor:pointer; padding:.3rem; border-radius:6px; line-height:0; }
-  .head button:hover{ color:var(--tinta); background:rgba(27,23,18,.06); }
-  .head button svg{ width:19px; height:19px; }
-  .msgs{ flex:1; overflow-y:auto; padding:1.1rem 1rem .5rem; display:flex; flex-direction:column; gap:.7rem;
+  #kitty-root .k-head-txt{ flex:1; min-width:0; }
+  #kitty-root .k-head-txt h4{ font-family:'Cormorant Garamond',Georgia,serif; font-weight:600; font-size:1.32rem; color:var(--tinta); line-height:1.1; }
+  #kitty-root .k-head-txt p{ font-size:.73rem; color:var(--tinta2); letter-spacing:.02em; display:flex; align-items:center; gap:.35rem; }
+  #kitty-root .k-dot{ width:7px; height:7px; border-radius:50%; background:var(--verde); box-shadow:0 0 0 3px rgba(94,125,59,.18); }
+  #kitty-root .k-head button{ color:var(--tinta2); padding:.3rem; border-radius:6px; line-height:0; }
+  #kitty-root .k-head button:hover{ color:var(--tinta); background:rgba(27,23,18,.06); }
+  #kitty-root .k-head button svg{ width:19px; height:19px; }
+  #kitty-root .k-msgs{ flex:1; overflow-y:auto; padding:1.1rem 1rem .5rem; display:flex; flex-direction:column; gap:.7rem;
     scrollbar-width:thin; scrollbar-color:var(--linea) transparent; }
-  .msgs::-webkit-scrollbar{ width:7px; } .msgs::-webkit-scrollbar-thumb{ background:var(--linea); border-radius:4px; }
-  .row{ display:flex; gap:.55rem; align-items:flex-end; max-width:100%; }
-  .row.user{ flex-direction:row-reverse; }
-  .av{ width:27px; height:27px; flex:0 0 auto; border-radius:50%; display:grid; place-items:center;
+  #kitty-root .k-msgs::-webkit-scrollbar{ width:7px; } #kitty-root .k-msgs::-webkit-scrollbar-thumb{ background:var(--linea); border-radius:4px; }
+  #kitty-root .k-row{ display:flex; gap:.55rem; align-items:flex-end; max-width:100%; }
+  #kitty-root .k-row.k-user{ flex-direction:row-reverse; }
+  #kitty-root .k-av{ width:27px; height:27px; flex:0 0 auto; border-radius:50%; display:grid; place-items:center;
     background:#FFFDF8; border:1px solid var(--oro-br); color:var(--oro); font-family:'Cormorant Garamond',serif; font-size:.9rem; font-weight:600; }
-  .row.user .av{ display:none; }
-  .bubble{ padding:.6rem .8rem; border-radius:14px; font-size:.9rem; max-width:83%; word-wrap:break-word; }
-  .row.bot .bubble{ background:var(--sup); border:1px solid var(--linea-sutil); border-bottom-left-radius:5px; color:var(--tinta); box-shadow:0 1px 2px rgba(27,23,18,.04); }
-  .row.user .bubble{ background:var(--oro-br); color:var(--negro); border-bottom-right-radius:5px; font-weight:500; }
-  .bubble b{ color:var(--oro); font-weight:600; } .row.user .bubble b{ color:var(--negro); }
-  .bubble small{ display:block; margin-top:.25rem; color:var(--tinta2); font-size:.76rem; }
-  .bubble a{ color:var(--oro); text-decoration:underline; }
-  .typing{ display:inline-flex; gap:4px; padding:.7rem .85rem; background:var(--sup); border:1px solid var(--linea-sutil); border-radius:14px; border-bottom-left-radius:5px; }
-  .typing i{ width:7px; height:7px; border-radius:50%; background:var(--tinta2); animation:bl 1.2s infinite; }
-  .typing i:nth-child(2){ animation-delay:.2s; } .typing i:nth-child(3){ animation-delay:.4s; }
-  @keyframes bl{ 0%,60%,100%{opacity:.3;transform:translateY(0)} 30%{opacity:1;transform:translateY(-3px)} }
-  .chips{ display:flex; flex-wrap:wrap; gap:.45rem; padding:.15rem 0 .3rem 34px; }
-  .chip{ background:var(--sup); border:1px solid var(--oro-br); color:var(--oro); cursor:pointer;
+  #kitty-root .k-row.k-user .k-av{ display:none; }
+  #kitty-root .k-bubble{ padding:.6rem .8rem; border-radius:14px; font-size:.9rem; max-width:83%; word-wrap:break-word; }
+  #kitty-root .k-row.k-bot .k-bubble{ background:var(--sup); border:1px solid var(--linea-sutil); border-bottom-left-radius:5px; color:var(--tinta); box-shadow:0 1px 2px rgba(27,23,18,.04); }
+  #kitty-root .k-row.k-user .k-bubble{ background:var(--oro-br); color:var(--negro); border-bottom-right-radius:5px; font-weight:500; }
+  #kitty-root .k-bubble b{ color:var(--oro); font-weight:600; } #kitty-root .k-row.k-user .k-bubble b{ color:var(--negro); }
+  #kitty-root .k-bubble small{ display:block; margin-top:.25rem; color:var(--tinta2); font-size:.76rem; }
+  #kitty-root .k-bubble a{ color:var(--oro); text-decoration:underline; }
+  #kitty-root .k-typing{ display:inline-flex; gap:4px; padding:.7rem .85rem; background:var(--sup); border:1px solid var(--linea-sutil); border-radius:14px; border-bottom-left-radius:5px; }
+  #kitty-root .k-typing i{ width:7px; height:7px; border-radius:50%; background:var(--tinta2); animation:kbl 1.2s infinite; }
+  #kitty-root .k-typing i:nth-child(2){ animation-delay:.2s; } #kitty-root .k-typing i:nth-child(3){ animation-delay:.4s; }
+  @keyframes kbl{ 0%,60%,100%{opacity:.3;transform:translateY(0)} 30%{opacity:1;transform:translateY(-3px)} }
+  #kitty-root .k-chips{ display:flex; flex-wrap:wrap; gap:.45rem; padding:.15rem 0 .3rem 34px; }
+  #kitty-root .k-chip{ background:var(--sup); border:1px solid var(--oro-br); color:var(--oro);
     padding:.5rem .8rem; border-radius:999px; font-size:.84rem; font-weight:600; transition:all .15s ease; }
-  .chip:hover{ background:var(--oro-br); color:#fff; }
-  .chip.ghost{ border-color:var(--linea-sutil); color:var(--tinta2); font-weight:500; }
-  .chip.ghost:hover{ background:rgba(27,23,18,.05); color:var(--tinta); border-color:var(--tinta2); }
-  .card{ background:var(--sup); border:1px solid var(--linea); border-radius:12px; padding:.85rem .9rem; max-width:100%; margin-left:34px; box-shadow:0 2px 8px rgba(27,23,18,.05); }
-  .card h5{ font-family:'Cormorant Garamond',serif; font-weight:600; font-size:1.12rem; color:var(--tinta); margin-bottom:.55rem; display:flex; align-items:center; gap:.4rem; }
-  .card .li{ display:flex; justify-content:space-between; align-items:baseline; gap:.9rem; padding:.28rem 0; font-size:.85rem; border-bottom:1px dashed var(--linea-sutil); }
-  .card .li:last-of-type{ border-bottom:none; }
-  .card .li .k{ color:var(--tinta2); min-width:0; } .card .li .v{ font-variant-numeric:tabular-nums; font-weight:600; color:var(--tinta); white-space:nowrap; flex:0 0 auto; text-align:right; }
-  .card .li.total{ margin-top:.3rem; padding-top:.5rem; border-top:1px solid var(--linea); border-bottom:none; }
-  .card .li.total .k{ color:var(--tinta); font-weight:600; }
-  .card .li.total .v{ color:var(--oro); font-size:1.15rem; }
-  .aviso{ font-size:.78rem; color:var(--tinta2); margin-top:.55rem; padding-left:.7rem; border-left:2px solid var(--linea); }
-  .aviso.verde{ border-color:var(--verde); } .aviso.ambar{ border-color:var(--ambar); } .aviso.rojo{ border-color:var(--rojo); color:#8a2f28; }
-  .disc{ font-size:.72rem; color:var(--tinta2); margin-top:.6rem; font-style:italic; }
-  .acts{ display:flex; flex-direction:column; gap:.5rem; margin:.2rem 0 .4rem 34px; }
-  .btn{ display:flex; align-items:center; justify-content:center; gap:.5rem; text-decoration:none; padding:.7rem 1rem; border-radius:10px; font-weight:600; font-size:.9rem; cursor:pointer; border:none; }
-  .btn svg{ width:19px; height:19px; }
-  .btn-wa{ background:var(--wa); color:#062e14; } .btn-wa:hover{ filter:brightness(1.05); }
-  .btn-line{ background:var(--sup); border:1px solid var(--linea); color:var(--tinta); }
-  .btn-line:hover{ border-color:var(--oro-br); color:var(--oro); }
-  .composer{ display:none; align-items:center; gap:.5rem; padding:.7rem .8rem; border-top:1px solid var(--linea); background:var(--sup2); }
-  .composer.on{ display:flex; }
-  .composer input{ flex:1; background:var(--sup); border:1px solid var(--linea); color:var(--tinta); padding:.6rem .8rem; border-radius:9px; font-size:.9rem; outline:none; }
-  .composer input::placeholder{ color:#9a9082; }
-  .composer input:focus{ border-color:var(--oro-br); box-shadow:0 0 0 3px rgba(178,142,68,.14); }
-  .composer button{ background:var(--oro-br); border:none; color:var(--negro); width:40px; height:40px; border-radius:9px; cursor:pointer; display:grid; place-items:center; flex:0 0 auto; }
-  .composer button:hover{ background:#C69C4C; }
-  .composer button svg{ width:20px; height:20px; }
-  .err{ padding:0 .8rem; } .err span{ color:var(--rojo); font-size:.75rem; }
-  .legal{ text-align:center; font-size:.66rem; color:var(--tinta2); padding:.4rem .8rem .5rem; }
-  .legal a{ color:var(--tinta2); text-decoration:underline; }
-  @media (max-width:480px){ .wrap{ right:14px; bottom:14px; } .panel{ width:calc(100vw - 20px); height:calc(100vh - 28px); right:-4px; bottom:-2px; } }
-  @media (prefers-reduced-motion: reduce){ *{ animation:none!important; transition:none!important; } }
+  #kitty-root .k-chip:hover{ background:var(--oro-br); color:#fff; }
+  #kitty-root .k-chip.k-ghost{ border-color:var(--linea-sutil); color:var(--tinta2); font-weight:500; }
+  #kitty-root .k-chip.k-ghost:hover{ background:rgba(27,23,18,.05); color:var(--tinta); border-color:var(--tinta2); }
+  #kitty-root .k-card{ background:var(--sup); border:1px solid var(--linea); border-radius:12px; padding:.85rem .9rem; max-width:100%; margin-left:34px; box-shadow:0 2px 8px rgba(27,23,18,.05); }
+  #kitty-root .k-card h5{ font-family:'Cormorant Garamond',serif; font-weight:600; font-size:1.12rem; color:var(--tinta); margin-bottom:.55rem; display:flex; align-items:center; gap:.4rem; }
+  #kitty-root .k-li{ display:flex; justify-content:space-between; align-items:baseline; gap:.9rem; padding:.28rem 0; font-size:.85rem; border-bottom:1px dashed var(--linea-sutil); }
+  #kitty-root .k-li:last-of-type{ border-bottom:none; }
+  #kitty-root .k-li .k-k{ color:var(--tinta2); min-width:0; } #kitty-root .k-li .k-v{ font-variant-numeric:tabular-nums; font-weight:600; color:var(--tinta); white-space:nowrap; flex:0 0 auto; text-align:right; }
+  #kitty-root .k-li.k-total{ margin-top:.3rem; padding-top:.5rem; border-top:1px solid var(--linea); border-bottom:none; }
+  #kitty-root .k-li.k-total .k-k{ color:var(--tinta); font-weight:600; }
+  #kitty-root .k-li.k-total .k-v{ color:var(--oro); font-size:1.15rem; }
+  #kitty-root .k-aviso{ font-size:.78rem; color:var(--tinta2); margin-top:.55rem; padding-left:.7rem; border-left:2px solid var(--linea); }
+  #kitty-root .k-aviso.k-verde{ border-color:var(--verde); } #kitty-root .k-aviso.k-ambar{ border-color:var(--ambar); } #kitty-root .k-aviso.k-rojo{ border-color:var(--rojo); color:#8a2f28; }
+  #kitty-root .k-disc{ font-size:.72rem; color:var(--tinta2); margin-top:.6rem; font-style:italic; }
+  #kitty-root .k-acts{ display:flex; flex-direction:column; gap:.5rem; margin:.2rem 0 .4rem 34px; }
+  #kitty-root .k-btn{ display:flex; align-items:center; justify-content:center; gap:.5rem; padding:.7rem 1rem; border-radius:10px; font-weight:600; font-size:.9rem; }
+  #kitty-root .k-btn svg{ width:19px; height:19px; }
+  #kitty-root .k-btn-wa{ background:var(--wa); color:#062e14; } #kitty-root .k-btn-wa:hover{ filter:brightness(1.05); }
+  #kitty-root .k-btn-line{ background:var(--sup); border:1px solid var(--linea); color:var(--tinta); }
+  #kitty-root .k-btn-line:hover{ border-color:var(--oro-br); color:var(--oro); }
+  #kitty-root .k-composer{ display:none; align-items:center; gap:.5rem; padding:.7rem .8rem; border-top:1px solid var(--linea); background:var(--sup2); }
+  #kitty-root .k-composer.k-on{ display:flex; }
+  #kitty-root .k-composer input{ flex:1; background:var(--sup); border:1px solid var(--linea); color:var(--tinta); padding:.6rem .8rem; border-radius:9px; font-size:.9rem; outline:none; }
+  #kitty-root .k-composer input::placeholder{ color:#9a9082; }
+  #kitty-root .k-composer input:focus{ border-color:var(--oro-br); box-shadow:0 0 0 3px rgba(178,142,68,.14); }
+  #kitty-root .k-composer button{ background:var(--oro-br); color:var(--negro); width:40px; height:40px; border-radius:9px; display:grid; place-items:center; flex:0 0 auto; }
+  #kitty-root .k-composer button:hover{ background:#C69C4C; }
+  #kitty-root .k-composer button svg{ width:20px; height:20px; }
+  #kitty-root .k-err{ padding:0 .8rem; } #kitty-root .k-err span{ color:var(--rojo); font-size:.75rem; }
+  #kitty-root .k-legal{ text-align:center; font-size:.66rem; color:var(--tinta2); padding:.4rem .8rem .5rem; }
+  #kitty-root .k-legal a{ color:var(--tinta2); text-decoration:underline; }
+  @media (max-width:480px){ #kitty-root{ right:14px; bottom:14px; } #kitty-root .k-panel{ width:calc(100vw - 20px); height:calc(100vh - 28px); right:-4px; bottom:-2px; } }
+  @media (prefers-reduced-motion: reduce){ #kitty-root *{ animation:none!important; transition:none!important; } }
   `;
 
   // ============================================================
-  // Shadow DOM
+  // Montaje en el DOM normal
   // ============================================================
-  const host = document.createElement('div');
-  host.setAttribute('aria-live', 'polite');
-  document.body.appendChild(host);
-  const root = host.attachShadow({ mode: 'open' });
-  const style = document.createElement('style'); style.textContent = CSS; root.appendChild(style);
-
-  const wrap = document.createElement('div');
-  wrap.className = 'wrap';
-  wrap.innerHTML = `
-    <button class="launcher" id="lz" aria-label="Abrir a Kitty, el asistente de Alberto Cabas">
-      <span class="pulse"></span>
+  const style = document.createElement('style'); style.textContent = CSS; document.head.appendChild(style);
+  const root = document.createElement('div');
+  root.id = 'kitty-root';
+  root.setAttribute('aria-live', 'polite');
+  root.innerHTML = `
+    <button class="k-launcher" id="k-lz" aria-label="Abrir a Kitty, el asistente de Alberto Cabas">
+      <span class="k-pulse"></span>
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
-      <span class="lb-txt">Habla con Kitty</span>
+      <span class="k-lb">Habla con Kitty</span>
     </button>
-    <section class="panel" id="pn" role="dialog" aria-label="Kitty, asistente de Alberto Cabas">
-      <header class="head">
-        <div class="ac">K</div>
-        <div class="head-txt">
+    <section class="k-panel" id="k-pn" role="dialog" aria-label="Kitty, asistente de Alberto Cabas">
+      <header class="k-head">
+        <div class="k-ac">K</div>
+        <div class="k-head-txt">
           <h4>Kitty</h4>
-          <p><span class="dot"></span> Asistente de Alberto Cabas</p>
+          <p><span class="k-dot"></span> Asistente de Alberto Cabas</p>
         </div>
-        <button id="reset" aria-label="Empezar de nuevo" title="Empezar de nuevo">
+        <button id="k-reset" aria-label="Empezar de nuevo" title="Empezar de nuevo">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>
         </button>
-        <button id="min" aria-label="Minimizar" title="Minimizar">
+        <button id="k-min" aria-label="Minimizar" title="Minimizar">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14"/></svg>
         </button>
       </header>
-      <div class="msgs" id="msgs"></div>
-      <div class="err" id="err"></div>
-      <form class="composer" id="composer">
-        <input id="inp" autocomplete="off" />
+      <div class="k-msgs" id="k-msgs"></div>
+      <div class="k-err" id="k-err"></div>
+      <form class="k-composer" id="k-composer">
+        <input id="k-inp" autocomplete="off" />
         <button type="submit" aria-label="Enviar">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4 20-7z"/></svg>
         </button>
       </form>
-      <p class="legal">Estimaciones orientativas · no constituye asesoramiento fiscal ni financiero</p>
+      <p class="k-legal">Estimaciones orientativas · no constituye asesoramiento fiscal ni financiero</p>
     </section>
   `;
-  root.appendChild(wrap);
+  document.body.appendChild(root);
 
-  const $ = s => root.getElementById(s);
-  const lz = $('lz'), pn = $('pn'), msgs = $('msgs'), composer = $('composer'), inp = $('inp'), errBox = $('err');
+  const $ = id => root.querySelector('#' + id);
+  const lz = $('k-lz'), pn = $('k-pn'), msgs = $('k-msgs'), composer = $('k-composer'), inp = $('k-inp'), errBox = $('k-err');
 
-  let activeSubmit = null;   // handler de la pregunta de texto en curso (para poder cancelarla)
+  let activeSubmit = null;
   composer.addEventListener('submit', e => e.preventDefault());
   inp.addEventListener('keydown', e => {
     if (e.key === 'Enter' && !e.isComposing) {
@@ -213,16 +216,16 @@
 
   // ---------- Apertura / cierre / reinicio ----------
   let iniciado = false;
-  function abrir() { pn.classList.add('abierto'); lz.classList.add('oculto'); if (!iniciado) { iniciado = true; conversacion(); } }
-  function minimizar() { pn.classList.remove('abierto'); lz.classList.remove('oculto'); }
+  function abrir() { pn.classList.add('k-abierto'); lz.classList.add('k-oculto'); if (!iniciado) { iniciado = true; conversacion(); } }
+  function minimizar() { pn.classList.remove('k-abierto'); lz.classList.remove('k-oculto'); }
   function reiniciar() {
     if (activeSubmit) { composer.removeEventListener('submit', activeSubmit); activeSubmit = null; }
-    composer.classList.remove('on'); errBox.innerHTML = ''; msgs.innerHTML = '';
+    composer.classList.remove('k-on'); errBox.innerHTML = ''; msgs.innerHTML = '';
     conversacion();
   }
   lz.addEventListener('click', abrir);
-  $('min').addEventListener('click', minimizar);
-  $('reset').addEventListener('click', reiniciar);
+  $('k-min').addEventListener('click', minimizar);
+  $('k-reset').addEventListener('click', reiniciar);
 
   // ============================================================
   // Helpers de conversación
@@ -235,24 +238,24 @@
   function nodo(html) { const d = document.createElement('div'); d.innerHTML = html.trim(); return d.firstChild; }
 
   function burbujaBot(html) {
-    const row = nodo(`<div class="row bot"><div class="av">K</div><div class="bubble">${html}</div></div>`);
+    const row = nodo(`<div class="k-row k-bot"><div class="k-av">K</div><div class="k-bubble">${html}</div></div>`);
     msgs.appendChild(row); scrollAbajo(); return row;
   }
   function burbujaUser(txt) {
-    const row = nodo(`<div class="row user"><div class="bubble"></div></div>`);
-    row.querySelector('.bubble').textContent = txt; msgs.appendChild(row); scrollAbajo();
+    const row = nodo(`<div class="k-row k-user"><div class="k-bubble"></div></div>`);
+    row.querySelector('.k-bubble').textContent = txt; msgs.appendChild(row); scrollAbajo();
   }
   async function botDice(html, pausa = 650) {
-    const t = nodo(`<div class="row bot"><div class="av">K</div><div class="typing"><i></i><i></i><i></i></div></div>`);
+    const t = nodo(`<div class="k-row k-bot"><div class="k-av">K</div><div class="k-typing"><i></i><i></i><i></i></div></div>`);
     msgs.appendChild(t); scrollAbajo();
     await espera(pausa);
     t.remove(); return burbujaBot(html);
   }
   function preguntarChips(options) {
     return new Promise(resolve => {
-      const cont = nodo(`<div class="chips"></div>`);
+      const cont = nodo(`<div class="k-chips"></div>`);
       options.forEach(o => {
-        const b = nodo(`<button class="chip${o.ghost ? ' ghost' : ''}"></button>`);
+        const b = nodo(`<button class="k-chip${o.ghost ? ' k-ghost' : ''}"></button>`);
         b.textContent = o.label;
         b.addEventListener('click', () => { cont.remove(); burbujaUser(o.label); resolve(o.value !== undefined ? o.value : o.label); });
         cont.appendChild(b);
@@ -262,7 +265,7 @@
   }
   function preguntarTexto({ tipo = 'texto', placeholder = '', validar } = {}) {
     return new Promise(resolve => {
-      composer.classList.add('on'); inp.value = ''; inp.placeholder = placeholder;
+      composer.classList.add('k-on'); inp.value = ''; inp.placeholder = placeholder;
       inp.inputMode = (tipo === 'dinero' || tipo === 'numero') ? 'numeric' : (tipo === 'tel' ? 'tel' : 'text');
       inp.focus(); scrollAbajo();
       const onSubmit = e => {
@@ -274,7 +277,7 @@
         if (tipo === 'dinero') { val = parseNum(bruto); etiqueta = eurW(val); }
         else if (tipo === 'numero') { val = parseNum(bruto); etiqueta = String(val); }
         composer.removeEventListener('submit', onSubmit); activeSubmit = null;
-        composer.classList.remove('on'); errBox.innerHTML = '';
+        composer.classList.remove('k-on'); errBox.innerHTML = '';
         burbujaUser(etiqueta); resolve(val);
       };
       activeSubmit = onSubmit;
@@ -296,7 +299,6 @@
   const askAnio = async (txt) => { await botDice(txt, 450); return preguntarTexto({ tipo: 'numero', placeholder: 'Ej. 2011', validar: vAnio }); };
   const askDinero0 = async (txt, ph) => { await botDice(txt, 450); return preguntarTexto({ tipo: 'dinero', placeholder: ph || 'Ej. 0', validar: vMoney0 }); };
 
-  // Titulares (1 o 2) y edad del mayor → edadRef (para el criterio de edad del banco)
   async function preguntarTitularesEdades() {
     await botDice('¿La compra <b>una persona o dos</b>?', 450);
     const dos = await preguntarChips([{ label: 'Una persona', value: false }, { label: 'Dos personas', value: true }]);
@@ -314,12 +316,12 @@
   };
 
   // ============================================================
-  // Envío del lead a Alberto en segundo plano (si está configurado)
+  // Envío del lead a Alberto en segundo plano (Web3Forms)
   // ============================================================
   function enviarLead(nombre, tel, resumen, contexto) {
-    if (!CFG.leadEndpoint || !CFG.leadKey) return;   // dormido hasta tener la Access Key
+    if (!CFG.leadEndpoint || !CFG.leadKey) return;
     const payload = {
-      access_key: CFG.leadKey,               // compatible con Web3Forms
+      access_key: CFG.leadKey,
       subject: 'Nuevo lead desde cabas.es — ' + nombre,
       from_name: 'Kitty · cabas.es',
       nombre, telefono: tel, consulta: contexto, resumen,
@@ -337,7 +339,7 @@
     await botDice(`Encantada, ${nombre.split(' ')[0]}. ¿A qué <b>teléfono</b> te viene bien que te contacte?`, 500);
     const tel = await preguntarTexto({ tipo: 'tel', placeholder: 'Tu teléfono', validar: vTel });
 
-    enviarLead(nombre, tel, resumen, contexto);   // aviso automático a Alberto
+    enviarLead(nombre, tel, resumen, contexto);
 
     const texto = `Hola Alberto, soy ${nombre}. ${contexto}` + (resumen ? `\n\n${resumen}` : '') + `\n\nMi teléfono: ${tel}. (Enviado desde Kitty · cabas.es)`;
     const waURL = `https://wa.me/${CFG.wa}?text=${encodeURIComponent(texto)}`;
@@ -345,10 +347,10 @@
 
     await botDice(`Perfecto, ${nombre.split(' ')[0]}. Le paso tu consulta a Alberto${CFG.leadEndpoint && CFG.leadKey ? ' — ya le ha llegado tu aviso' : ''}. Para hablar <b>ahora mismo</b>, pulsa WhatsApp y te responde en persona.`, 700);
 
-    const acts = nodo(`<div class="acts"></div>`);
-    acts.appendChild(botonEnlace(waURL, 'btn-wa', iconoWA(), 'Enviar por WhatsApp', true));
-    acts.appendChild(botonEnlace('tel:' + CFG.telHref, 'btn-line', iconoTel(), 'Llamar ahora (' + CFG.telShow + ')'));
-    acts.appendChild(botonEnlace(mailURL, 'btn-line', iconoMail(), 'Enviar por email'));
+    const acts = nodo(`<div class="k-acts"></div>`);
+    acts.appendChild(botonEnlace(waURL, 'k-btn-wa', iconoWA(), 'Enviar por WhatsApp', true));
+    acts.appendChild(botonEnlace('tel:' + CFG.telHref, 'k-btn-line', iconoTel(), 'Llamar ahora (' + CFG.telShow + ')'));
+    acts.appendChild(botonEnlace(mailURL, 'k-btn-line', iconoMail(), 'Enviar por email'));
     msgs.appendChild(acts); scrollAbajo();
 
     burbujaBot(`<small>Tus datos solo se usan para que Alberto te contacte. <a href="${CFG.privacidadURL}" target="_blank" rel="noopener">Política de privacidad</a>.</small>`);
@@ -359,7 +361,7 @@
   }
 
   function botonEnlace(href, clase, svg, txt, blank) {
-    const a = nodo(`<a class="btn ${clase}" href="${href}"${blank ? ' target="_blank" rel="noopener"' : ''}></a>`);
+    const a = nodo(`<a class="k-btn ${clase}" href="${href}"${blank ? ' target="_blank" rel="noopener"' : ''}></a>`);
     a.innerHTML = svg + `<span>${txt}</span>`; return a;
   }
   const iconoWA = () => `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 14.4c-.3-.15-1.7-.85-2-.95-.26-.1-.45-.15-.64.15-.19.29-.74.94-.9 1.13-.17.19-.33.22-.62.07-.3-.15-1.25-.46-2.38-1.47-.88-.78-1.47-1.75-1.64-2.04-.17-.29-.02-.45.13-.6.13-.13.3-.34.44-.51.15-.17.2-.29.3-.48.1-.19.05-.36-.02-.51-.08-.15-.64-1.55-.88-2.12-.23-.55-.47-.48-.64-.49l-.55-.01c-.19 0-.5.07-.76.36-.26.29-1 .98-1 2.38s1.02 2.76 1.17 2.95c.15.19 2.02 3.08 4.9 4.32.68.29 1.22.47 1.63.6.69.22 1.31.19 1.8.11.55-.08 1.7-.69 1.94-1.36.24-.67.24-1.24.17-1.36-.07-.12-.26-.19-.55-.34zM12 2a10 10 0 0 0-8.6 15.06L2 22l5.06-1.33A10 10 0 1 0 12 2z"/></svg>`;
@@ -370,18 +372,18 @@
   // Tarjeta de resultado
   // ============================================================
   function tarjeta({ titulo, lineas, total, avisos = [], disc }) {
-    const card = nodo(`<div class="card"></div>`);
+    const card = nodo(`<div class="k-card"></div>`);
     card.appendChild(nodo(`<h5>${titulo}</h5>`));
     lineas.forEach(([k, v]) => {
-      const li = nodo(`<div class="li"><span class="k"></span><span class="v"></span></div>`);
-      li.querySelector('.k').textContent = k; li.querySelector('.v').textContent = v; card.appendChild(li);
+      const li = nodo(`<div class="k-li"><span class="k-k"></span><span class="k-v"></span></div>`);
+      li.querySelector('.k-k').textContent = k; li.querySelector('.k-v').textContent = v; card.appendChild(li);
     });
     if (total) {
-      const li = nodo(`<div class="li total"><span class="k"></span><span class="v"></span></div>`);
-      li.querySelector('.k').textContent = total[0]; li.querySelector('.v').textContent = total[1]; card.appendChild(li);
+      const li = nodo(`<div class="k-li k-total"><span class="k-k"></span><span class="k-v"></span></div>`);
+      li.querySelector('.k-k').textContent = total[0]; li.querySelector('.k-v').textContent = total[1]; card.appendChild(li);
     }
-    avisos.forEach(a => { const d = nodo(`<div class="aviso ${a.t || ''}"></div>`); d.textContent = a.txt; card.appendChild(d); });
-    if (disc) { const d = nodo(`<div class="disc"></div>`); d.textContent = disc; card.appendChild(d); }
+    avisos.forEach(a => { const d = nodo(`<div class="k-aviso k-${a.t || ''}"></div>`); d.textContent = a.txt; card.appendChild(d); });
+    if (disc) { const d = nodo(`<div class="k-disc"></div>`); d.textContent = disc; card.appendChild(d); }
     msgs.appendChild(card); scrollAbajo();
   }
 
@@ -393,11 +395,11 @@
     const r = await preguntarChips([{ label: 'Madrid', value: 'madrid' }, { label: 'Otra comunidad', value: '__otra' }]);
     if (r !== '__otra') return r;
     return new Promise(resolve => {
-      const cont = nodo(`<div class="chips" style="padding-left:34px"></div>`);
-      const sel = nodo(`<select class="chip"></select>`);
+      const cont = nodo(`<div class="k-chips" style="padding-left:34px"></div>`);
+      const sel = nodo(`<select class="k-chip"></select>`);
       sel.style.cssText = 'background:#fff;color:#8A6B27;border:1px solid #B28E44;padding:.5rem .7rem;border-radius:999px;font-size:.85rem;max-width:100%;';
       Object.keys(DATOS_CCAA).forEach(slug => { const o = document.createElement('option'); o.value = slug; o.textContent = DATOS_CCAA[slug].nombre; if (slug === 'madrid') o.selected = true; sel.appendChild(o); });
-      const b = nodo(`<button class="chip">Elegir</button>`);
+      const b = nodo(`<button class="k-chip">Elegir</button>`);
       b.addEventListener('click', () => { const slug = sel.value; cont.remove(); burbujaUser(DATOS_CCAA[slug].nombre); resolve(slug); });
       cont.appendChild(sel); cont.appendChild(b); msgs.appendChild(cont); scrollAbajo();
     });
@@ -537,7 +539,6 @@
     await botDice('¿Cuál es el <b>precio</b> de la vivienda?', 450);
     const precio = await preguntarTexto({ tipo: 'dinero', placeholder: 'Ej. 250000', validar: vMoney });
 
-    // Honorarios de intermediación (2ª pregunta, como pidió Alberto)
     const honorarios = await preguntarHonorarios(precio);
 
     const ccaa = await elegirCCAA('¿En qué <b>comunidad</b> está? Los impuestos cambian según la zona.');
@@ -584,7 +585,6 @@
     await ofrecerContacto(resumen, `estoy mirando comprar una vivienda de ${eurW(precio)} en ${r.ccaaNombre}.`);
   }
 
-  // Sub-flujo reutilizable: honorarios de intermediación
   async function preguntarHonorarios(precio) {
     await botDice('¿Hay <b>honorarios de intermediación a tu cargo</b> como comprador? (no siempre los hay)', 650);
     const hMode = await preguntarChips([
@@ -608,7 +608,7 @@
   }
 
   // ============================================================
-  // FLUJO: Simular hipoteca (cuota + criterio de edad)
+  // FLUJO: Simular hipoteca
   // ============================================================
   async function flujoHipoteca() {
     await botDice('Te calculo la <b>cuota mensual</b> al momento.', 550);
@@ -646,7 +646,7 @@
   }
 
   // ============================================================
-  // FLUJO: ¿Hasta qué precio puedo comprar? (capacidad)
+  // FLUJO: ¿Hasta qué precio puedo comprar?
   // ============================================================
   async function flujoHastaPrecio() {
     await botDice('Te digo <b>hasta qué precio</b> podrías comprar según tus ingresos y ahorro. Es una estimación orientativa, <b>no vinculante</b>.', 750);
