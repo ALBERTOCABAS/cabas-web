@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Preview · Chatbot Cabas</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<nav class="nav" aria-label="Navegación principal">
+  <div class="nav-inner">
+    <a class="nav-logo" href="#"><span>CABAS</span></a>
+    <ul class="nav-links">
+      <li><a href="#">Inicio</a></li>
+      <li><a href="#">Herencias</a></li>
+      <li><a href="#">Vender</a></li>
+      <li><a href="#">Comprar</a></li>
+    </ul>
+  </div>
+</nav>
+<header class="section section-negro">
+  <div class="inner-narrow" style="max-width:760px;margin:0 auto;padding:4rem 1.4rem">
+    <p class="eyebrow">Vista previa privada</p>
+    <h1 style="font-size:clamp(2rem,5vw,3.2rem)">Método, datos y <em class="oro" style="font-style:italic">seguridad jurídica</em></h1>
+    <p class="lead" style="margin-top:1.2rem">Esta es una página de prueba con el aspecto de cabas.es. Pulsa el botón <strong class="oro">«¿Te ayudo?»</strong> abajo a la derecha para probar el asistente. Los cálculos usan el mismo motor (<code>calc-core.js</code>) que tu web.</p>
+  </div>
+</header>
+
+<!-- MISMO ORDEN QUE EN LA WEB REAL -->
+<script src="js/main.js"></script>
+<script src="js/datos-cabas.js"></script>
+<script src="js/calc-core.js"></script>
+<script src="js/cabas-chatbot.js" defer></script>
+
+<!-- Autotest de paridad (solo en la preview; no va a producción) -->
+<script>
+window.addEventListener('load', () => {
+  try {
+    const c = coreCompra({precio:300000,tipoViv:'usada',ccaaSlug:'madrid',conHipoteca:true,ahorro:80000,plazo:30,tin:3,ingresos:3000});
+    const v = coreNetoVendedor({venta:320000,gVenta:0,vcTotal:120000,vcSuelo:60000,fVenta:'2025-06-01',ccaaSlug:'madrid',adquisiciones:[{valor:200000,gastos:0,fecha:'2010-06-01',pct:100}]});
+    console.log('%cAUTOTEST CABAS','color:#B28E44;font-weight:bold');
+    console.table({
+      'Compra 300k Madrid': {ITP:Math.round(c.impuestos), GastosTot:Math.round(c.gastosTotales), CosteTotal:Math.round(c.costeTotal), Hipoteca:Math.round(c.hipoteca), Cuota:c.cuota.toFixed(2), LTV:c.ltv.toFixed(1)+'%', Esf:c.esfuerzo.toFixed(1)+'%'},
+      'Venta 320k (+120k gan)': {Plusvalia:v.plusvalia.toFixed(2), Ganancia:Math.round(v.ganancia), IRPF:v.irpf.toFixed(2), Neto:Math.round(v.neto)}
+    });
+    // Comprobaciones esperadas
+    const okITP = Math.abs(c.impuestos-18000)<0.5;               // 6% de 300.000
+    const okCuota = Math.abs(c.cuota-987.6)<3;                    // ~987,6 €/mes
+    const okIRPF = Math.abs(v.irpf-25919.8)<2;                    // 6000*.19+44000*.21+68260*.23
+    window.__AUTOTEST = {okITP, okCuota, okIRPF, plusvalia:v.plusvalia.toFixed(2), neto:Math.round(v.neto)};
+    console.log('Resultado autotest:', window.__AUTOTEST);
+  } catch(e){ console.error('AUTOTEST ERROR', e); window.__AUTOTEST = {error:String(e)}; }
+});
+</script>
+</body>
+</html>

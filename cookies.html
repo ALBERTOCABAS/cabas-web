@@ -102,11 +102,12 @@ function googleTranslateElementInit(){new google.translate.TranslateElement({pag
 document.getElementById('selector-idioma').addEventListener('change', function(){
   var lang=this.value;
   if(!lang){ // volver a español: borrar cookie y recargar
-    document.cookie='googtrans=;path=/;expires=Thu, 01 Jan 1970 00:00:00 GMT';
-    document.cookie='googtrans=;path=/;domain=.'+location.hostname+';expires=Thu, 01 Jan 1970 00:00:00 GMT';
+    var _h=location.hostname, _r=_h.replace(/^www\./,'');
+    ['', _h, '.'+_h, _r, '.'+_r].forEach(function(d){document.cookie='googtrans=;path=/;expires=Thu, 01 Jan 1970 00:00:00 GMT'+(d?';domain='+d:'');});
     location.reload(); return;
   }
   document.cookie='googtrans=/es/'+lang+';path=/';
+  document.cookie='googtrans=/es/'+lang+';path=/;domain=.'+location.hostname.replace(/^www\./,'');
   var combo=document.querySelector('select.goog-te-combo');
   if(combo){combo.value=lang;combo.dispatchEvent(new Event('change'));}else{location.reload();}
 });
