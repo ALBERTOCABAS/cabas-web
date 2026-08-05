@@ -100,6 +100,26 @@ h3{font-size:1.35rem}
 .section{padding:5.5rem 1.4rem}
 .section-tight{padding:3.5rem 1.4rem}
 .section-negro{background:var(--negro-puro)}
+/* Sección clara (crema) — para dar contraste y descanso visual al negro */
+.section-clara{background:var(--hueso);color:#4a443a;border-top:1px solid var(--linea);border-bottom:1px solid var(--linea)}
+.section-clara h1,.section-clara h2,.section-clara h3,.section-clara h4{color:#161310}
+.section-clara .lead{color:#5c5446;text-shadow:none}
+.section-clara .eyebrow{color:#8a6b27}
+.section-clara .eyebrow::before{background:#8a6b27}
+.section-clara p{color:#4a443a}
+.section-clara a{color:#8a6b27}
+.section-clara .metodo{background:rgba(150,116,46,.30);border-color:rgba(150,116,46,.30)}
+.section-clara .metodo div{background:#fffdf8}
+.section-clara .metodo strong{color:#8a6b27}
+.section-clara .metodo span{color:#161310}
+.section-clara .metodo p{color:#5c5446}
+.section-clara .card{background:#fffdf8;border-color:rgba(150,116,46,.30)}
+.section-clara .card:hover{border-color:var(--oro)}
+.section-clara .card h3{color:#161310}
+.section-clara .card p{color:#5c5446}
+.section-clara .card a{color:#8a6b27}
+/* dos secciones claras seguidas: sin doble línea entre ellas */
+.section-clara + .section-clara{border-top:none}
 .inner{max-width:var(--max);margin:0 auto}
 .inner-narrow{max-width:760px;margin:0 auto}
 .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:center}
@@ -157,8 +177,8 @@ h3{font-size:1.35rem}
 }
 .btn-oro{background:var(--oro);color:var(--negro-puro)}
 .btn-oro:hover{background:var(--oro-claro);color:var(--negro-puro)}
-.btn-linea{background:transparent;color:var(--oro)}
-.btn-linea:hover{background:rgba(178,142,68,.1);color:var(--oro-claro)}
+.btn-linea{background:rgba(11,10,8,.55);color:var(--oro-claro);-webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px)}
+.btn-linea:hover{background:var(--oro);color:var(--negro-puro)}
 .btn-wide{width:100%}
 
 /* ---------- Cifras ---------- */
@@ -167,6 +187,10 @@ h3{font-size:1.35rem}
 .cifra strong{font-family:var(--serif);font-size:2.4rem;color:var(--oro);display:block;line-height:1.1}
 .cifra span{font-size:.8rem;color:var(--gris);letter-spacing:.06em}
 @media(max-width:820px){.cifras{grid-template-columns:repeat(2,1fr)}}
+a.cifra{text-decoration:none;cursor:pointer;transition:background .2s ease}
+a.cifra:hover{background:var(--panel)}
+a.cifra:hover strong{color:var(--oro-claro)}
+a.cifra:hover span{color:var(--hueso)}
 
 /* ---------- Tarjetas ---------- */
 .card{
@@ -304,7 +328,7 @@ h3{font-size:1.35rem}
 
 /* ---------- WhatsApp flotante ---------- */
 .whatsapp{
-  position:fixed;bottom:1.4rem;right:1.4rem;z-index:90;
+  position:fixed;bottom:1.4rem;left:1.4rem;z-index:90;
   background:var(--oro);color:var(--negro-puro);width:54px;height:54px;
   border-radius:50%;display:flex;align-items:center;justify-content:center;
   box-shadow:0 4px 20px rgba(0,0,0,.5);transition:transform .2s;
