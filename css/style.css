@@ -107,7 +107,7 @@ h3{font-size:1.35rem}
 .section-clara .eyebrow{color:#8a6b27}
 .section-clara .eyebrow::before{background:#8a6b27}
 .section-clara p{color:#4a443a}
-.section-clara a{color:#8a6b27}
+.section-clara a:not(.btn){color:#8a6b27}
 .section-clara .metodo{background:rgba(150,116,46,.30);border-color:rgba(150,116,46,.30)}
 .section-clara .metodo div{background:#fffdf8}
 .section-clara .metodo strong{color:#8a6b27}
@@ -120,6 +120,19 @@ h3{font-size:1.35rem}
 .section-clara .card a{color:#8a6b27}
 /* dos secciones claras seguidas: sin doble línea entre ellas */
 .section-clara + .section-clara{border-top:none}
+/* --- Componentes en versión clara (resto de páginas) --- */
+.section-clara .pasos{border-left-color:rgba(150,116,46,.30)}
+.section-clara .paso::before{background:#fffdf8;color:#8a6b27;border-color:#8a6b27}
+.section-clara .paso p{color:#5c5446}
+.section-clara .oficina{background:#fffdf8;border-color:rgba(150,116,46,.30)}
+.section-clara .oficina h3{color:#8a6b27}
+.section-clara .oficina p{color:#5c5446}
+.section-clara .oficina a{color:#8a6b27}
+.section-clara .foto-slot{background:#fffdf8;border-color:rgba(150,116,46,.30)}
+.section-clara .foto-slot .foto-etiqueta{color:#8a6b27;border-color:rgba(150,116,46,.45)}
+.section-clara .foto-marco{box-shadow:inset 0 0 0 8px #fffdf8, inset 0 0 0 9px rgba(150,116,46,.30)}
+.section-clara .btn-linea{background:transparent;color:#8a6b27;-webkit-backdrop-filter:none;backdrop-filter:none}
+.section-clara .btn-linea:hover{background:var(--oro);color:var(--negro-puro)}
 .inner{max-width:var(--max);margin:0 auto}
 .inner-narrow{max-width:760px;margin:0 auto}
 .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:center}
