@@ -586,3 +586,10 @@ a.cifra:hover span{color:#161310}
 
 /* #2 Oficinas: vídeo de cabecera y foto (fallback móvil) en blanco y negro */
 .video-header .hero-media{filter:grayscale(1)}
+
+/* #3 Calculadora clara: que los controles nativos (calendario de fecha, etc.)
+   se rendericen en modo claro para que el icono se vea sobre fondo blanco */
+.calc .campo input,.calc .campo select,.calc .campo textarea{color-scheme:light}
+
+/* #2 Aviso "datos precargados": borde dorado completo (no la línea verde) */
+.aviso.aviso-oro{border:1px solid var(--oro);background:rgba(178,142,68,.10);color:var(--hueso)}

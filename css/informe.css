@@ -34,7 +34,7 @@
 .i-tabla-cab .tin-label{color:#8A8272;font-size:.78rem}
 table.i-tabla{width:100%;border-collapse:collapse;margin-bottom:.5rem}
 table.i-tabla th{background:#000;color:#F2EFE7;text-align:left;font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;padding:.6rem .7rem;font-weight:600}
-table.i-tabla th.num,table.i-tabla td.num{text-align:right}
+table.i-tabla th.num,table.i-tabla td.num{text-align:right;font-variant-numeric:tabular-nums}
 table.i-tabla th.centro,table.i-tabla td.centro{text-align:center}
 table.i-tabla td{padding:.65rem .7rem;font-size:.86rem;border-bottom:1px solid #EDE7D8;color:#1A1712}
 table.i-tabla tr:nth-child(even) td{background:#FAF8F2}

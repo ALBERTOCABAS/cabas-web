@@ -34,7 +34,7 @@ actualizarHonorariosUI();
   if (p.get('ccaa')) document.getElementById('f-ccaa').value = p.get('ccaa');
   if (p.get('tipo')) document.getElementById('f-tipo').value = p.get('tipo');
   const aviso = document.getElementById('f-avisos');
-  aviso.innerHTML = '<div class="aviso aviso-verde">Datos precargados desde el simulador. Añade abajo las aportaciones, tipos de interés y plazos que quieras comparar.</div>';
+  aviso.innerHTML = '<div class="aviso aviso-oro">Datos precargados desde el simulador. Añade abajo las aportaciones, tipos de interés y plazos que quieras comparar.</div>';
 })();
 
 // ---------- Lectura profesional (bullets automáticos) ----------
