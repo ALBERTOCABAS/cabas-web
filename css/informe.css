@@ -24,7 +24,7 @@
 .i-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:0}
 .i-stat{padding:0 1.2rem;border-left:1px solid #E3D9C2}
 .i-stat:first-child{border-left:none;padding-left:0}
-.i-stat-label{color:var(--oro);text-transform:uppercase;letter-spacing:.06em;font-size:.68rem;font-weight:700;margin-bottom:.3rem}
+.i-stat-label{color:var(--oro);text-transform:uppercase;letter-spacing:.06em;font-size:.68rem;font-weight:700;margin-bottom:.3rem;line-height:1.25;min-height:2.5em}
 .i-stat-valor{font-family:var(--sans);font-size:1.7rem;font-weight:700;color:#000;font-variant-numeric:tabular-nums}
 .i-stat-cap{color:#8A8272;font-size:.74rem;margin-top:.15rem}
 @media (max-width:640px){.i-stats{grid-template-columns:1fr 1fr;row-gap:1rem}.i-stat{border-left:none;padding-left:0}}
