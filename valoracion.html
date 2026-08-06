@@ -52,70 +52,10 @@
 
 <section class="section">
   <div class="inner">
-    <div class="calc reveal">
-      <h3><img src="assets/logo-c.png" alt="" style="height:28px;width:auto;vertical-align:-6px;margin-right:6px"> Pide tu valoración</h3>
-      <form action="https://api.web3forms.com/submit" method="POST">
-        <input type="hidden" name="access_key" value="00c2dba0-ec58-4fa8-b849-3a5839f3fd86">
-        <input type="hidden" name="subject" value="Solicitud de VALORACIÓN — cabas.es">
-        <div class="campo">
-          <label for="val-direccion">Calle y número</label>
-          <input type="text" id="val-direccion" name="direccion" placeholder="Calle de Bravo Murillo, 23" required>
-        </div>
-        <div class="fila-2">
-          <div class="campo">
-            <label for="val-barrio">Barrio o zona <small style="color:var(--gris);font-weight:400">(opcional)</small></label>
-            <input type="text" id="val-barrio" name="barrio" placeholder="Chamberí">
-          </div>
-          <div class="campo">
-            <label for="val-piso">Piso / Puerta <small style="color:var(--gris);font-weight:400">(opcional)</small></label>
-            <input type="text" id="val-piso" name="piso_puerta" placeholder="3º B">
-          </div>
-        </div>
-        <div class="campo">
-          <label for="val-cp">Código postal <small style="color:var(--gris);font-weight:400">(opcional)</small></label>
-          <input type="text" id="val-cp" name="codigo_postal" placeholder="28015" inputmode="numeric" maxlength="5" style="max-width:200px">
-        </div>
-        <div class="fila-2">
-          <div class="campo">
-            <label for="val-m2">Metros cuadrados aprox.</label>
-            <input type="number" id="val-m2" name="m2" min="0" placeholder="85">
-          </div>
-          <div class="campo">
-            <label for="val-habitaciones">Habitaciones</label>
-            <input type="number" id="val-habitaciones" name="habitaciones" min="0" placeholder="3">
-          </div>
-        </div>
-        <div class="fila-2">
-          <div class="campo">
-            <label for="val-estado">Estado</label>
-            <select id="val-estado" name="estado">
-              <option>Para entrar a vivir</option>
-              <option>Buen estado</option>
-              <option>A actualizar</option>
-              <option>A reformar</option>
-            </select>
-          </div>
-          <div class="campo">
-            <label for="val-situacion">Situación</label>
-            <select id="val-situacion" name="situacion">
-              <option>Quiero vender</option>
-              <option>Es una vivienda heredada</option>
-              <option>Estoy valorando un cambio de vivienda</option>
-              <option>Solo quiero saber cuánto vale</option>
-            </select>
-          </div>
-        </div>
-        <div class="fila-2">
-          <div class="campo"><label for="val-nombre">Nombre</label><input type="text" id="val-nombre" name="nombre" required></div>
-          <div class="campo"><label for="val-tel">Teléfono</label><input type="tel" id="val-tel" name="telefono" required></div>
-        </div>
-        <div class="campo"><label for="val-email">Email</label><input type="email" id="val-email" name="email"></div>
-        <div class="campo-check">
-          <input type="checkbox" id="val-rgpd" required>
-          <label for="val-rgpd">Acepto que mis datos se utilicen únicamente para preparar y comunicarme esta valoración, conforme a la <a href="privacidad.html">política de privacidad</a>.</label>
-        </div>
-        <button class="btn btn-oro btn-wide" type="submit">Quiero mi valoración en 24h</button>
-      </form>
+    <div class="calc reveal calc-cta" style="text-align:center">
+      <h3 style="justify-content:center">Pide tu valoración</h3>
+      <p style="color:#4a443a;max-width:48ch;margin:0 auto 1.8rem">Entra en mi valorador y consigue una estimación del valor de tu vivienda en Madrid. Después la reviso personalmente con datos reales de tu zona y te llamo — gratis y sin compromiso.</p>
+      <a class="btn btn-oro btn-wide" href="https://statefox.com/mites/v/69dd2a4d80d1b27c6c0aa1fd" target="_blank" rel="noopener" style="max-width:340px;margin:0 auto">Pide tu valoración</a>
     </div>
   </div>
 </section>
@@ -133,15 +73,8 @@
 <footer class="footer">
   <div class="footer-grid">
     <div>
-      <img src="assets/logo-completo.png" alt="Cabas Realtor">
-      <p>Experto en herencias y cambios de vivienda en Madrid. Realtor desde 2010. Franquiciado del grupo Redpiso.</p>
-      <div class="social">
-        <a href="https://www.instagram.com/cabas995" aria-label="Instagram" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M12 2.2c3.2 0 3.6 0 4.8.1 1.2.1 1.8.2 2.2.4.6.2 1 .5 1.4.9.4.4.7.8.9 1.4.2.4.4 1 .4 2.2.1 1.2.1 1.6.1 4.8s0 3.6-.1 4.8c-.1 1.2-.2 1.8-.4 2.2-.2.6-.5 1-.9 1.4-.4.4-.8.7-1.4.9-.4.2-1 .4-2.2.4-1.2.1-1.6.1-4.8.1s-3.6 0-4.8-.1c-1.2-.1-1.8-.2-2.2-.4-.6-.2-1-.5-1.4-.9-.4-.4-.7-.8-.9-1.4-.2-.4-.4-1-.4-2.2C2.2 15.6 2.2 15.2 2.2 12s0-3.6.1-4.8c.1-1.2.2-1.8.4-2.2.2-.6.5-1 .9-1.4.4-.4.8-.7 1.4-.9.4-.2 1-.4 2.2-.4C8.4 2.2 8.8 2.2 12 2.2zm0 1.8c-3.1 0-3.5 0-4.7.1-1.1.1-1.5.2-1.9.4-.5.2-.8.4-1.1.7-.3.3-.5.6-.7 1.1-.2.4-.3.8-.4 1.9-.1 1.2-.1 1.6-.1 4.7s0 3.5.1 4.7c.1 1.1.2 1.5.4 1.9.2.5.4.8.7 1.1.3.3.6.5 1.1.7.4.2.8.3 1.9.4 1.2.1 1.6.1 4.7.1s3.5 0 4.7-.1c1.1-.1 1.5-.2 1.9-.4.5-.2.8-.4 1.1-.7.3-.3.5-.6.7-1.1.2-.4.3-.8.4-1.9.1-1.2.1-1.6.1-4.7s0-3.5-.1-4.7c-.1-1.1-.2-1.5-.4-1.9-.2-.5-.4-.8-.7-1.1-.3-.3-.6-.5-1.1-.7-.4-.2-.8-.3-1.9-.4-1.2-.1-1.6-.1-4.7-.1zm0 3.1a5 5 0 1 1 0 10 5 5 0 0 1 0-10zm0 1.8a3.2 3.2 0 1 0 0 6.4 3.2 3.2 0 0 0 0-6.4zm5.2-2.9a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4z"/></svg></a>
-        <a href="https://www.linkedin.com/in/cabas995" aria-label="LinkedIn" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M4.98 3.5C4.98 4.88 3.87 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5zM.22 8.09h4.56V23H.22V8.09zM8.34 8.09h4.37v2.04h.06c.61-1.15 2.1-2.37 4.32-2.37 4.62 0 5.47 3.04 5.47 7v8.24h-4.55v-7.3c0-1.74-.03-3.98-2.43-3.98-2.43 0-2.8 1.9-2.8 3.86V23H8.34V8.09z"/></svg></a>
-        <a href="https://www.facebook.com/share/1Db59MYHj7/" aria-label="Facebook" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M22 12a10 10 0 1 0-11.6 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.5h-1.3c-1.2 0-1.6.8-1.6 1.6V12h2.8l-.4 2.9h-2.4v7A10 10 0 0 0 22 12z"/></svg></a>
-        <a href="https://www.tiktok.com/@cabas995" aria-label="TikTok" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M19.6 6.7a5.6 5.6 0 0 1-3.4-3.5c-.1-.4-.2-.8-.2-1.2h-3.7v14.3a3 3 0 1 1-2.1-2.9V9.6a6.7 6.7 0 1 0 5.8 6.7V8.9a9.2 9.2 0 0 0 4.6 1.2V6.9c-.3 0-.7-.1-1-.2z"/></svg></a>
-        <a href="https://youtube.com/@cabas995" aria-label="YouTube" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.2C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.5A3 3 0 0 0 .5 6.2 31.6 31.6 0 0 0 0 12a31.6 31.6 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.2c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.2A31.6 31.6 0 0 0 24 12a31.6 31.6 0 0 0-.5-5.8zM9.6 15.6V8.4L15.8 12l-6.2 3.6z"/></svg></a>
-      </div>
+      <h4>Alberto Cabas</h4>
+      <p>Experto en herencias y cambios de vivienda en Madrid. Realtor desde 2010, franquiciado del grupo Redpiso.</p>
     </div>
     <div>
       <h4>Herramientas gratuitas</h4>
@@ -162,6 +95,13 @@
   </div>
   <div class="footer-legal">
     <span>© Alberto Cabas Ortiz. Todos los derechos reservados.</span>
+    <div class="social">
+      <a href="https://www.instagram.com/cabas995" aria-label="Instagram" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M12 2.2c3.2 0 3.6 0 4.8.1 1.2.1 1.8.2 2.2.4.6.2 1 .5 1.4.9.4.4.7.8.9 1.4.2.4.4 1 .4 2.2.1 1.2.1 1.6.1 4.8s0 3.6-.1 4.8c-.1 1.2-.2 1.8-.4 2.2-.2.6-.5 1-.9 1.4-.4.4-.8.7-1.4.9-.4.2-1 .4-2.2.4-1.2.1-1.6.1-4.8.1s-3.6 0-4.8-.1c-1.2-.1-1.8-.2-2.2-.4-.6-.2-1-.5-1.4-.9-.4-.4-.7-.8-.9-1.4-.2-.4-.4-1-.4-2.2C2.2 15.6 2.2 15.2 2.2 12s0-3.6.1-4.8c.1-1.2.2-1.8.4-2.2.2-.6.5-1 .9-1.4.4-.4.8-.7 1.4-.9.4-.2 1-.4 2.2-.4C8.4 2.2 8.8 2.2 12 2.2zm0 1.8c-3.1 0-3.5 0-4.7.1-1.1.1-1.5.2-1.9.4-.5.2-.8.4-1.1.7-.3.3-.5.6-.7 1.1-.2.4-.3.8-.4 1.9-.1 1.2-.1 1.6-.1 4.7s0 3.5.1 4.7c.1 1.1.2 1.5.4 1.9.2.5.4.8.7 1.1.3.3.6.5 1.1.7.4.2.8.3 1.9.4 1.2.1 1.6.1 4.7.1s3.5 0 4.7-.1c1.1-.1 1.5-.2 1.9-.4.5-.2.8-.4 1.1-.7.3-.3.5-.6.7-1.1.2-.4.3-.8.4-1.9.1-1.2.1-1.6.1-4.7s0-3.5-.1-4.7c-.1-1.1-.2-1.5-.4-1.9-.2-.5-.4-.8-.7-1.1-.3-.3-.6-.5-1.1-.7-.4-.2-.8-.3-1.9-.4-1.2-.1-1.6-.1-4.7-.1zm0 3.1a5 5 0 1 1 0 10 5 5 0 0 1 0-10zm0 1.8a3.2 3.2 0 1 0 0 6.4 3.2 3.2 0 0 0 0-6.4zm5.2-2.9a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4z"/></svg></a>
+      <a href="https://www.linkedin.com/in/cabas995" aria-label="LinkedIn" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M4.98 3.5C4.98 4.88 3.87 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5zM.22 8.09h4.56V23H.22V8.09zM8.34 8.09h4.37v2.04h.06c.61-1.15 2.1-2.37 4.32-2.37 4.62 0 5.47 3.04 5.47 7v8.24h-4.55v-7.3c0-1.74-.03-3.98-2.43-3.98-2.43 0-2.8 1.9-2.8 3.86V23H8.34V8.09z"/></svg></a>
+      <a href="https://www.facebook.com/share/1Db59MYHj7/" aria-label="Facebook" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M22 12a10 10 0 1 0-11.6 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.5h-1.3c-1.2 0-1.6.8-1.6 1.6V12h2.8l-.4 2.9h-2.4v7A10 10 0 0 0 22 12z"/></svg></a>
+      <a href="https://www.tiktok.com/@cabas995" aria-label="TikTok" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M19.6 6.7a5.6 5.6 0 0 1-3.4-3.5c-.1-.4-.2-.8-.2-1.2h-3.7v14.3a3 3 0 1 1-2.1-2.9V9.6a6.7 6.7 0 1 0 5.8 6.7V8.9a9.2 9.2 0 0 0 4.6 1.2V6.9c-.3 0-.7-.1-1-.2z"/></svg></a>
+      <a href="https://youtube.com/@cabas995" aria-label="YouTube" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.2C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.5A3 3 0 0 0 .5 6.2 31.6 31.6 0 0 0 0 12a31.6 31.6 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.2c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.2A31.6 31.6 0 0 0 24 12a31.6 31.6 0 0 0-.5-5.8zM9.6 15.6V8.4L15.8 12l-6.2 3.6z"/></svg></a>
+    </div>
     <span>
       <a href="aviso-legal.html">Aviso legal</a>
       <a href="privacidad.html">Privacidad</a>
@@ -190,6 +130,7 @@ document.getElementById('selector-idioma').addEventListener('change', function()
 </script>
 <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit" defer></script>
 <script src="js/main.js"></script>
+<script src="js/textura.js"></script>
 
   <!-- Asistente Kitty (usa el mismo motor que las calculadoras) -->
   <script src="js/datos-cabas.js"></script>
