@@ -78,6 +78,10 @@ body.modo-impresion-informe .hoja-imprimible-wrap{display:block !important}
 @media print{
   body{background:#fff}
   nav.nav, footer.footer, header.section-negro, .pantalla-solo, #pantalla-form{display:none !important}
+  /* Ocultar en la impresión/PDF los elementos flotantes: chatbot Kitty,
+     botón de WhatsApp y widgets de Google Translate (si no, se colaban). */
+  #kitty-root, .whatsapp, #google_translate_element, .skiptranslate,
+  div[id^="goog-gt"], .VIpgJd-ZVi9od-aZ2wEe-wOHMyf{display:none !important}
   .hoja{box-shadow:none;max-width:none}
   @page{size:A4;margin:12mm}
   .i-header{-webkit-print-color-adjust:exact;print-color-adjust:exact}
