@@ -249,7 +249,170 @@ function coreCapacidadCompra(inp) {
   return { plazoMax, maxHipotecaIngresos, maxPrecio, hipoteca, cuota, limita, gR, ccaaNombre: d.nombre, tin, edadRef, ingresos, ahorro };
 }
 
+// ------------------------------------------------------------
+// Gastos de compra (impuestos + fijos) reutilizables por las
+// calculadoras de inversión. Mismo criterio que coreCompra.
+// ------------------------------------------------------------
+function coreGastosCompra(precio, tipoViv, ccaaSlug, incluyeTasacion) {
+  const d = datosITPAJD(ccaaSlug || 'madrid', precio);
+  let impuestos, impLabel;
+  if (tipoViv === 'nueva') {
+    impuestos = precio * 0.10 + precio * (d.ajdPct / 100);
+    impLabel = `IVA 10% + AJD ${d.ajdPct}% (${d.nombre})`;
+  } else {
+    const itpTxt = d.itpPct % 1 === 0 ? d.itpPct : d.itpPct.toFixed(2);
+    impuestos = precio * (d.itpPct / 100);
+    impLabel = `ITP ${itpTxt}% (${d.nombre})`;
+  }
+  const g = coreGastosFijos(precio, incluyeTasacion);
+  const total = impuestos + g.notaria + g.registro + g.gestoria + g.tasacion;
+  return { impuestos, impLabel, fijos: g, total, ccaaNombre: d.nombre };
+}
+
+// ============================================================
+// 4) INVERSIÓN — COMPRAR PARA ALQUILAR (rentabilidad)
+// Entrada:
+//   { precio, tipoViv, ccaaSlug, reforma,
+//     rentaMes, vacanciaPct,
+//     ibi, comunidadMes, seguro, mantenimientoPct, gestionPct,
+//     conHipoteca, entrada, tin, plazo }
+// Salida: inversión total, rentabilidad bruta/neta, NOI, y si hay
+//   hipoteca: cuota, cash flow y rentabilidad sobre el capital
+//   aportado (cash-on-cash). Todo orientativo.
+// ============================================================
+function coreInversionAlquiler(inp) {
+  const precio = +inp.precio || 0;
+  const tipoViv = inp.tipoViv === 'nueva' ? 'nueva' : 'usada';
+  const ccaaSlug = inp.ccaaSlug || 'madrid';
+  const reforma = +inp.reforma || 0;
+  const rentaMes = +inp.rentaMes || 0;
+  const vacanciaPct = +inp.vacanciaPct || 0;
+  const ibi = +inp.ibi || 0;
+  const comunidadMes = +inp.comunidadMes || 0;
+  const seguro = +inp.seguro || 0;
+  const mantenimientoPct = +inp.mantenimientoPct || 0;
+  const gestionPct = +inp.gestionPct || 0;
+  const honorariosCompra = +inp.honorariosCompra || 0;
+  const conHipoteca = !!inp.conHipoteca;
+  const entrada = conHipoteca ? (+inp.entrada || 0) : 0;
+  const tin = +inp.tin || 0;
+  const plazo = +inp.plazo || 0;
+
+  const gc = coreGastosCompra(precio, tipoViv, ccaaSlug, conHipoteca);
+  const inversionTotal = precio + gc.total + honorariosCompra + reforma;
+
+  const rentaAnualBruta = rentaMes * 12;
+  const rentaAnualEfectiva = rentaAnualBruta * (1 - vacanciaPct / 100);
+  const comunidadAnual = comunidadMes * 12;
+  const mantenimiento = rentaAnualBruta * (mantenimientoPct / 100);
+  const gestion = rentaAnualEfectiva * (gestionPct / 100);
+  const gastosOperativos = ibi + comunidadAnual + seguro + mantenimiento + gestion;
+  const noi = rentaAnualEfectiva - gastosOperativos;
+
+  const rentBruta = inversionTotal > 0 ? (rentaAnualBruta / inversionTotal) * 100 : 0;
+  const rentNeta = inversionTotal > 0 ? (noi / inversionTotal) * 100 : 0;
+
+  let hipoteca = 0, ltv = 0, cuotaMes = 0, cuotaAnual = 0;
+  let capitalAportado = inversionTotal, cashFlowAnual = noi, cashFlowMes = noi / 12, cashOnCash = rentNeta;
+  if (conHipoteca) {
+    hipoteca = Math.max(0, precio - entrada);
+    ltv = precio > 0 ? (hipoteca / precio) * 100 : 0;
+    cuotaMes = coreCuota(hipoteca, plazo, tin);
+    cuotaAnual = cuotaMes * 12;
+    capitalAportado = entrada + gc.total + honorariosCompra + reforma;
+    cashFlowAnual = noi - cuotaAnual;
+    cashFlowMes = cashFlowAnual / 12;
+    cashOnCash = capitalAportado > 0 ? (cashFlowAnual / capitalAportado) * 100 : 0;
+  }
+
+  const avisos = [];
+  if (rentNeta >= 5) avisos.push({ t: 'verde', txt: `Rentabilidad neta del ${rentNeta.toFixed(1)}% — buena para el mercado español (media ~4-5%).` });
+  else if (rentNeta >= 3) avisos.push({ t: 'ambar', txt: `Rentabilidad neta del ${rentNeta.toFixed(1)}% — ajustada. Revisa precio de compra, renta o gastos.` });
+  else if (inversionTotal > 0 && rentaMes > 0) avisos.push({ t: 'rojo', txt: `Rentabilidad neta del ${rentNeta.toFixed(1)}% — baja. La operación aporta poco por sí sola.` });
+  if (conHipoteca && rentaMes > 0) {
+    if (cashFlowMes >= 0) avisos.push({ t: 'verde', txt: `Flujo de caja positivo: te quedan ${eur2(cashFlowMes)} al mes después de pagar la hipoteca.` });
+    else avisos.push({ t: 'rojo', txt: `Flujo de caja negativo: pones ${eur2(-cashFlowMes)} de tu bolsillo cada mes tras la hipoteca.` });
+    if (cashOnCash > rentNeta && cashFlowMes >= 0) avisos.push({ t: 'verde', txt: `El apalancamiento eleva tu rentabilidad sobre el capital aportado al ${cashOnCash.toFixed(1)}% (cash-on-cash).` });
+  }
+
+  return {
+    precio, tipoViv, ccaaNombre: gc.ccaaNombre, reforma, honorariosCompra,
+    gastosCompra: gc.total, impLabel: gc.impLabel, impuestos: gc.impuestos, fijos: gc.fijos,
+    inversionTotal, rentaAnualBruta, rentaAnualEfectiva, vacanciaPct,
+    gastosOperativos, ibi, comunidadAnual, seguro, mantenimiento, gestion,
+    noi, rentBruta, rentNeta,
+    conHipoteca, hipoteca, ltv, cuotaMes, cuotaAnual, entrada, tin, plazo,
+    capitalAportado, cashFlowAnual, cashFlowMes, cashOnCash, avisos
+  };
+}
+
+// ============================================================
+// 5) INVERSIÓN — COMPRAR PARA REFORMAR Y VENDER (flipping)
+// Entrada:
+//   { precioCompra, tipoViv, ccaaSlug, reforma, meses,
+//     gastosTenenciaMes, precioVenta, comisionVentaPct,
+//     otrosGastosVenta, conHipoteca, entrada, tin }
+// Salida: inversión total, beneficio, ROI sobre capital aportado,
+//   margen y ROI anualizado. Beneficio ANTES de impuestos.
+// ============================================================
+function coreInversionFlipping(inp) {
+  const precio = +inp.precioCompra || 0;
+  const tipoViv = inp.tipoViv === 'nueva' ? 'nueva' : 'usada';
+  const ccaaSlug = inp.ccaaSlug || 'madrid';
+  const reforma = +inp.reforma || 0;
+  const honorariosCompra = +inp.honorariosCompra || 0;
+  const meses = +inp.meses || 0;
+  const gastosTenenciaMes = +inp.gastosTenenciaMes || 0;
+  const precioVenta = +inp.precioVenta || 0;
+  const honorariosVenta = +inp.honorariosVenta || 0;
+  const otrosGastosVenta = +inp.otrosGastosVenta || 0;
+  const conHipoteca = !!inp.conHipoteca;
+  const entrada = conHipoteca ? (+inp.entrada || 0) : 0;
+  const tin = +inp.tin || 0;
+  const gastosFinancierosFijos = conHipoteca ? (+inp.gastosFinancierosFijos || 0) : 0; // apertura, tasación, cancelación...
+
+  const gc = coreGastosCompra(precio, tipoViv, ccaaSlug, conHipoteca);
+  const costesTenencia = gastosTenenciaMes * meses;
+
+  let hipoteca = 0, ltv = 0, costeFinanciero = 0;
+  if (conHipoteca) {
+    hipoteca = Math.max(0, precio - entrada);
+    ltv = precio > 0 ? (hipoteca / precio) * 100 : 0;
+    costeFinanciero = hipoteca * (tin / 100) * (meses / 12); // intereses del periodo (aprox.)
+  }
+
+  const gastosVenta = honorariosVenta + otrosGastosVenta;
+
+  // Todo lo invertido/gastado en la operación (antes de impuestos sobre la ganancia)
+  const costesEntrada = precio + gc.total + honorariosCompra + reforma + costesTenencia + costeFinanciero + gastosFinancierosFijos;
+  const inversionTotal = costesEntrada + gastosVenta;
+  const beneficio = precioVenta - inversionTotal;
+
+  // Capital propio aportado (los gastos de venta salen del precio de venta al final)
+  const capitalAportado = conHipoteca ? (entrada + gc.total + honorariosCompra + reforma + costesTenencia + costeFinanciero + gastosFinancierosFijos) : costesEntrada;
+  const roi = capitalAportado > 0 ? (beneficio / capitalAportado) * 100 : 0;
+  const margen = precioVenta > 0 ? (beneficio / precioVenta) * 100 : 0;
+  const roiAnualizado = meses > 0 ? roi * (12 / meses) : roi;
+
+  const avisos = [];
+  if (precioVenta > 0) {
+    if (margen >= 15) avisos.push({ t: 'verde', txt: `Margen del ${margen.toFixed(1)}% sobre el precio de venta — holgado para un flipping.` });
+    else if (margen >= 8) avisos.push({ t: 'ambar', txt: `Margen del ${margen.toFixed(1)}% — ajustado. Cualquier sobrecoste de obra o bajada de precio se come el beneficio.` });
+    else avisos.push({ t: 'rojo', txt: `Margen del ${margen.toFixed(1)}% — muy estrecho. Alto riesgo si la obra se desvía o el mercado cae.` });
+  }
+  avisos.push({ t: 'ambar', txt: 'El beneficio mostrado es ANTES de impuestos. La tributación depende de tu caso (ganancia patrimonial en IRPF si es puntual, o actividad económica/Sociedades si es habitual). Consúltalo conmigo.' });
+
+  return {
+    precioCompra: precio, tipoViv, ccaaNombre: gc.ccaaNombre,
+    gastosCompra: gc.total, impLabel: gc.impLabel, reforma, honorariosCompra, meses,
+    costesTenencia, gastosTenenciaMes,
+    conHipoteca, hipoteca, ltv, costeFinanciero, gastosFinancierosFijos, entrada, tin,
+    precioVenta, honorariosVenta, otrosGastosVenta, gastosVenta,
+    inversionTotal, capitalAportado, beneficio, roi, margen, roiAnualizado, avisos
+  };
+}
+
 // Exportar para Node (tests) sin romper el uso en navegador
 if (typeof module !== 'undefined' && module.exports) {
-  module.exports = { coreCuota, coreCompra, coreNetoVendedor, coreCapacidadCompra, coreGastosFijos, coreCalcIRPF, coreAniosCompletos };
+  module.exports = { coreCuota, coreCompra, coreNetoVendedor, coreCapacidadCompra, coreGastosFijos, coreGastosCompra, coreCalcIRPF, coreAniosCompletos, coreInversionAlquiler, coreInversionFlipping };
 }

@@ -593,3 +593,21 @@ a.cifra:hover span{color:#161310}
 
 /* #2 Aviso "datos precargados": borde dorado completo (no la línea verde) */
 .aviso.aviso-oro{border:1px solid var(--oro);background:rgba(178,142,68,.10);color:var(--hueso)}
+
+/* ===== Inversión: selector de modo (alquiler / flipping) ===== */
+.modo-toggle{display:flex;gap:.6rem;max-width:760px;margin:0 auto 1.6rem;flex-wrap:wrap}
+.modo-btn{flex:1 1 220px;background:#fffdf8;border:1px solid rgba(150,116,46,.35);color:#4a443a;
+  font-family:var(--sans);font-size:.95rem;font-weight:600;padding:1rem 1.2rem;border-radius:3px;cursor:pointer;
+  transition:all .25s ease;text-align:center;line-height:1.3}
+.modo-btn small{display:block;font-weight:400;font-size:.78rem;color:#6b6456;margin-top:.2rem}
+.modo-btn:hover{border-color:var(--oro)}
+.modo-btn.activo{background:var(--oro);border-color:var(--oro);color:var(--negro-puro)}
+.modo-btn.activo small{color:var(--negro-puro);opacity:.8}
+.inv-form{display:none}
+.inv-form.activo{display:block}
+.campo-sep{border-top:1px dashed rgba(178,142,68,.28);margin:1.6rem 0 1.2rem;padding-top:1.2rem}
+.calc .campo-sep-titulo{font-family:var(--serif);font-size:1.15rem;color:#161310;margin-bottom:1rem}
+
+/* #1/#7 Inversión: los <small> dentro de las etiquetas, en línea (no en bloque)
+   para que las etiquetas ocupen 1 sola línea y las casillas queden alineadas */
+.pg-inversion .campo label small{display:inline;color:#6b6456;font-weight:400;margin:0}
