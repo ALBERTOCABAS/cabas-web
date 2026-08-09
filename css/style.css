@@ -611,3 +611,8 @@ a.cifra:hover span{color:#161310}
 /* #1/#7 Inversión: los <small> dentro de las etiquetas, en línea (no en bloque)
    para que las etiquetas ocupen 1 sola línea y las casillas queden alineadas */
 .pg-inversion .campo label small{display:inline;color:#6b6456;font-weight:400;margin:0}
+
+/* #2 Pantallas grandes: ensanchar el contenido y escalar la tipografía para
+   que no quede una columna pequeña perdida en un mar de negro (y mejor al hacer zoom). */
+@media(min-width:1700px){ :root{--max:1260px} body{font-size:17px} }
+@media(min-width:2200px){ :root{--max:1380px} body{font-size:18px} }

@@ -49,7 +49,10 @@ table.i-tabla td.aportacion{font-weight:700}
 .i-lectura li::before{content:'';position:absolute;left:0;top:.5em;width:5px;height:5px;border-radius:50%;background:var(--oro)}
 .i-equilibrado{background:#000;color:#fff;border-radius:6px;padding:1.4rem 1.5rem}
 .i-equilibrado .lbl{color:var(--oro);text-transform:uppercase;letter-spacing:.08em;font-size:.68rem;font-weight:700}
-.i-equilibrado .cifra{font-family:var(--sans);font-size:2.3rem;font-weight:700;color:var(--oro-claro);margin:.3rem 0;font-variant-numeric:tabular-nums}
+.i-equilibrado .cifra{font-family:var(--sans);font-size:2.3rem;font-weight:700;color:var(--oro-claro);margin:.3rem 0;font-variant-numeric:tabular-nums;
+  /* Reset: la clase .cifra también la usan los cuadros de inicio (fondo claro);
+     aquí es solo un número dentro de la caja negra, sin recuadro propio. */
+  background:none;border:none;padding:0;max-width:none;flex:0 1 auto;box-shadow:none;transform:none}
 .i-equilibrado .cap{color:#B9B3A4;font-size:.78rem;margin-bottom:.9rem}
 .i-equilibrado .fila{display:flex;justify-content:space-between;border-top:1px solid rgba(178,142,68,.3);padding-top:.7rem;font-size:.82rem;margin:0}
 .i-equilibrado .fila strong{color:#fff}
@@ -119,4 +122,15 @@ body.modo-impresion-informe .hoja-imprimible-wrap{display:block !important}
   .i-equilibrado .fila{padding-top:.4rem;font-size:.76rem}
   .i-tabla-nota{margin-bottom:.7rem}
   table.i-tabla td{padding:.42rem .6rem}
+}
+
+/* #4 Textos más legibles: los grises claros costaban de leer sobre blanco. */
+.i-stat-cap, .i-tabla-cab .tin-label, .i-tabla-nota, .i-disclaimer{color:#6b6356}
+.i-hipotesis{color:#544e43}
+
+/* #5 En móvil, la tabla comparativa (7 columnas) no debe desbordar la hoja
+   ni empujar la página: se desplaza horizontalmente dentro de su grupo. */
+@media(max-width:700px){
+  .i-tabla-grupo{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  table.i-tabla{min-width:580px}
 }
