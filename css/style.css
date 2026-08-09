@@ -616,3 +616,8 @@ a.cifra:hover span{color:#161310}
    que no quede una columna pequeña perdida en un mar de negro (y mejor al hacer zoom). */
 @media(min-width:1700px){ :root{--max:1260px} body{font-size:17px} }
 @media(min-width:2200px){ :root{--max:1380px} body{font-size:18px} }
+
+/* #1 Textos de ayuda (small) dentro de las calculadoras claras: forzar un gris
+   oscuro legible. El !important es necesario para ganar a los style="color:var(--gris)"
+   inline heredados (gris claro pensado para fondo negro). */
+.calc small{color:#6b6356 !important}
