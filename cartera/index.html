@@ -21,8 +21,21 @@
   }
   *{box-sizing:border-box;margin:0;padding:0}
   body{ background:var(--negro); color:var(--hueso); font-family:var(--sans); line-height:1.45;
-    -webkit-font-smoothing:antialiased;
-    background-image:radial-gradient(120% 80% at 50% -10%, rgba(178,142,68,.10), transparent 60%); }
+    -webkit-font-smoothing:antialiased; }
+  /* Fondo como en cabas.es: glows dorados/rojo + textura de puntitos muy sutil.
+     Se hace en CSS (sin js/textura.js) para que el panel siga siendo autónomo. */
+  body::before{
+    content:""; position:fixed; inset:0; z-index:-2; pointer-events:none;
+    background:
+      radial-gradient(55% 42% at 82% 8%,  rgba(178,142,68,.16), transparent 60%),
+      radial-gradient(48% 40% at 10% 72%, rgba(178,142,68,.09), transparent 60%),
+      radial-gradient(70% 55% at 50% 118%, rgba(200,54,43,.05), transparent 60%);
+  }
+  body::after{
+    content:""; position:fixed; inset:0; z-index:-1; pointer-events:none;
+    background-image:radial-gradient(rgba(207,172,102,.10) 1px, transparent 1.5px);
+    background-size:22px 22px;
+  }
   .wrap{ max-width:var(--max); margin:0 auto; padding:0 18px 64px; }
   body:not(.abierta) .wrap{ display:none; }
 
@@ -275,7 +288,7 @@ function render(){
   grid.innerHTML = res.map(d=>{
     const c = ofiCol(d.oficina);
     const ofiStyle = `background:${c.bg};color:${c.fg}` + (c.bd?`;border:1.5px solid ${c.bd}`:'');
-    const ofiCorto = (d.oficina||'').replace(/\s*\(.*?\)\s*/,'').trim();  // "Chamberí (Bravo Murillo)" -> "Chamberí"
+    const ofiCorto = (d.oficina||'').replace(/\s*\(.*?\)\s*/,'').split(/\s*·\s*/)[0].trim();  // "…(Bravo Murillo)"->"Chamberí"; "San Bernardo · Malasaña"->"San Bernardo"
     const op = (d.operacion||'').trim();
     const opHtml = op ? `<span class="op-ini">${op.charAt(0).toUpperCase()}</span>${op.slice(1).toLowerCase()}` : '';
     const mes = d.operacion==='Alquiler' ? '<span class="mes">/mes</span>':'';
