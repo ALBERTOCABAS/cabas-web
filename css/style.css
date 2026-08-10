@@ -99,7 +99,7 @@ h3{font-size:1.35rem}
 .nav-logo span{
   font-family:var(--serif);font-size:1.25rem;letter-spacing:.14em;color:var(--oro);
 }
-.nav-links{display:flex;gap:1.6rem;list-style:none;align-items:center}
+.nav-links{display:flex;gap:1.1rem;list-style:none;align-items:center}
 .nav-links a{
   color:var(--hueso);font-size:.86rem;font-weight:500;letter-spacing:.04em;
   padding:.3rem 0;border-bottom:1px solid transparent;
@@ -112,7 +112,7 @@ h3{font-size:1.35rem}
   display:none;background:none;border:1px solid var(--linea);color:var(--oro);
   font-size:1.3rem;padding:.25rem .7rem;border-radius:2px;cursor:pointer;
 }
-@media(max-width:900px){
+@media(max-width:1180px){
   .nav-toggle{display:block}
   .nav-links{
     display:none;position:absolute;top:100%;left:0;right:0;

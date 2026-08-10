@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /cartera/
+
+Sitemap: https://www.cabas.es/sitemap.xml
