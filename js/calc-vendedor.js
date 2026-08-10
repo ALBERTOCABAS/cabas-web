@@ -143,7 +143,7 @@ document.getElementById('v-calcular').addEventListener('click', () => {
     if (gananciaTramo <= 0) return; // sin incremento: no sujeto
     if (!t.fecha || !fVenta || !vcTotal || !vcSuelo) { faltanDatosPV = true; return; }
     const a = Math.min(Math.max(aniosCompletos(t.fecha, fVenta), 0), 20);
-    const baseObjetiva = vcSuelo * share * (COEF_IIVTNU[a] ?? 0.45);
+    const baseObjetiva = vcSuelo * share * (COEF_IIVTNU[a] ?? 0.40);
     const baseReal = gananciaTramo * (vcSuelo / vcTotal);
     plusvalia += Math.max(0, Math.min(baseObjetiva, baseReal)) * tipoIIVTNU;
   });
