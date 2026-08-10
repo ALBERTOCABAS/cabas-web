@@ -1,0 +1,392 @@
+// ============================================================
+// kitty-textos.js — MAPA ÚNICO DE TEXTOS de Kitty (web + Telegram)
+// ------------------------------------------------------------
+// Cada texto tiene un identificador y, de momento, SOLO versión
+// española ("es"). Añadir un idioma el día de mañana = añadir su clave
+// al lado de "es" (p. ej.  en: '...'), SIN tocar el guión ni la lógica.
+//
+//   TEXTOS.hipoteca.intro   →   { es: 'Te calculo la cuota mensual…' }
+//
+// HUECOS: un texto puede llevar huecos entre llaves, p. ej. {neto}. El
+// runner los rellena con VALORES (números ya formateados). El texto
+// completo —frase entera— vive aquí; en la lógica NO se pega ningún
+// trozo de frase. Así se puede editar y, el día de mañana, traducir
+// (el orden de las palabras puede cambiar sin romper nada).
+//
+// Notas:
+//  · <b>...</b> = negrita (en Telegram se convierte a su equivalente).
+//  · El formato de los importes (p. ej. "180.000 €") lo hacen las
+//    funciones eur()/eur2() —formato local—, no el mapa.
+//  · Textos LITERALES de la web actual (tono sin retocar; el repaso de
+//    tono para Telegram se hará antes de "congelar").
+// ============================================================
+(function (raiz) {
+  'use strict';
+
+  var TEXTOS = {
+
+    // ---------- Menú y saludo (entrada / /start) ----------
+    menu: {
+      saludo1: { es: 'Hola 👋 Soy <b>Kitty</b>, la asistente de <b>Alberto Cabas</b>.' },
+      saludo2: { es: 'Puedo hacerte <b>cálculos al instante</b> —lo que te queda al vender, gastos de compra, cuota de hipoteca o hasta qué precio puedes comprar— o ponerte en contacto con Alberto para <b>valorar un inmueble</b> o <b>asesorarte sobre una herencia</b>.' },
+      elige:    { es: '¿Qué necesitas? 👇' },
+      m_valorar:   { es: '🏡 Valorar un inmueble' },
+      m_herencia:  { es: '⚖️ Tengo una herencia' },
+      m_vender:    { es: '💶 Lo que me queda si vendo' },
+      m_comprar:   { es: '🔑 Cuánto me cuesta comprar' },
+      m_hipoteca:  { es: '🏦 Simular mi hipoteca' },
+      m_capacidad: { es: '📈 Hasta qué precio puedo comprar' },
+      m_inversion: { es: '📊 Rentabilidad de inversión' },
+      m_contacto:  { es: '📞 Hablar con Alberto' }
+    },
+
+    // ---------- "Hablar con Alberto" directo (desde el menú) ----------
+    contacto_directo: {
+      lead_resumen:  { es: 'CONTACTO DIRECTO' },
+      lead_contexto: { es: 'me gustaría que me llamaras para comentar mi caso.' }
+    },
+
+    // ---------- Comunes (reutilizados por varios flujos) ----------
+    comun: {
+      ccaa_madrid: { es: 'Madrid' },
+      ccaa_otra:   { es: 'Otra comunidad' },
+      ccaa_elegir: { es: 'Elegir' },
+      // Valores con PALABRA (unidad) → plantilla con hueco:
+      v_anios:     { es: '{n} años' },
+      v_pct:       { es: '{n} %' },
+      v_mes:       { es: '{v} /mes' },
+      viv_usada:   { es: 'Usada (2ª mano)' },
+      viv_nueva:   { es: 'Obra nueva' },
+      con_hipoteca:{ es: 'Con hipoteca' },
+      al_contado:  { es: 'Al contado' },
+      si:          { es: 'Sí' },
+      no:          { es: 'No' },
+      n_20:        { es: '20' },
+      n_25:        { es: '25' },
+      n_30:        { es: '30' },
+      // Opciones de plazo (con la palabra "años"):
+      plazo_20a:   { es: '20 años' },
+      plazo_25a:   { es: '25 años' },
+      plazo_30a:   { es: '30 años' },
+      otro:        { es: 'Otro' },
+      anios_ph:    { es: 'Años' }
+    },
+
+    // ---------- Flujo: Valorar un inmueble ----------
+    valorar: {
+      intro:        { es: 'Perfecto. Alberto te prepara una <b>valoración realista</b> de tu inmueble, sin compromiso y con datos de la zona.' },
+      cuantos_preg: { es: '¿Es un <b>solo inmueble</b> o <b>varios</b>?' },
+      opt_uno:      { es: 'Un solo inmueble' },
+      opt_varios:   { es: 'Varios inmuebles' },
+      ccaa_preg:    { es: '¿En qué <b>comunidad autónoma</b> está?' },
+      dir_preg:     { es: '¿Cuál es la <b>dirección</b>? (calle y número, o la zona)' },
+      dir_ph:       { es: 'Ej. C/ Bravo Murillo 23, Madrid' },
+      varios_preg:  { es: '¿<b>Dónde están</b> y cuántos son? Dime las direcciones o zonas.' },
+      varios_ph:    { es: 'Ej. 2 pisos: Bravo Murillo 23 (Madrid) y Toledo centro' },
+      // Textos internos del lead (van a Alberto). AHORA como plantillas:
+      lead_resumen_uno:     { es: 'VALORACIÓN · 1 inmueble · {ccaa} · {dir}' },
+      lead_resumen_varios:  { es: 'VALORACIÓN · Varios inmuebles · {dir}' },
+      lead_contexto_uno:    { es: 'quiero valorar un inmueble situado en {ccaa} ({dir}).' },
+      lead_contexto_varios: { es: 'quiero valorar varios inmuebles: {dir}.' }
+    },
+
+    // ---------- Flujo: Simular hipoteca ----------
+    hipoteca: {
+      intro:       { es: 'Te calculo la <b>cuota mensual</b> al momento.' },
+      capital_preg:{ es: '¿Qué <b>importe</b> de hipoteca necesitas? (o el que estés valorando)' },
+      capital_ph:  { es: 'Ej. 180000' },
+      plazo_preg:  { es: '¿A cuántos <b>años</b>?' },
+      tin_preg:    { es: '¿Qué <b>tipo de interés (TIN)</b> aplicamos? Si no lo sabes, un 3% es una referencia razonable hoy.' },
+      tin_ph:      { es: 'Ej. 3 (o 3,2)' },
+
+      // Tarjeta de resultado
+      card_titulo: { es: '🏦 Tu hipoteca, estimada' },
+      l_importe:   { es: 'Importe' },
+      l_plazo:     { es: 'Plazo' },
+      l_interes:   { es: 'Interés (TIN)' },
+      l_titular:   { es: 'Titular de más edad' },
+      l_intereses: { es: 'Intereses totales' },
+      l_total_dev: { es: 'Total a devolver' },
+      l_cuota:     { es: 'Cuota mensual' },
+      disc:        { es: 'Sistema francés, cuota constante. No incluye comisiones, seguros ni productos vinculados. Las condiciones y la edad máxima dependen de cada banco.' },
+
+      // Avisos: FRASES COMPLETAS con huecos (nunca trozos pegados)
+      aviso_edad_ok:          { es: 'Con {edad} años, el plazo de {plazo} años entra dentro del criterio de edad habitual de las entidades.' },
+      aviso_edad_supera:      { es: 'Con {edad} años, el criterio habitual "edad + plazo ≤ 75" deja un plazo máximo orientativo de {plazoMax} años, por debajo de los {plazo} indicados.' },
+      aviso_edad_supera_cuota:{ es: 'A {plazoMax} años la cuota sería {cuotaMax}/mes.' },
+      aviso_edad_cierre:      { es: 'Varía según la entidad.' },
+
+      // Textos internos del lead (a Alberto)
+      lead_resumen:  { es: 'HIPOTECA · Importe {capital} · {plazo} años · TIN {tin}% · Titular {edad} años · Cuota {cuota}/mes' },
+      lead_contexto: { es: 'quiero simular una hipoteca.' }
+    },
+
+    // ---------- Subflujo compartido: titulares y edad ----------
+    titulares: {
+      una_o_dos: { es: '¿La compra <b>una persona o dos</b>?' },
+      opt_una:   { es: 'Una persona' },
+      opt_dos:   { es: 'Dos personas' },
+      edad_dos:  { es: '¿Qué <b>edad</b> tiene el titular de <b>más edad</b>?' },
+      edad_una:  { es: '¿Qué <b>edad</b> tienes?' },
+      edad_ph:   { es: 'Ej. 42' }
+    },
+
+    // ---------- Subflujo compartido: ofrecer contacto ----------
+    contacto: {
+      // En Telegram, los botones cuelgan de un mensaje: por eso aquí SÍ hay
+      // una frase corta (en la web no hacía falta). Es texto NUEVO para Telegram.
+      pregunta:  { es: '¿Quieres que <b>Alberto</b> te lo vea contigo?' },
+      chip_lead: { es: '📲 Que me contacte Alberto' },
+      chip_menu: { es: 'Calcular otra cosa' }
+    },
+
+    // ---------- Subflujo compartido: captación de lead (con RGPD) ----------
+    lead: {
+      // ===== PUERTA DE CONSENTIMIENTO — BORRADOR (revisar el gestor) =====
+      // Elementos RGPD incluidos: responsable (Alberto), finalidad (llamarte
+      // por tu consulta), datos (nombre + teléfono), sin otros usos (ni listas
+      // ni publicidad), derecho de supresión (borrar cuando quieras) y enlace a
+      // la política. El botón "Sí" es el consentimiento explícito.
+      consent_texto: { es: 'Una cosa antes de seguir 🙂 Para que <b>Alberto Cabas Ortiz</b> te llame solo necesito <b>tu nombre y un teléfono</b>. Los usa <b>únicamente para contactarte por tu consulta</b> — nada de listas ni publicidad, y puedes pedirle que los borre cuando quieras. (Esta conversación es a través de <b>Telegram</b>.) Aquí puedes ver <a href="https://www.cabas.es/privacidad.html">cómo trata tus datos</a>. ¿Seguimos?' },
+      consent_link:  { es: 'cómo trata tus datos' },
+      consent_si:    { es: '✅ Sí, que me llame' },
+      consent_no:    { es: 'Ahora no, gracias' },
+
+      nombre_preg:   { es: 'Genial. Para que Alberto te atienda personalmente, ¿cómo te llamas?' },
+      nombre_ph:     { es: 'Tu nombre' },
+      tel_preg:      { es: 'Encantada, {nombre}. ¿A qué <b>teléfono</b> te viene bien que te contacte?' },
+      tel_ph:        { es: 'Tu teléfono' },
+
+      confirmacion:  { es: 'Perfecto, {nombre}. Le paso tu consulta a Alberto y <b>te contacta en menos de 24 h</b>. Si quieres hablar <b>ahora mismo</b>, pulsa WhatsApp o llámale al <b>662 669 014</b>.' },
+      btn_whatsapp:  { es: 'Enviar por WhatsApp' },
+      btn_llamar:    { es: 'Llamar ahora' },
+      privacidad_nota: { es: 'Tus datos solo se usan para que Alberto te contacte. <a href="https://www.cabas.es/privacidad.html">Política de privacidad</a>.' },
+      privacidad_link: { es: 'Política de privacidad' },
+
+      // ===== Salida cuando el cliente NO acepta — no se le echa =====
+      no_consent:    { es: 'Sin problema 🙂 Puedes seguir usando las <b>calculadoras</b> todo lo que quieras, sin dejar ningún dato. Y si quieres hablar con Alberto, puedes <b>escribirle por WhatsApp</b> o <b>llamarle al 662 669 014</b> tú directamente cuando te venga bien.' },
+
+      algo_mas:      { es: '¿Quieres calcular o consultar algo más?' }
+    },
+
+    // ---------- Flujo: Herencia ----------
+    herencia: {
+      intro:           { es: 'Gestionar una <b>herencia</b> con una vivienda de por medio es la especialidad de Alberto: valoración, acuerdo entre herederos y venta con seguridad jurídica. ¿En qué punto estás?' },
+      opt_nuevo:       { es: 'Acabo de heredar' },
+      opt_coherederos: { es: 'Somos varios herederos' },
+      opt_vender:      { es: 'Quiero vender lo heredado' },
+      opt_info:        { es: 'Solo quiero información' },
+      resp_nuevo:      { es: 'Lo primero es tener una <b>valoración realista</b> y ordenar la documentación. Alberto te acompaña en todo el proceso, sin que tengas que pelearte con el papeleo.' },
+      resp_coherederos:{ es: 'Cuando hay <b>varios herederos</b>, lo clave es un acuerdo claro y justo. Alberto media entre coherederos: más del 80% de los casos terminan en acuerdo.' },
+      resp_vender:     { es: 'Si ya quieres <b>vender lo heredado</b>, te puedo estimar aquí mismo lo que te quedaría tras impuestos, o pasarte directamente con Alberto.' },
+      resp_info:       { es: 'Perfecto. Alberto puede resolverte las dudas de herencia sin compromiso: plazos, impuestos (sucesiones y plusvalía) y qué conviene hacer con la vivienda.' },
+      vender_calc:     { es: 'Calcular lo que me quedaría' },
+      vender_hablar:   { es: 'Hablar con Alberto' },
+      lead_resumen:    { es: 'HERENCIA · Situación: {situacion}' },
+      lead_contexto:   { es: 'tengo una consulta sobre una herencia con una vivienda.' }
+    },
+
+    // ---------- Flujo: Hasta qué precio puedo comprar (capacidad) ----------
+    capacidad: {
+      intro:        { es: 'Te digo <b>hasta qué precio</b> podrías comprar según tus ingresos y ahorro. Es una estimación orientativa, <b>no vinculante</b>.' },
+      ccaa_preg:    { es: '¿En qué <b>comunidad</b> quieres comprar?' },
+      ahorro_preg:  { es: '¿Cuánto <b>ahorro</b> tienes disponible (para entrada + gastos)?' },
+      ahorro_ph:    { es: 'Ej. 60000' },
+      ingresos_preg:{ es: '¿Cuáles son los <b>ingresos netos mensuales</b> del hogar?' },
+      ingresos_ph:  { es: 'Ej. 3000' },
+      tin_preg:     { es: '¿Qué <b>tipo de interés (TIN)</b> estimamos para la hipoteca? Si no lo sabes, un 3% es una referencia razonable hoy.' },
+      card_titulo:  { es: '📈 Hasta dónde puedes llegar' },
+      l_ingresos:   { es: 'Ingresos del hogar' },
+      l_ahorro:     { es: 'Ahorro disponible' },
+      l_plazo_max:  { es: 'Plazo máximo (por edad)' },
+      l_hip_max:    { es: 'Hipoteca máxima estimada' },
+      l_cuota:      { es: 'Cuota a ese nivel' },
+      l_precio_max: { es: 'Precio máximo de compra' },
+      disc:         { es: 'Estimación orientativa y NO vinculante. Supone cuota ≤ 35% de ingresos, financiación hasta el 80% y el criterio habitual de edad. La concesión y las condiciones reales dependen de cada banco.' },
+      aviso_max:    { es: 'Con estos datos podrías comprar una vivienda de hasta ~{maxPrecio} en {ccaa}.' },
+      aviso_limita_ahorro:   { es: 'El límite aquí es el ahorro (hay que cubrir la entrada del 20% + gastos). Con más ahorro subiría el precio máximo.' },
+      aviso_limita_ingresos: { es: 'El límite aquí son los ingresos (cuota ≤ 35%). Con más ingresos o más plazo subiría el importe.' },
+      aviso_plazo:  { es: 'Plazo máximo estimado por edad (edad + plazo ≤ 75): {plazoMax} años.' },
+      lead_resumen: { es: 'CAPACIDAD · {ccaa} · Ingresos {ingresos}/mes · Ahorro {ahorro} · Titular {edad} años · Hipoteca máx {hipMax} · Precio máx {precioMax}' },
+      lead_contexto:{ es: 'quiero saber hasta qué precio de vivienda puedo llegar en {ccaa}.' }
+    },
+
+    // ---------- Etiquetas de RUTA (origen del lead al saltar entre flujos) ----------
+    rutas: {
+      valorar:   { es: 'VALORACIÓN' },
+      herencia:  { es: 'HERENCIA' },
+      vender:    { es: 'VENTA' },
+      comprar:   { es: 'COMPRA' },
+      hipoteca:  { es: 'HIPOTECA' },
+      capacidad: { es: 'CAPACIDAD' },
+      inversion: { es: 'INVERSIÓN' }
+    },
+
+    // ---------- Subflujo compartido: honorarios de intermediación ----------
+    honorarios: {
+      no:        { es: 'No hay' },
+      fijo:      { es: 'Sí, importe fijo' },
+      pct:       { es: 'Sí, un % del precio' },
+      fijo_preg: { es: '¿Qué <b>importe</b> de honorarios?' },
+      fijo_ph:   { es: 'Ej. 6000' },
+      pct_preg:  { es: '¿Qué <b>porcentaje</b> sobre el precio? (ej. 3)' },
+      pct_ph:    { es: 'Ej. 3' },
+      iva_preg:  { es: '¿Ese porcentaje <b>lleva el IVA (21%) incluido</b>?' },
+      iva_si:    { es: 'Sí, IVA incluido' },
+      iva_no:    { es: 'No, súmalo' }
+    },
+
+    // ---------- Flujo: Cuánto cuesta comprar ----------
+    comprar: {
+      intro:        { es: 'Te calculo <b>todo el coste real</b> de comprar: honorarios, impuestos, notaría, registro, gestoría… y la hipoteca si la necesitas.' },
+      precio_preg:  { es: '¿Cuál es el <b>precio</b> de la vivienda?' },
+      precio_ph:    { es: 'Ej. 250000' },
+      hon_preg:     { es: '¿Hay <b>honorarios de intermediación a tu cargo</b> como comprador? (no siempre los hay)' },
+      ccaa_preg:    { es: '¿En qué <b>comunidad</b> está? Los impuestos cambian según la zona.' },
+      viv_preg:     { es: '¿Es vivienda <b>usada</b> o de <b>obra nueva</b>?' },
+      hip_preg:     { es: '¿Vas a pedir <b>hipoteca</b> o comprar al contado?' },
+      ahorro_preg:  { es: '¿Cuánto <b>ahorro</b> vas a aportar (entrada + gastos)?' },
+      ahorro_ph:    { es: 'Ej. 70000' },
+      plazo_preg:   { es: '¿A cuántos <b>años</b> la hipoteca?' },
+      tin_preg:     { es: '¿Qué <b>TIN</b>? (un 3% es referencia razonable si no lo sabes)' },
+      tin_ph:       { es: 'Ej. 3' },
+      ingresos_preg:{ es: '¿Cuáles son los <b>ingresos netos mensuales</b> del hogar?' },
+      ingresos_ph:  { es: 'Ej. 3000' },
+      card_titulo:  { es: '🔑 Coste de tu compra' },
+      l_precio:     { es: 'Precio' },
+      l_notaria:    { es: 'Notaría (est.)' },
+      l_registro:   { es: 'Registro (est.)' },
+      l_gestoria:   { es: 'Gestoría (est.)' },
+      l_tasacion:   { es: 'Tasación (est.)' },
+      l_honorarios_hip: { es: 'Honorarios (no los financia el banco)' },
+      l_honorarios: { es: 'Honorarios de intermediación' },
+      l_hipoteca:   { es: 'Hipoteca necesaria' },
+      l_cuota:      { es: 'Cuota mensual' },
+      l_ltv:        { es: 'Financiación (LTV)' },
+      l_total:      { es: 'Coste total de la operación' },
+      disc:         { es: 'Notaría, registro y gestoría son estimaciones habituales según el precio. Los honorarios de intermediación, cuando existen, los paga el comprador y el banco no los financia. No es asesoramiento fiscal.' },
+      lead_resumen_hip:     { es: 'COMPRA · {precio} · {ccaa} · {tipoViv} · Honorarios {hon} · Coste total {coste} · Hipoteca {hipoteca} · Cuota {cuota}/mes · LTV {ltv}% · titular {edad} años' },
+      lead_resumen_contado: { es: 'COMPRA · {precio} · {ccaa} · {tipoViv} · Honorarios {hon} · Coste total {coste} · al contado' },
+      lead_contexto:{ es: 'estoy mirando comprar una vivienda de {precio} en {ccaa}.' }
+    },
+
+    // ---------- Flujo: Lo que me queda si vendo ----------
+    vender: {
+      intro:        { es: 'Te calculo <b>lo que te queda limpio</b> tras vender, después de impuestos.' },
+      venta_preg:   { es: '¿En cuánto vas a <b>vender</b> (o esperas vender)?' },
+      venta_ph:     { es: 'Ej. 320000' },
+      adq_intro:    { es: 'Ahora, cómo <b>adquiriste</b> la vivienda (hace falta para calcular la ganancia). Si fue de una sola vez, son tres datos y listo.' },
+      modo_preg:    { es: '¿La adquiriste <b>de una vez</b>, o en <b>varias veces</b>? (por ejemplo una herencia, o comprando partes en distintos momentos)' },
+      modo_una:     { es: 'De una vez' },
+      modo_varias:  { es: 'En varias veces' },
+      una_valor_preg:{ es: '¿Por cuánto la <b>compraste o adquiriste</b>? (si fue heredada, el valor que se declaró)' },
+      una_valor_ph: { es: 'Ej. 210000' },
+      anio_preg:    { es: '¿En qué <b>año</b> la adquiriste?' },
+      anio_ph:      { es: 'Ej. 2011' },
+      una_gastos_preg:{ es: '¿Qué <b>gastos deducibles</b> tuviste al adquirirla (impuestos, notaría, registro)? Pon 0 si no lo sabes.' },
+      una_gastos_ph:{ es: 'Ej. 8000' },
+      varias_intro: { es: 'Vale, vamos una a una (hasta 3). De cada una necesito valor, año, gastos y qué % adquiriste. <b>Puedes calcular en cualquier momento</b> con las que lleves metidas.' },
+      adq_valor_preg:{ es: '<b>Adquisición {i}</b> · ¿por cuánto valor?' },
+      adq_valor_ph: { es: 'Ej. 105000' },
+      adq_anio_preg:{ es: 'Adquisición {i} · ¿en qué año?' },
+      adq_gastos_preg:{ es: 'Adquisición {i} · ¿gastos deducibles (impuestos, notaría, registro)? Pon 0 si no.' },
+      adq_gastos_ph:{ es: 'Ej. 4000' },
+      adq_pct_preg: { es: 'Adquisición {i} · ¿qué <b>% de la vivienda</b> adquiriste aquí? (ej. 50)' },
+      adq_pct_ph:   { es: 'Ej. 50' },
+      mas_preg:     { es: '¿Añades otra adquisición o calculamos ya?' },
+      mas_si:       { es: 'Añadir otra' },
+      mas_no:       { es: 'Calcular ya con estas' },
+      gventa_preg:  { es: '¿Qué <b>gastos tienes en la venta</b> (honorarios de agencia, derramas, certificados, cancelación de hipoteca…)? Pon 0 si ninguno.' },
+      gventa_ph:    { es: 'Ej. 9000' },
+      habitual_preg:{ es: '¿Es (o era) tu <b>vivienda habitual</b>?' },
+      m65_preg:     { es: '¿Tienes <b>más de 65 años</b>? En ese caso la ganancia está exenta de IRPF.' },
+      m65_si:       { es: 'Sí, más de 65' },
+      reinv_preg:   { es: '¿Vas a <b>reinvertir</b> todo lo obtenido en otra vivienda habitual?' },
+      reinv_si:     { es: 'Sí, reinvierto' },
+      afinar_preg:  { es: '¿Quieres <b>afinar con la plusvalía municipal</b>? Necesito 2 datos que salen en el recibo del IBI.' },
+      afinar_si:    { es: 'Sí, afinar' },
+      afinar_no:    { es: 'No, dame la estimación' },
+      vc_total_preg:{ es: '¿<b>Valor catastral total</b> del recibo del IBI?' },
+      vc_total_ph:  { es: 'Ej. 90000' },
+      vc_suelo_preg:{ es: '¿Y el <b>valor catastral del suelo</b>? (viene desglosado en el mismo recibo)' },
+      vc_suelo_ph:  { es: 'Ej. 45000' },
+      ccaa_preg:    { es: '¿En qué <b>comunidad</b> está la vivienda?' },
+      card_titulo:  { es: '💶 Lo que te queda tras vender' },
+      l_venta:      { es: 'Precio de venta' },
+      l_gastos_venta:{ es: 'Gastos de la venta' },
+      l_adquisicion:{ es: 'Valor de adquisición' },
+      l_plusvalia:  { es: 'Plusvalía municipal' },
+      l_plusvalia_no:{ es: 'Plusvalía municipal (no incluida)' },
+      l_ganancia:   { es: 'Ganancia (IRPF)' },
+      l_irpf:       { es: 'IRPF sobre la ganancia' },
+      l_neto:       { es: 'Neto estimado para ti' },
+      val_exenta:   { es: 'Exenta' },
+      val_exento:   { es: 'Exento' },
+      disc:         { es: 'Plusvalía con coeficientes máximos estatales (RDL 8/2023) y tipo estimado del municipio. IRPF sobre la base del ahorro (19-30%). Estimación orientativa, no asesoramiento fiscal.' },
+      lead_resumen: { es: 'VENTA · Venta {venta} · Adquisición {adq} · Gastos venta {gventa} · Plusvalía {plusvalia} · IRPF {irpf} · Neto {neto}' },
+      lead_contexto:{ es: 'quiero saber lo que me quedaría al vender mi vivienda.' }
+    },
+
+    // ---------- Flujo: Rentabilidad de inversión (alquiler / flipping) ----------
+    inversion: {
+      intro:         { es: 'Te calculo la <b>rentabilidad</b> de la inversión. ¿Qué estrategia?' },
+      modo_alquiler: { es: '🏠 Comprar para alquilar' },
+      modo_flipping: { es: '🔨 Comprar, reformar y vender' },
+      precio_preg:   { es: '¿<b>Precio de compra</b>?' },
+      precio_ph:     { es: 'Ej. 200000' },
+      viv_preg:      { es: '¿Tipo de vivienda?' },
+      ccaa_preg:     { es: '¿En qué <b>comunidad</b> está?' },
+      hon_compra_preg:{ es: '¿Hay <b>honorarios de intermediación</b> por la compra? (no siempre los hay)' },
+      reforma_preg:  { es: '¿<b>Reforma</b> o puesta a punto? (si no, pon 0)' },
+      reforma_ph:    { es: 'Ej. 15000' },
+      renta_preg:    { es: '¿<b>Renta mensual</b> que esperas cobrar?' },
+      renta_ph:      { es: 'Ej. 950' },
+      gastos_preg:   { es: '¿<b>Gastos anuales</b> aproximados? Suma IBI, comunidad, seguros y mantenimiento.' },
+      gastos_ph:     { es: 'Ej. 2000' },
+      hip_preg:      { es: '¿Vas a <b>financiar con hipoteca</b>?' },
+      entrada_preg:  { es: '¿Cuánto pones de <b>entrada</b>?' },
+      entrada_ph:    { es: 'Ej. 40000' },
+      entrada_ph_fl: { es: 'Ej. 60000' },
+      plazo_preg:    { es: '¿A cuántos <b>años</b>?' },
+      tin_preg:      { es: '¿<b>TIN</b>? Si no lo sabes, un 3% es referencia.' },
+      tin_ph:        { es: 'Ej. 3' },
+      meses_preg:    { es: '¿En cuántos <b>meses</b> harías toda la operación (compra, obra y venta)?' },
+      meses_ph:      { es: 'Ej. 8' },
+      tenencia_preg: { es: '¿<b>Gastos de tenencia</b> al mes durante la obra? (IBI, comunidad, suministros, seguro). Si no, 0.' },
+      tenencia_ph:   { es: 'Ej. 150' },
+      venta_preg:    { es: '¿A qué <b>precio</b> esperas venderla?' },
+      venta_ph:      { es: 'Ej. 290000' },
+      hon_venta_preg:{ es: '¿<b>Comisión / honorarios de venta</b>? (intermediación al vender; si no, ninguno)' },
+      tin_preg_fl:   { es: '¿<b>TIN</b>? Si no lo sabes, un 4% es referencia.' },
+      tin_ph_fl:     { es: 'Ej. 4' },
+      gfin_preg:     { es: '¿<b>Gastos financieros</b> (apertura, tasación, cancelación)? Si no, 0.' },
+      gfin_ph:       { es: 'Ej. 3000' },
+      card_titulo_alq:{ es: '📊 Rentabilidad del alquiler' },
+      l_inversion:   { es: 'Inversión total' },
+      l_noi:         { es: 'Ingreso neto al año' },
+      l_rentbruta:   { es: 'Rentabilidad bruta' },
+      l_cuota_hip:   { es: 'Cuota hipoteca' },
+      l_flujo:       { es: 'Flujo de caja' },
+      l_coc:         { es: 'Rentab. sobre tu capital' },
+      l_rentneta:    { es: 'Rentabilidad neta' },
+      disc_alq:      { es: 'Estimación orientativa. La rentabilidad neta no descuenta el IRPF del alquiler, que depende de tu declaración.' },
+      card_titulo_fl:{ es: '🔨 Comprar, reformar y vender' },
+      l_venta_fl:    { es: 'Precio de venta' },
+      l_roi:         { es: 'ROI sobre tu capital' },
+      l_margen:      { es: 'Margen sobre la venta' },
+      l_roi_anual:   { es: 'ROI anualizado' },
+      l_beneficio:   { es: 'Beneficio (antes de impuestos)' },
+      disc_fl:       { es: 'Estimación orientativa. El beneficio es antes de impuestos: la tributación depende de si la operación es puntual o habitual.' },
+      lead_resumen_alq_hip:     { es: 'INVERSIÓN·ALQUILER · Compra {precio} {ccaa} · Renta {renta}/mes · Rent. neta {rentneta} · Cash-on-cash {coc} · Flujo {flujo}/mes' },
+      lead_resumen_alq_contado: { es: 'INVERSIÓN·ALQUILER · Compra {precio} {ccaa} · Renta {renta}/mes · Rent. neta {rentneta}' },
+      lead_resumen_fl:          { es: 'INVERSIÓN·FLIPPING · Compra {precio} + reforma {reforma} {ccaa} · Venta {venta} · Beneficio {beneficio} · ROI {roi} · Margen {margen}' },
+      lead_contexto_alq: { es: 'estoy analizando comprar para alquilar una vivienda de {precio} en {ccaa}.' },
+      lead_contexto_fl:  { es: 'estoy analizando una operación de comprar, reformar y vender (compra {precio} en {ccaa}).' }
+    }
+
+  };
+
+  if (typeof module !== 'undefined' && module.exports) module.exports = { TEXTOS: TEXTOS };
+  else raiz.TEXTOS = TEXTOS;
+
+})(typeof globalThis !== 'undefined' ? globalThis : this);

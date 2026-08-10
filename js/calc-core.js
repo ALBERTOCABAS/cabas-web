@@ -16,6 +16,51 @@
 // calc-hipoteca.js / calc-vendedor.js / cabas-chatbot.js.
 // ============================================================
 
+// ------------------------------------------------------------
+// Reutilización en servidor (Worker de Telegram).
+// En el NAVEGADOR, datos-cabas.js ya cargó y DATOS_CCAA existe: esta
+// condición es FALSA, el bloque se ignora por completo y todo funciona
+// igual que siempre (los mismos datos globales de siempre).
+// En el SERVIDOR (Node / Worker) esos datos NO son globales, así que se
+// cargan aquí desde datos-cabas.js y se dejan accesibles para las
+// funciones de abajo. Resultado: los MISMOS números en web y Telegram.
+// No se declara ninguna variable con nombre de dato (DATOS_CCAA, etc.)
+// a propósito, para no chocar con los globales que ya existen en la web.
+// ------------------------------------------------------------
+if (typeof DATOS_CCAA === 'undefined') {
+  try {
+    const _datos = require('./datos-cabas.js');
+    globalThis.DATOS_CCAA     = _datos.DATOS_CCAA;
+    globalThis.datosITPAJD    = _datos.datosITPAJD;
+    globalThis.PLUSVALIA_CCAA = _datos.PLUSVALIA_CCAA;
+    globalThis.COEF_IIVTNU    = _datos.COEF_IIVTNU;
+    globalThis.TRAMOS_IRPF    = _datos.TRAMOS_IRPF;
+  } catch (e) { /* en el navegador nunca se llega aquí */ }
+}
+
+// ------------------------------------------------------------
+// Formateadores de euros para 3 avisos (líneas de "flujo de caja" y
+// "ahorro recomendado"). En la WEB ya existen —los define main.js, que
+// carga ANTES que este archivo en todas las páginas—, así que esta
+// condición es FALSA y no se toca nada. En el SERVIDOR no existen: se
+// definen aquí con el MISMO formato exacto que main.js (espacio fijo
+//   antes del €) para que los textos salgan idénticos a la web.
+// Se asignan a globalThis (no se declaran con const/var) para no chocar
+// con los de main.js en el navegador.
+// ------------------------------------------------------------
+if (typeof eur === 'undefined') {
+  globalThis._miles = globalThis._miles || function (e) { return e.replace(/\B(?=(\d{3})+(?!\d))/g, '.'); };
+  globalThis.eur = function (n) {
+    var neg = n < 0 ? '−' : '';
+    return neg + globalThis._miles(String(Math.round(Math.abs(n)))) + ' €';
+  };
+  globalThis.eur2 = function (n) {
+    var neg = n < 0 ? '−' : '';
+    var abs = Math.abs(n).toFixed(2).split('.');
+    return neg + globalThis._miles(abs[0]) + ',' + abs[1] + ' €';
+  };
+}
+
 // ---------- Utilidades de cálculo (sin DOM) ----------
 
 // Años completos entre dos fechas (para el coeficiente de plusvalía)
@@ -412,7 +457,11 @@ function coreInversionFlipping(inp) {
   };
 }
 
-// Exportar para Node (tests) sin romper el uso en navegador
+// Exportar para Node / Worker sin romper el uso en navegador.
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = { coreCuota, coreCompra, coreNetoVendedor, coreCapacidadCompra, coreGastosFijos, coreGastosCompra, coreCalcIRPF, coreAniosCompletos, coreInversionAlquiler, coreInversionFlipping };
+  // Además, en servidor las funciones NO son globales (en el navegador sí, por
+  // ser scripts sueltos). kitty-guion.js las usa como globales, así que aquí
+  // las publicamos también en globalThis para que el guión funcione igual.
+  for (var _k in module.exports) globalThis[_k] = module.exports[_k];
 }

@@ -18,24 +18,37 @@
 // ============================================================
 
 // ITP (vivienda usada): número = tipo fijo (%); función = escala progresiva
+// POR TRAMOS (marginal: cada parte del precio tributa a su tipo).
 // AJD (obra nueva, IVA + AJD): siempre número, tipo general (%)
-// Fuentes: boletines oficiales autonómicos 2025-2026. Tipos generales;
-// existen reducidos por edad, familia numerosa, discapacidad, VPO o
-// zona rural en la mayoría de comunidades que esta simulación no aplica.
+//
+// TIPOS GENERALES verificados 2025-2026. Con escala por tramos: Aragón,
+// Asturias, Illes Balears, Castilla y León (8% hasta 250k, 10% resto),
+// Cataluña, C. Valenciana y Extremadura. Murcia 7,75% (rebaja Ley 3/2025).
+//
+// ⚠️ ADVERTENCIA LEGAL: son los tipos GENERALES. NO se aplican los tipos
+// REDUCIDOS (jóvenes, familia numerosa, VPO, discapacidad, vivienda habitual
+// por debajo de cierto valor, zonas despobladas…), que bajan mucho el ITP
+// según el perfil del comprador. Es una ESTIMACIÓN ORIENTATIVA, no
+// asesoramiento fiscal: confírmalo siempre con un profesional.
 const DATOS_CCAA = {
   andalucia:          { nombre: 'Andalucía',            itp: 7,    ajd: 1.2 },
-  aragon:             { nombre: 'Aragón',                itp: 8,    ajd: 1.5 },
-  asturias:           { nombre: 'Asturias',               itp: 8,    ajd: 1.2 },
-  baleares:           { nombre: 'Illes Balears',          itp: 8,    ajd: 1.5 },
+  aragon:             { nombre: 'Aragón', ajd: 1.5,
+    itp: (precio) => tramosProgresivos(precio, [[400000, 8], [450000, 8.5], [500000, 9], [750000, 9.5], [Infinity, 10]]) },
+  asturias:           { nombre: 'Asturias', ajd: 1.2,
+    itp: (precio) => tramosProgresivos(precio, [[300000, 8], [500000, 9], [Infinity, 10]]) },
+  baleares:           { nombre: 'Illes Balears', ajd: 1.5,
+    itp: (precio) => tramosProgresivos(precio, [[400000, 8], [600000, 9], [1000000, 10], [2000000, 12], [Infinity, 13]]) },
   canarias:           { nombre: 'Canarias',                itp: 6.5,  ajd: 1.0 },
   cantabria:          { nombre: 'Cantabria',                itp: 9,    ajd: 1.5 },
-  castillayleon:      { nombre: 'Castilla y León',          itp: 8,    ajd: 1.5 },
+  castillayleon:      { nombre: 'Castilla y León', ajd: 1.5,
+    itp: (precio) => tramosProgresivos(precio, [[250000, 8], [Infinity, 10]]) },
   castillalamancha:   { nombre: 'Castilla-La Mancha',       itp: 9,    ajd: 1.25 },
   cataluna:           { nombre: 'Cataluña', ajd: 1.5,
     itp: (precio) => tramosProgresivos(precio, [[600000, 10], [900000, 11], [1500000, 12], [Infinity, 13]]) },
   valencia:           { nombre: 'Comunitat Valenciana', ajd: 1.4,
     itp: (precio) => tramosProgresivos(precio, [[1000000, 9], [Infinity, 11]]) },
-  extremadura:        { nombre: 'Extremadura',             itp: 8,    ajd: 1.5 },
+  extremadura:        { nombre: 'Extremadura', ajd: 1.5,
+    itp: (precio) => tramosProgresivos(precio, [[360000, 8], [600000, 10], [Infinity, 11]]) },
   galicia:            { nombre: 'Galicia',                  itp: 8,    ajd: 1.5 },
   madrid:             { nombre: 'Comunidad de Madrid',      itp: 6,    ajd: 0.75 },
   murcia:             { nombre: 'Región de Murcia',         itp: 7.75, ajd: 1.5 },
@@ -171,3 +184,18 @@ const TRAMOS_IRPF = [
   { hasta: 300000,   tipo: 0.27 },
   { hasta: Infinity, tipo: 0.30 }
 ];
+
+// ============================================================
+// Reutilización en servidor (Cloudflare Worker del bot de Telegram).
+// En el NAVEGADOR esta condición es falsa (no existe "module"), así que
+// este bloque se ignora por completo y la web funciona igual que siempre.
+// En el servidor, permite que calc-core.js y el bot compartan EXACTAMENTE
+// estos mismos datos → mismos números en la web y en Telegram.
+// Mismo patrón que ya usa js/calc-core.js al final del archivo.
+// ============================================================
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = {
+    DATOS_CCAA, tramosProgresivos, datosITPAJD,
+    OFICINAS, PLUSVALIA_CCAA, COEF_IIVTNU, TRAMOS_IRPF
+  };
+}
