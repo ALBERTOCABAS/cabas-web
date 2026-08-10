@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<title>Cartera consolidada · Oficinas Cabas</title>
+<style>
+  :root{
+    --tinta:#1b1f2a; --tinta-2:#5a6172; --linea:#e4e6ec; --fondo:#f5f6f8;
+    --papel:#ffffff; --acento:#b8232f; --acento-osc:#8c1a23;
+    --ok:#1f7a4d; --baja:#1f7a4d; --alta:#b8232f;
+    /* color-code por oficina */
+    --o1:#b8232f; --o2:#2f6db8; --o3:#7a4fb8; --o4:#1f7a4d; --o5:#c9821a; --o6:#2b7d84;
+    --radio:14px; --sombra:0 1px 2px rgba(20,25,40,.06),0 8px 24px rgba(20,25,40,.05);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--fondo);color:var(--tinta);font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+    -webkit-font-smoothing:antialiased;line-height:1.4}
+  .wrap{max-width:960px;margin:0 auto;padding:0 16px 64px}
+
+  header.top{padding:22px 0 14px;border-bottom:1px solid var(--linea);margin-bottom:0}
+  .brand{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+  .brand h1{font-size:1.35rem;font-weight:800;letter-spacing:-.02em}
+  .brand .red{color:var(--acento)}
+  .brand .fecha{color:var(--tinta-2);font-size:.82rem;font-weight:600;margin-left:auto}
+  .sub{color:var(--tinta-2);font-size:.85rem;margin-top:3px}
+
+  /* Novedades de la semana */
+  .novedades{background:var(--papel);border:1px solid var(--linea);border-radius:var(--radio);
+    box-shadow:var(--sombra);margin:16px 0 10px;overflow:hidden}
+  .novedades summary{cursor:pointer;list-style:none;padding:13px 16px;display:flex;align-items:center;gap:10px;
+    font-weight:700;font-size:.95rem}
+  .novedades summary::-webkit-details-marker{display:none}
+  .novedades summary .tag{background:var(--acento);color:#fff;font-size:.68rem;font-weight:800;
+    padding:3px 8px;border-radius:999px;letter-spacing:.04em}
+  .novedades summary .chev{margin-left:auto;color:var(--tinta-2);transition:transform .2s}
+  .novedades[open] summary .chev{transform:rotate(180deg)}
+  .nov-body{padding:2px 16px 16px;border-top:1px solid var(--linea)}
+  .nov-grupo{margin-top:12px}
+  .nov-grupo h4{font-size:.78rem;text-transform:uppercase;letter-spacing:.06em;color:var(--tinta-2);margin-bottom:6px}
+  .nov-item{font-size:.87rem;padding:5px 0;border-bottom:1px dashed var(--linea);display:flex;gap:8px;flex-wrap:wrap}
+  .nov-item:last-child{border-bottom:0}
+  .nov-item .dot{width:8px;height:8px;border-radius:50%;margin-top:6px;flex:0 0 auto}
+  .nov-item a{color:var(--tinta);text-decoration:none;font-weight:600}
+  .nov-item a:hover{color:var(--acento)}
+  .nov-item .delta{font-weight:800}
+  .delta.baja{color:var(--baja)} .delta.alta{color:var(--alta)}
+
+  /* Filtros */
+  .filtros{position:sticky;top:0;z-index:20;background:var(--fondo);padding:12px 0 10px;margin-top:6px}
+  .busca{width:100%;padding:12px 14px;border:1px solid var(--linea);border-radius:12px;font-size:1rem;
+    background:var(--papel);box-shadow:var(--sombra)}
+  .busca:focus{outline:2px solid var(--acento);border-color:transparent}
+  .chips{display:flex;gap:7px;margin-top:10px;flex-wrap:wrap}
+  .chip{border:1px solid var(--linea);background:var(--papel);border-radius:999px;padding:7px 13px;
+    font-size:.82rem;font-weight:700;color:var(--tinta-2);cursor:pointer;user-select:none}
+  .chip[aria-pressed="true"]{background:var(--tinta);color:#fff;border-color:var(--tinta)}
+  .selects{display:flex;gap:7px;margin-top:8px;flex-wrap:wrap}
+  .selects select{flex:1 1 auto;min-width:120px;padding:9px 10px;border:1px solid var(--linea);
+    border-radius:10px;background:var(--papel);font-size:.85rem;font-weight:600;color:var(--tinta)}
+  .contador{font-size:.82rem;color:var(--tinta-2);margin-top:9px;font-weight:600}
+  .contador b{color:var(--tinta)}
+
+  /* Grid tarjetas */
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px;margin-top:6px}
+  .card{background:var(--papel);border:1px solid var(--linea);border-radius:var(--radio);box-shadow:var(--sombra);
+    padding:14px;display:flex;flex-direction:column;gap:9px;position:relative;text-decoration:none;color:inherit;
+    transition:transform .12s,box-shadow .12s}
+  .card:hover{transform:translateY(-2px);box-shadow:0 2px 4px rgba(20,25,40,.08),0 14px 30px rgba(20,25,40,.09)}
+  .card .top-row{display:flex;align-items:center;gap:8px}
+  .ofi{font-size:.68rem;font-weight:800;padding:3px 8px;border-radius:6px;color:#fff;letter-spacing:.02em;white-space:nowrap}
+  .op{font-size:.68rem;font-weight:800;letter-spacing:.05em;color:var(--tinta-2);text-transform:uppercase;margin-left:auto}
+  .reserv{position:absolute;top:0;right:0;background:var(--tinta);color:#fff;font-size:.62rem;font-weight:800;
+    padding:3px 8px;border-bottom-left-radius:10px;letter-spacing:.05em}
+  .precio{font-size:1.5rem;font-weight:800;letter-spacing:-.02em}
+  .precio .mes{font-size:.8rem;font-weight:600;color:var(--tinta-2)}
+  .specs{display:flex;gap:10px;font-size:.82rem;color:var(--tinta-2);font-weight:600;flex-wrap:wrap}
+  .specs .tt{color:var(--tinta);font-weight:800}
+  .titulo{font-size:.86rem;line-height:1.35;color:var(--tinta);
+    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .ver{font-size:.78rem;font-weight:800;color:var(--acento);margin-top:auto}
+  .vacio{text-align:center;color:var(--tinta-2);padding:48px 0;font-weight:600}
+
+  footer{margin-top:28px;padding-top:16px;border-top:1px solid var(--linea);color:var(--tinta-2);font-size:.76rem;line-height:1.5}
+  @media(max-width:560px){ .brand h1{font-size:1.15rem} .precio{font-size:1.35rem} }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <h1>Cartera <span class="red">consolidada</span></h1>
+      <span class="fecha" id="fecha">—</span>
+    </div>
+    <p class="sub">6 oficinas en red · pisos de venta y alquiler de todas las oficinas, en un sitio. Si tienes un cliente o un cambio de casa, busca aquí primero.</p>
+  </header>
+
+  <details class="novedades" open id="novedades">
+    <summary><span class="tag">NOVEDADES</span> Cambios de la semana <span class="chev">▾</span></summary>
+    <div class="nov-body" id="nov-body"><!-- lo rellena el digest --></div>
+  </details>
+
+  <div class="filtros">
+    <input class="busca" id="busca" type="search" placeholder="Buscar por calle, zona, referencia…" autocomplete="off">
+    <div class="chips" id="chips-op">
+      <span class="chip" data-op="" aria-pressed="true">Todas</span>
+      <span class="chip" data-op="Venta" aria-pressed="false">Venta</span>
+      <span class="chip" data-op="Alquiler" aria-pressed="false">Alquiler</span>
+    </div>
+    <div class="selects">
+      <select id="f-oficina"><option value="">Todas las oficinas</option></select>
+      <select id="f-tipo"><option value="">Todos los tipos</option></select>
+      <select id="f-precio">
+        <option value="">Cualquier precio</option>
+        <option value="0-150000">Hasta 150.000 €</option>
+        <option value="150000-300000">150.000 – 300.000 €</option>
+        <option value="300000-500000">300.000 – 500.000 €</option>
+        <option value="500000-800000">500.000 – 800.000 €</option>
+        <option value="800000-99999999">Más de 800.000 €</option>
+      </select>
+      <select id="f-hab">
+        <option value="">Habitaciones</option>
+        <option value="1">1+</option><option value="2">2+</option>
+        <option value="3">3+</option><option value="4">4+</option>
+      </select>
+    </div>
+    <div class="contador" id="contador"></div>
+  </div>
+
+  <div class="grid" id="grid"></div>
+
+  <footer id="foot"></footer>
+</div>
+
+<script>
+/* ------- CÓDIGO DE COLOR POR OFICINA (info real: oficina propietaria) ------- */
+const COLOR_OFI = {
+  "Chamberí (Bravo Murillo)":"var(--o1)","San Bernardo · Malasaña":"var(--o2)",
+  "Almagro":"var(--o3)","Vallehermoso":"var(--o4)","Ríos Rosas":"var(--o5)","Nueva España":"var(--o6)"
+};
+const eur = n => n==null ? "—" : n.toLocaleString("es-ES")+" €";
+
+/* ------- DATOS -------
+   En producción: fetch('cartera.json'). Aquí van embebidos los datos REALES
+   de Chamberí (venta) para que el panel se vea funcionando ya. ------------- */
+const DATOS_DEMO = [{"ref": "RP752026155685", "oficina": "Chamberí (Bravo Murillo)", "slug_oficina": "inmobiliaria-chamberi", "operacion": "Venta", "tipo": "Piso", "precio": 1500000, "m2": 113, "habitaciones": 3, "banos": 2, "reservado": false, "titulo": "Espectacular vivienda en Chamberi en sexta planta con dos terrazas y gran luminosidad", "url": "https://www.redpiso.es/inmueble/piso-en-venta-en-calle-de-galileo-arapiles-chamberi-madrid-RP752026155685"}, {"ref": "RP752026155153", "oficina": "Chamberí (Bravo Murillo)", "slug_oficina": "inmobiliaria-chamberi", "operacion": "Venta", "tipo": "Piso", "precio": 975000, "m2": 128, "habitaciones": 5, "banos": 2, "reservado": false, "titulo": "AMPLIA VIVIENDA EXTERIOR DE EN BRAVO MURILLO", "url": "https://www.redpiso.es/inmueble/piso-en-venta-en-calle-de-bravo-murillo-arapiles-chamberi-madrid-RP752026155153"}, {"ref": "RP752026153441", "oficina": "Chamberí (Bravo Murillo)", "slug_oficina": "inmobiliaria-chamberi", "operacion": "Venta", "tipo": "Local", "precio": 450000, "m2": 96, "habitaciones": null, "banos": null, "reservado": false, "titulo": "IDEAL CAMBIO DE USO A VIVIENDA EN PLENO CHAMBERÍ – VIRIATO ESQUINA BRAVO MURILLO", "url": "https://www.redpiso.es/inmueble/local-comercial-en-venta-en-calle-de-viriato-trafalgar-chamberi-madrid-RP752026153441"}, {"ref": "RP752026152906", "oficina": "Chamberí (Bravo Murillo)", "slug_oficina": "inmobiliaria-chamberi", "operacion": "Venta", "tipo": "Garaje", "precio": 25000, "m2": 31, "habitaciones": null, "banos": null, "reservado": false, "titulo": "PLAZA DE GARAJE EN VENTA EN CHAMBERÍ – CEA BERMÚDEZ", "url": "https://www.redpiso.es/inmueble/plaza-de-garaje-en-venta-en-calle-de-cea-bermudez-arapiles-chamberi-madrid-RP752026152906"}, {"ref": "RP752026152598", "oficina": "Chamberí (Bravo Murillo)", "slug_oficina": "inmobiliaria-chamberi", "operacion": "Venta", "tipo": "Garaje", "precio": 39000, "m2": 23, "habitaciones": null, "banos": null, "reservado": false, "titulo": "¡OPORTUNIDAD EN CHAMBERÍ! Plaza de garaje en Calle Fernando Garrido", "url": "https://www.redpiso.es/inmueble/plaza-de-garaje-en-venta-en-calle-de-fernando-garrido-arapiles-chamberi-madrid-RP752026152598"}, {"ref": "RP752026152597", "oficina": "Chamberí (Bravo Murillo)", "slug_oficina": "inmobiliaria-chamberi", "operacion": "Venta", "tipo": "Garaje", "precio": 33000, "m2": 24, "habitaciones": null, "banos": null, "reservado": false, "titulo": "PLAZA DE GARAJE EN CHAMBERÍ – CALLE GALILEO", "url": "https://www.redpiso.es/inmueble/plaza-de-garaje-en-venta-en-calle-de-galileo-arapiles-chamberi-madrid-RP752026152597"}];
+const DIGEST_DEMO = {
+  altas: [], bajadas: [], ya_no_disponibles: []
+};
+
+let CARTERA = [], DIGEST = DIGEST_DEMO;
+
+async function cargar(){
+  try{
+    const r = await fetch('cartera.json',{cache:'no-store'});
+    if(!r.ok) throw 0;
+    const j = await r.json();
+    CARTERA = j.inmuebles || j;
+    if(j.digest) DIGEST = j.digest;
+    if(j.generado) document.getElementById('fecha').textContent = j.generado;
+  }catch(e){
+    CARTERA = DATOS_DEMO;
+    document.getElementById('fecha').textContent = new Date().toLocaleDateString('es-ES',{day:'numeric',month:'long'})+" · demo";
+  }
+  init();
+}
+
+function init(){
+  // poblar selects
+  const ofis = [...new Set(CARTERA.map(d=>d.oficina))];
+  const selO = document.getElementById('f-oficina');
+  ofis.forEach(o=>{const op=document.createElement('option');op.value=o;op.textContent=o;selO.appendChild(op)});
+  const tipos = [...new Set(CARTERA.map(d=>d.tipo))].sort();
+  const selT = document.getElementById('f-tipo');
+  tipos.forEach(t=>{const op=document.createElement('option');op.value=t;op.textContent=t;selT.appendChild(op)});
+  pintarDigest(); render();
+  // listeners
+  document.getElementById('busca').addEventListener('input',render);
+  ['f-oficina','f-tipo','f-precio','f-hab'].forEach(id=>document.getElementById(id).addEventListener('change',render));
+  document.querySelectorAll('#chips-op .chip').forEach(c=>c.addEventListener('click',()=>{
+    document.querySelectorAll('#chips-op .chip').forEach(x=>x.setAttribute('aria-pressed','false'));
+    c.setAttribute('aria-pressed','true'); render();
+  }));
+}
+
+function estadoFiltros(){
+  const q = document.getElementById('busca').value.trim().toLowerCase();
+  const op = document.querySelector('#chips-op .chip[aria-pressed="true"]').dataset.op;
+  const of = document.getElementById('f-oficina').value;
+  const ti = document.getElementById('f-tipo').value;
+  const pr = document.getElementById('f-precio').value;
+  const hb = parseInt(document.getElementById('f-hab').value)||0;
+  return {q,op,of,ti,pr,hb};
+}
+
+function render(){
+  const f = estadoFiltros();
+  let res = CARTERA.filter(d=>{
+    if(f.op && d.operacion!==f.op) return false;
+    if(f.of && d.oficina!==f.of) return false;
+    if(f.ti && d.tipo!==f.ti) return false;
+    if(f.hb && (d.habitaciones||0) < f.hb) return false;
+    if(f.pr){const[a,b]=f.pr.split('-').map(Number); if(d.precio==null||d.precio<a||d.precio>b) return false;}
+    if(f.q){const blob=(d.titulo+' '+d.ref+' '+d.oficina+' '+d.url).toLowerCase(); if(!blob.includes(f.q)) return false;}
+    return true;
+  });
+  const grid = document.getElementById('grid');
+  document.getElementById('contador').innerHTML = `<b>${res.length}</b> inmueble${res.length!==1?'s':''} · de ${CARTERA.length} en cartera`;
+  if(!res.length){grid.innerHTML='<p class="vacio">Sin resultados con esos filtros. Prueba a quitar alguno.</p>';return;}
+  grid.innerHTML = res.map(d=>{
+    const col = COLOR_OFI[d.oficina]||'var(--tinta-2)';
+    const mes = d.operacion==='Alquiler' ? '<span class="mes">/mes</span>':'';
+    const specs=[]; if(d.habitaciones) specs.push(`<span class="tt">${d.habitaciones}</span> hab`);
+    if(d.banos) specs.push(`<span class="tt">${d.banos}</span> baño${d.banos>1?'s':''}`);
+    if(d.m2) specs.push(`<span class="tt">${d.m2}</span> m²`);
+    return `<a class="card" href="${d.url}" target="_blank" rel="noopener">
+      ${d.reservado?'<span class="reserv">RESERVADO</span>':''}
+      <div class="top-row">
+        <span class="ofi" style="background:${col}">${d.oficina}</span>
+        <span class="op">${d.operacion}</span>
+      </div>
+      <div class="precio">${eur(d.precio)}${mes}</div>
+      <div class="specs">${specs.join('<span>·</span>')||'<span>—</span>'}</div>
+      <div class="titulo">${d.titulo||d.tipo}</div>
+      <div class="ver">Ver ficha →</div>
+    </a>`;
+  }).join('');
+}
+
+function pintarDigest(){
+  const cont=document.getElementById('nov-body');
+  const secc=(t,arr,fn)=>arr.length?`<div class="nov-grupo"><h4>${t} (${arr.length})</h4>${arr.map(fn).join('')}</div>`:'';
+  const html =
+    secc('Nuevas altas', DIGEST.altas, d=>`<div class="nov-item"><span class="dot" style="background:${COLOR_OFI[d.oficina]||'#999'}"></span><a href="${d.url}" target="_blank">${d.titulo||d.tipo} · ${d.oficina}</a> — ${eur(d.precio)}</div>`)+
+    secc('Bajadas de precio', DIGEST.bajadas, d=>`<div class="nov-item"><span class="dot" style="background:${COLOR_OFI[d.oficina]||'#999'}"></span><a href="${d.url}" target="_blank">${d.titulo||d.tipo} · ${d.oficina}</a> <span class="delta baja">${eur(d.precio)} (▼ ${eur(d.antes-d.precio)})</span></div>`)+
+    secc('Ya no disponibles', DIGEST.ya_no_disponibles||[], d=>`<div class="nov-item"><span class="dot" style="background:#c9ccd4"></span>${d.titulo||d.tipo} · ${d.oficina} — ${eur(d.precio)} <span style="color:var(--tinta-2);font-weight:700">(${d.motivo||'retirado'})</span></div>`);
+  cont.innerHTML = html || '<p style="color:var(--tinta-2);font-size:.86rem;padding:10px 0">Sin cambios registrados esta semana. El primer lunes que corra la tarea se guardará la foto de partida; a partir del siguiente ya verás altas, bajas y bajadas de precio.</p>';
+}
+
+document.getElementById('foot').innerHTML =
+  'Cartera consolidada de las 6 oficinas · uso interno. Los datos se actualizan automáticamente cada lunes desde las webs de oficina. '+
+  'Verifica siempre disponibilidad y condiciones con la oficina propietaria antes de enseñar a un cliente.';
+
+cargar();
+</script>
+</body>
+</html>
