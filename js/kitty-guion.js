@@ -333,23 +333,24 @@
       pasos: [
         { id: 'intro', tipo: 'decir', texto: 'vender.intro' },
         { id: 'venta', tipo: 'texto', texto: 'vender.venta_preg', placeholder: 'vender.venta_ph', entrada: 'dinero', validador: 'money', guardar: 'venta' },
+        { id: 'fventa', tipo: 'texto', texto: 'vender.fventa_preg', placeholder: 'vender.fventa_ph', entrada: 'fecha', validador: 'fecha', guardar: 'fventa' },
         { id: 'adq_intro', tipo: 'decir', texto: 'vender.adq_intro' },
         { id: 'modo', tipo: 'chips', texto: 'vender.modo_preg', guardar: 'modo',
           opciones: [ { texto: 'vender.modo_una', valor: 'una' }, { texto: 'vender.modo_varias', valor: 'varias', saltarA: 'varias_intro' } ] },
         // rama: UNA adquisición (3 datos → resultado)
         { id: 'una_valor', tipo: 'texto', texto: 'vender.una_valor_preg', placeholder: 'vender.una_valor_ph', entrada: 'dinero', validador: 'money', guardar: 'una_valor' },
-        { id: 'una_anio',  tipo: 'texto', texto: 'vender.anio_preg', placeholder: 'vender.anio_ph', entrada: 'numero', validador: 'anio', guardar: 'una_anio' },
+        { id: 'una_fecha', tipo: 'texto', texto: 'vender.fecha_adq_preg', placeholder: 'vender.fecha_ph', entrada: 'fecha', validador: 'fecha', guardar: 'una_fecha' },
         { id: 'una_gastos',tipo: 'texto', texto: 'vender.una_gastos_preg', placeholder: 'vender.una_gastos_ph', entrada: 'dinero', validador: 'money0', guardar: 'una_gastos', saltarA: 'gventa' },
         // rama: VARIAS adquisiciones (bucle)
         { id: 'varias_intro', tipo: 'decir', texto: 'vender.varias_intro' },
         { id: 'bucle', tipo: 'bucle', guardar: 'adquisiciones', max: 3,
           itemPasos: [
             { id: 'v', tipo: 'texto', texto: 'vender.adq_valor_preg', placeholder: 'vender.adq_valor_ph', entrada: 'dinero', validador: 'money', guardar: 'valor' },
-            { id: 'a', tipo: 'texto', texto: 'vender.adq_anio_preg', placeholder: 'vender.anio_ph', entrada: 'numero', validador: 'anio', guardar: 'anio' },
+            { id: 'a', tipo: 'texto', texto: 'vender.adq_fecha_preg', placeholder: 'vender.fecha_ph', entrada: 'fecha', validador: 'fecha', guardar: 'fecha' },
             { id: 'g', tipo: 'texto', texto: 'vender.adq_gastos_preg', placeholder: 'vender.adq_gastos_ph', entrada: 'dinero', validador: 'money0', guardar: 'gastos' },
             { id: 'p', tipo: 'texto', texto: 'vender.adq_pct_preg', placeholder: 'vender.adq_pct_ph', entrada: 'numero', validador: 'pct', guardar: 'pct' }
           ],
-          item: function (it) { return { valor: it.valor, gastos: it.gastos, fecha: it.anio + '-01-01', pct: it.pct }; },
+          item: function (it) { return { valor: it.valor, gastos: it.gastos, fecha: it.fecha, pct: it.pct }; },
           continuar: { texto: 'vender.mas_preg', mas: 'vender.mas_si', fin: 'vender.mas_no' } },
         // convergen ambas ramas
         { id: 'gventa', tipo: 'texto', texto: 'vender.gventa_preg', placeholder: 'vender.gventa_ph', entrada: 'dinero', validador: 'money0', guardar: 'gventa' },
@@ -367,9 +368,9 @@
         { id: 'calc', tipo: 'calc',
           calcular: function (a) {
             var adq = (a.adquisiciones && a.adquisiciones.length) ? a.adquisiciones
-                    : [ { valor: a.una_valor, gastos: a.una_gastos, fecha: a.una_anio + '-01-01', pct: 100 } ];
+                    : [ { valor: a.una_valor, gastos: a.una_gastos, fecha: a.una_fecha, pct: 100 } ];
             return coreNetoVendedor({ venta: a.venta, gVenta: a.gventa || 0, vcTotal: a.vcTotal || 0, vcSuelo: a.vcSuelo || 0,
-              fVenta: hoyISO(), ccaaSlug: a.ccaa || 'madrid', mayor65: !!a.mayor65, reinv: !!a.reinv, adquisiciones: adq });
+              fVenta: a.fventa || hoyISO(), ccaaSlug: a.ccaa || 'madrid', mayor65: !!a.mayor65, reinv: !!a.reinv, adquisiciones: adq });
           },
           tarjeta: {
             titulo: 'vender.card_titulo',
@@ -513,7 +514,7 @@
             { texto: 'comun.ccaa_madrid', valor: 'madrid', saltarA: '@fin' },
             { texto: 'comun.ccaa_otra',   valor: '__otra' }
           ] },
-        { id: 'lista', tipo: 'lista', fuente: 'CCAA', boton: 'comun.ccaa_elegir', guardar: 'ccaa' }
+        { id: 'lista', tipo: 'lista', texto: 'comun.ccaa_elige_lista', fuente: 'CCAA', boton: 'comun.ccaa_elegir', guardar: 'ccaa' }
       ]
     },
 

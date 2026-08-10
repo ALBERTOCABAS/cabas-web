@@ -81,6 +81,8 @@ function addTramo() {
 }
 btnAdd.addEventListener('click', addTramo);
 addTramo(); // primer tramo siempre presente
+// Fecha de venta por defecto = hoy (simulación "vendo ahora"); editable por el usuario.
+(function () { var fv = document.getElementById('v-fecha-venta'); if (fv && !fv.value) fv.value = new Date().toISOString().slice(0, 10); })();
 
 // ---------- Cálculo ----------
 function aniosCompletos(f1, f2) {
