@@ -33,34 +33,34 @@
   .brand .fecha{ color:var(--gris); font-size:.82rem; font-weight:500; margin-left:auto; }
   .sub{ color:var(--gris); font-size:.88rem; margin-top:6px; max-width:62ch; }
 
-  /* Novedades de la semana */
-  .novedades{ background:var(--panel); border:1px solid var(--linea); border-radius:14px; margin:18px 0 10px; overflow:hidden; }
-  .novedades summary{ cursor:pointer; list-style:none; padding:14px 16px; display:flex; align-items:center; gap:10px; font-weight:600; font-size:.95rem; color:var(--hueso); }
+  /* Novedades de la semana — en crema como el resto de las celdas */
+  .novedades{ background:#fffdf8; border:1px solid rgba(150,116,46,.30); border-radius:14px; margin:18px 0 10px; overflow:hidden; }
+  .novedades summary{ cursor:pointer; list-style:none; padding:14px 16px; display:flex; align-items:center; gap:10px; font-weight:600; font-size:.95rem; color:#3f3a31; }
   .novedades summary::-webkit-details-marker{ display:none; }
-  .novedades summary .tag{ background:var(--oro); color:var(--negro); font-size:.68rem; font-weight:700; padding:3px 9px; border-radius:999px; letter-spacing:.05em; }
-  .novedades summary .chev{ margin-left:auto; color:var(--gris); transition:transform .2s; }
+  .novedades summary .tag{ background:var(--oro); color:#20190a; font-size:.68rem; font-weight:700; padding:3px 9px; border-radius:999px; letter-spacing:.05em; }
+  .novedades summary .chev{ margin-left:auto; color:#8a7f6b; transition:transform .2s; }
   .novedades[open] summary .chev{ transform:rotate(180deg); }
-  .nov-body{ padding:2px 16px 16px; border-top:1px solid var(--linea); }
+  .nov-body{ padding:2px 16px 16px; border-top:1px solid rgba(150,116,46,.25); }
   .nov-grupo{ margin-top:12px; }
-  .nov-grupo h4{ font-size:.76rem; text-transform:uppercase; letter-spacing:.08em; color:var(--oro); margin-bottom:6px; }
-  .nov-item{ font-size:.87rem; padding:6px 0; border-bottom:1px dashed var(--linea); display:flex; gap:8px; flex-wrap:wrap; align-items:baseline; }
+  .nov-grupo h4{ font-size:.76rem; text-transform:uppercase; letter-spacing:.08em; color:#8a6b27; margin-bottom:6px; }
+  .nov-item{ font-size:.87rem; padding:6px 0; border-bottom:1px dashed rgba(150,116,46,.30); display:flex; gap:8px; flex-wrap:wrap; align-items:baseline; }
   .nov-item:last-child{ border-bottom:0; }
-  .nov-item .dot{ width:8px; height:8px; border-radius:50%; margin-top:6px; flex:0 0 auto; }
-  .nov-item a{ color:var(--hueso); text-decoration:none; font-weight:600; }
-  .nov-item a:hover{ color:var(--oro); }
+  .nov-item .dot{ width:8px; height:8px; border-radius:50%; margin-top:6px; flex:0 0 auto; box-shadow:0 0 0 1px rgba(0,0,0,.15); }
+  .nov-item a{ color:#3f3a31; text-decoration:none; font-weight:600; }
+  .nov-item a:hover{ color:#8a6b27; }
   .nov-item .delta{ font-weight:700; }
-  .delta.baja{ color:var(--verde); } .delta.alta{ color:var(--oro-claro); }
+  .delta.baja{ color:#5f7d3e; } .delta.alta{ color:#8a6b27; }
 
   /* Filtros */
   .filtros{ position:sticky; top:0; z-index:20; background:var(--negro); padding:12px 0 10px; margin-top:8px; }
-  .busca{ width:100%; padding:12px 14px; border:1px solid var(--linea); border-radius:12px; font-size:1rem; background:var(--panel); color:var(--hueso); }
-  .busca::placeholder{ color:var(--gris); }
+  .busca{ width:100%; padding:12px 14px; border:1px solid rgba(150,116,46,.30); border-radius:12px; font-size:1rem; background:#fffdf8; color:#3f3a31; }
+  .busca::placeholder{ color:#9a8f79; }
   .busca:focus{ outline:none; border-color:var(--oro); box-shadow:0 0 0 3px rgba(178,142,68,.16); }
   .chips{ display:flex; gap:7px; margin-top:10px; flex-wrap:wrap; }
-  .chip{ border:1px solid var(--linea); background:var(--panel); border-radius:999px; padding:7px 14px; font-size:.82rem; font-weight:600; color:var(--gris); cursor:pointer; user-select:none; }
-  .chip[aria-pressed="true"]{ background:var(--oro); color:var(--negro); border-color:var(--oro); }
+  .chip{ border:1px solid rgba(150,116,46,.30); background:#fffdf8; border-radius:999px; padding:7px 14px; font-size:.82rem; font-weight:600; color:#6b6152; cursor:pointer; user-select:none; }
+  .chip[aria-pressed="true"]{ background:var(--oro); color:#20190a; border-color:var(--oro); }
   .selects{ display:flex; gap:7px; margin-top:8px; flex-wrap:wrap; }
-  .selects select{ flex:1 1 auto; min-width:120px; padding:9px 10px; border:1px solid var(--linea); border-radius:10px; background:var(--panel); font-size:.85rem; font-weight:500; color:var(--hueso); }
+  .selects select{ flex:1 1 auto; min-width:120px; padding:9px 10px; border:1px solid rgba(150,116,46,.30); border-radius:10px; background:#fffdf8; font-size:.85rem; font-weight:500; color:#3f3a31; }
   .contador{ font-size:.82rem; color:var(--gris); margin-top:9px; font-weight:500; }
   .contador b{ color:var(--oro-claro); }
 
@@ -75,11 +75,12 @@
   .grid > .card:nth-child(3n+2){ transform:rotate(.8deg); }
   .grid > .card:nth-child(3n){ transform:rotate(-.4deg); }
   .card:hover{ transform:rotate(0deg); box-shadow:0 14px 34px rgba(0,0,0,.55), 0 0 0 1px var(--oro); }
-  .card .top-row{ display:flex; align-items:center; gap:8px; }
-  .ofi{ font-size:.66rem; font-weight:700; padding:3px 8px; border-radius:6px; color:#20190a; letter-spacing:.02em; white-space:nowrap; }
-  .op{ font-size:.66rem; font-weight:700; letter-spacing:.06em; color:#9a8f79; text-transform:uppercase; margin-left:auto; }
+  .card .top-row{ display:flex; align-items:flex-start; gap:8px; }
+  .ofi{ font-size:.74rem; font-weight:700; padding:4px 9px; border-radius:6px; letter-spacing:.03em; text-transform:uppercase; line-height:1.15; max-width:64%; }
+  .op{ font-size:.95rem; font-weight:700; letter-spacing:.005em; color:#161310; margin-left:auto; display:inline-flex; align-items:baseline; line-height:1; }
+  .op-ini{ font-size:1.28rem; line-height:1; }
   .reserv{ position:absolute; top:0; right:0; background:var(--oro); color:#20190a; font-size:.6rem; font-weight:700; padding:3px 9px; border-bottom-left-radius:10px; letter-spacing:.05em; }
-  .precio{ font-family:var(--serif); font-size:1.7rem; font-weight:600; color:#8a6b27; }
+  .precio{ font-family:var(--serif); font-size:1.7rem; font-weight:600; color:#8a6b27; font-variant-numeric:lining-nums; font-feature-settings:'lnum' 1,'tnum' 1; }
   .precio .mes{ font-size:.8rem; font-weight:500; color:#9a8f79; font-family:var(--sans); }
   .specs{ display:flex; gap:10px; font-size:.82rem; color:#6b6152; font-weight:500; flex-wrap:wrap; }
   .specs .tt{ color:#161310; font-weight:700; }
@@ -184,11 +185,21 @@
 </script>
 
 <script>
-/* ------- CÓDIGO DE COLOR POR OFICINA (info real: oficina propietaria) ------- */
+/* ------- CÓDIGO DE COLOR POR OFICINA (info real: oficina propietaria) -------
+   Paleta metálica elegida por Alberto: negro, gris oscuro, plata, RAL 1036
+   (oro perla), blanco con borde negro y un gris medio como sexto tono.
+   {bg: fondo · fg: texto · bd: borde opcional}. Para cambiar qué oficina
+   lleva qué color, reordena los valores de aquí abajo. */
 const COLOR_OFI = {
-  "Chamberí (Bravo Murillo)":"var(--o1)","San Bernardo · Malasaña":"var(--o2)",
-  "Almagro":"var(--o3)","Vallehermoso":"var(--o4)","Ríos Rosas":"var(--o5)","Nueva España":"var(--o6)"
+  "Chamberí (Bravo Murillo)": { bg:"#141414", fg:"#F2EFE7" },               // negro
+  "San Bernardo · Malasaña":  { bg:"#3B3E43", fg:"#F2EFE7" },               // gris oscuro
+  "Almagro":                  { bg:"#C7C9CC", fg:"#141414" },               // plata
+  "Vallehermoso":             { bg:"#8C7038", fg:"#F7F1E6" },               // RAL 1036 (oro perla)
+  "Ríos Rosas":               { bg:"#FFFFFF", fg:"#141414", bd:"#141414" }, // blanco, borde negro
+  "Nueva España":             { bg:"#8A8D92", fg:"#141414" }                // gris medio (6º)
 };
+const OFI_FALLBACK = { bg:"#8A8D92", fg:"#141414" };
+const ofiCol = n => COLOR_OFI[n] || OFI_FALLBACK;
 const eur = n => n==null ? "—" : n.toLocaleString("es-ES")+" €";
 
 /* ------- DATOS -------
@@ -262,7 +273,11 @@ function render(){
   document.getElementById('contador').innerHTML = `<b>${res.length}</b> inmueble${res.length!==1?'s':''} · de ${CARTERA.length} en cartera`;
   if(!res.length){grid.innerHTML='<p class="vacio">Sin resultados con esos filtros. Prueba a quitar alguno.</p>';return;}
   grid.innerHTML = res.map(d=>{
-    const col = COLOR_OFI[d.oficina]||'var(--gris)';
+    const c = ofiCol(d.oficina);
+    const ofiStyle = `background:${c.bg};color:${c.fg}` + (c.bd?`;border:1.5px solid ${c.bd}`:'');
+    const ofiCorto = (d.oficina||'').replace(/\s*\(.*?\)\s*/,'').trim();  // "Chamberí (Bravo Murillo)" -> "Chamberí"
+    const op = (d.operacion||'').trim();
+    const opHtml = op ? `<span class="op-ini">${op.charAt(0).toUpperCase()}</span>${op.slice(1).toLowerCase()}` : '';
     const mes = d.operacion==='Alquiler' ? '<span class="mes">/mes</span>':'';
     const specs=[]; if(d.habitaciones) specs.push(`<span class="tt">${d.habitaciones}</span> hab`);
     if(d.banos) specs.push(`<span class="tt">${d.banos}</span> baño${d.banos>1?'s':''}`);
@@ -270,8 +285,8 @@ function render(){
     return `<a class="card" href="${d.url}" target="_blank" rel="noopener">
       ${d.reservado?'<span class="reserv">RESERVADO</span>':''}
       <div class="top-row">
-        <span class="ofi" style="background:${col}">${d.oficina}</span>
-        <span class="op">${d.operacion}</span>
+        <span class="ofi" style="${ofiStyle}">${ofiCorto}</span>
+        <span class="op">${opHtml}</span>
       </div>
       <div class="precio">${eur(d.precio)}${mes}</div>
       <div class="specs">${specs.join('<span>·</span>')||'<span>—</span>'}</div>
@@ -285,10 +300,10 @@ function pintarDigest(){
   const cont=document.getElementById('nov-body');
   const secc=(t,arr,fn)=>arr.length?`<div class="nov-grupo"><h4>${t} (${arr.length})</h4>${arr.map(fn).join('')}</div>`:'';
   const html =
-    secc('Nuevas altas', DIGEST.altas, d=>`<div class="nov-item"><span class="dot" style="background:${COLOR_OFI[d.oficina]||'#999'}"></span><a href="${d.url}" target="_blank">${d.titulo||d.tipo} · ${d.oficina}</a> — ${eur(d.precio)}</div>`)+
-    secc('Bajadas de precio', DIGEST.bajadas, d=>`<div class="nov-item"><span class="dot" style="background:${COLOR_OFI[d.oficina]||'#999'}"></span><a href="${d.url}" target="_blank">${d.titulo||d.tipo} · ${d.oficina}</a> <span class="delta baja">${eur(d.precio)} (▼ ${eur(d.antes-d.precio)})</span></div>`)+
-    secc('Ya no disponibles', DIGEST.ya_no_disponibles||[], d=>`<div class="nov-item"><span class="dot" style="background:#c9ccd4"></span>${d.titulo||d.tipo} · ${d.oficina} — ${eur(d.precio)} <span style="color:var(--gris);font-weight:700">(${d.motivo||'retirado'})</span></div>`);
-  cont.innerHTML = html || '<p style="color:var(--gris);font-size:.86rem;padding:10px 0">Sin cambios registrados esta semana. El primer lunes que corra la tarea se guardará la foto de partida; a partir del siguiente ya verás altas, bajas y bajadas de precio.</p>';
+    secc('Nuevas altas', DIGEST.altas, d=>`<div class="nov-item"><span class="dot" style="background:${ofiCol(d.oficina).bg}"></span><a href="${d.url}" target="_blank">${d.titulo||d.tipo} · ${d.oficina}</a> — ${eur(d.precio)}</div>`)+
+    secc('Bajadas de precio', DIGEST.bajadas, d=>`<div class="nov-item"><span class="dot" style="background:${ofiCol(d.oficina).bg}"></span><a href="${d.url}" target="_blank">${d.titulo||d.tipo} · ${d.oficina}</a> <span class="delta baja">${eur(d.precio)} (▼ ${eur(d.antes-d.precio)})</span></div>`)+
+    secc('Ya no disponibles', DIGEST.ya_no_disponibles||[], d=>`<div class="nov-item"><span class="dot" style="background:#9a8f79"></span>${d.titulo||d.tipo} · ${d.oficina} — ${eur(d.precio)} <span style="color:#8a7f6b;font-weight:700">(${d.motivo||'retirado'})</span></div>`);
+  cont.innerHTML = html || '<p style="color:#6b6152;font-size:.86rem;padding:10px 0">Sin cambios registrados esta semana. El primer lunes que corra la tarea se guardará la foto de partida; a partir del siguiente ya verás altas, bajas y bajadas de precio.</p>';
 }
 
 document.getElementById('foot').innerHTML =
