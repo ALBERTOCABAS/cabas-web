@@ -3,90 +3,119 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Que Google NO la indexe: no aparece en búsquedas ni en el menú -->
 <meta name="robots" content="noindex,nofollow">
 <title>Cartera consolidada · Oficinas Cabas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
+  /* Paleta y fuentes EXACTAS de cabas.es (copiadas para que el panel sea
+     autónomo y no dependa del CSS del resto de la web). */
   :root{
-    --tinta:#1b1f2a; --tinta-2:#5a6172; --linea:#e4e6ec; --fondo:#f5f6f8;
-    --papel:#ffffff; --acento:#b8232f; --acento-osc:#8c1a23;
-    --ok:#1f7a4d; --baja:#1f7a4d; --alta:#b8232f;
-    /* color-code por oficina */
-    --o1:#b8232f; --o2:#2f6db8; --o3:#7a4fb8; --o4:#1f7a4d; --o5:#c9821a; --o6:#2b7d84;
-    --radio:14px; --sombra:0 1px 2px rgba(20,25,40,.06),0 8px 24px rgba(20,25,40,.05);
+    --negro:#0B0A08; --panel:#14120E; --oro:#B28E44; --oro-claro:#CFAC66;
+    --hueso:#F2EFE7; --gris:#A39C8D; --linea:rgba(178,142,68,.28);
+    --rojo:#C0574F; --verde:#7FA05B; --ambar:#C99B3F; --max:1120px;
+    --serif:'Cormorant Garamond', Georgia, serif; --sans:'Inter', -apple-system, sans-serif;
+    /* color por oficina (badges) */
+    --o1:#B28E44; --o2:#6f9bd1; --o3:#a98cc9; --o4:#7FA05B; --o5:#C99B3F; --o6:#5fa8ad;
   }
   *{box-sizing:border-box;margin:0;padding:0}
-  body{background:var(--fondo);color:var(--tinta);font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
-    -webkit-font-smoothing:antialiased;line-height:1.4}
-  .wrap{max-width:960px;margin:0 auto;padding:0 16px 64px}
+  body{ background:var(--negro); color:var(--hueso); font-family:var(--sans); line-height:1.45;
+    -webkit-font-smoothing:antialiased;
+    background-image:radial-gradient(120% 80% at 50% -10%, rgba(178,142,68,.10), transparent 60%); }
+  .wrap{ max-width:var(--max); margin:0 auto; padding:0 18px 64px; }
+  body:not(.abierta) .wrap{ display:none; }
 
-  header.top{padding:22px 0 14px;border-bottom:1px solid var(--linea);margin-bottom:0}
-  .brand{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
-  .brand h1{font-size:1.35rem;font-weight:800;letter-spacing:-.02em}
-  .brand .red{color:var(--acento)}
-  .brand .fecha{color:var(--tinta-2);font-size:.82rem;font-weight:600;margin-left:auto}
-  .sub{color:var(--tinta-2);font-size:.85rem;margin-top:3px}
+  header.top{ padding:24px 0 16px; border-bottom:1px solid var(--linea); }
+  .brand{ display:flex; align-items:baseline; gap:12px; flex-wrap:wrap; }
+  .brand h1{ font-family:var(--serif); font-weight:600; font-size:1.9rem; color:var(--oro); letter-spacing:.02em; }
+  .brand .red{ color:var(--oro-claro); }
+  .brand .fecha{ color:var(--gris); font-size:.82rem; font-weight:500; margin-left:auto; }
+  .sub{ color:var(--gris); font-size:.88rem; margin-top:6px; max-width:62ch; }
 
   /* Novedades de la semana */
-  .novedades{background:var(--papel);border:1px solid var(--linea);border-radius:var(--radio);
-    box-shadow:var(--sombra);margin:16px 0 10px;overflow:hidden}
-  .novedades summary{cursor:pointer;list-style:none;padding:13px 16px;display:flex;align-items:center;gap:10px;
-    font-weight:700;font-size:.95rem}
-  .novedades summary::-webkit-details-marker{display:none}
-  .novedades summary .tag{background:var(--acento);color:#fff;font-size:.68rem;font-weight:800;
-    padding:3px 8px;border-radius:999px;letter-spacing:.04em}
-  .novedades summary .chev{margin-left:auto;color:var(--tinta-2);transition:transform .2s}
-  .novedades[open] summary .chev{transform:rotate(180deg)}
-  .nov-body{padding:2px 16px 16px;border-top:1px solid var(--linea)}
-  .nov-grupo{margin-top:12px}
-  .nov-grupo h4{font-size:.78rem;text-transform:uppercase;letter-spacing:.06em;color:var(--tinta-2);margin-bottom:6px}
-  .nov-item{font-size:.87rem;padding:5px 0;border-bottom:1px dashed var(--linea);display:flex;gap:8px;flex-wrap:wrap}
-  .nov-item:last-child{border-bottom:0}
-  .nov-item .dot{width:8px;height:8px;border-radius:50%;margin-top:6px;flex:0 0 auto}
-  .nov-item a{color:var(--tinta);text-decoration:none;font-weight:600}
-  .nov-item a:hover{color:var(--acento)}
-  .nov-item .delta{font-weight:800}
-  .delta.baja{color:var(--baja)} .delta.alta{color:var(--alta)}
+  .novedades{ background:var(--panel); border:1px solid var(--linea); border-radius:14px; margin:18px 0 10px; overflow:hidden; }
+  .novedades summary{ cursor:pointer; list-style:none; padding:14px 16px; display:flex; align-items:center; gap:10px; font-weight:600; font-size:.95rem; color:var(--hueso); }
+  .novedades summary::-webkit-details-marker{ display:none; }
+  .novedades summary .tag{ background:var(--oro); color:var(--negro); font-size:.68rem; font-weight:700; padding:3px 9px; border-radius:999px; letter-spacing:.05em; }
+  .novedades summary .chev{ margin-left:auto; color:var(--gris); transition:transform .2s; }
+  .novedades[open] summary .chev{ transform:rotate(180deg); }
+  .nov-body{ padding:2px 16px 16px; border-top:1px solid var(--linea); }
+  .nov-grupo{ margin-top:12px; }
+  .nov-grupo h4{ font-size:.76rem; text-transform:uppercase; letter-spacing:.08em; color:var(--oro); margin-bottom:6px; }
+  .nov-item{ font-size:.87rem; padding:6px 0; border-bottom:1px dashed var(--linea); display:flex; gap:8px; flex-wrap:wrap; align-items:baseline; }
+  .nov-item:last-child{ border-bottom:0; }
+  .nov-item .dot{ width:8px; height:8px; border-radius:50%; margin-top:6px; flex:0 0 auto; }
+  .nov-item a{ color:var(--hueso); text-decoration:none; font-weight:600; }
+  .nov-item a:hover{ color:var(--oro); }
+  .nov-item .delta{ font-weight:700; }
+  .delta.baja{ color:var(--verde); } .delta.alta{ color:var(--oro-claro); }
 
   /* Filtros */
-  .filtros{position:sticky;top:0;z-index:20;background:var(--fondo);padding:12px 0 10px;margin-top:6px}
-  .busca{width:100%;padding:12px 14px;border:1px solid var(--linea);border-radius:12px;font-size:1rem;
-    background:var(--papel);box-shadow:var(--sombra)}
-  .busca:focus{outline:2px solid var(--acento);border-color:transparent}
-  .chips{display:flex;gap:7px;margin-top:10px;flex-wrap:wrap}
-  .chip{border:1px solid var(--linea);background:var(--papel);border-radius:999px;padding:7px 13px;
-    font-size:.82rem;font-weight:700;color:var(--tinta-2);cursor:pointer;user-select:none}
-  .chip[aria-pressed="true"]{background:var(--tinta);color:#fff;border-color:var(--tinta)}
-  .selects{display:flex;gap:7px;margin-top:8px;flex-wrap:wrap}
-  .selects select{flex:1 1 auto;min-width:120px;padding:9px 10px;border:1px solid var(--linea);
-    border-radius:10px;background:var(--papel);font-size:.85rem;font-weight:600;color:var(--tinta)}
-  .contador{font-size:.82rem;color:var(--tinta-2);margin-top:9px;font-weight:600}
-  .contador b{color:var(--tinta)}
+  .filtros{ position:sticky; top:0; z-index:20; background:var(--negro); padding:12px 0 10px; margin-top:8px; }
+  .busca{ width:100%; padding:12px 14px; border:1px solid var(--linea); border-radius:12px; font-size:1rem; background:var(--panel); color:var(--hueso); }
+  .busca::placeholder{ color:var(--gris); }
+  .busca:focus{ outline:none; border-color:var(--oro); box-shadow:0 0 0 3px rgba(178,142,68,.16); }
+  .chips{ display:flex; gap:7px; margin-top:10px; flex-wrap:wrap; }
+  .chip{ border:1px solid var(--linea); background:var(--panel); border-radius:999px; padding:7px 14px; font-size:.82rem; font-weight:600; color:var(--gris); cursor:pointer; user-select:none; }
+  .chip[aria-pressed="true"]{ background:var(--oro); color:var(--negro); border-color:var(--oro); }
+  .selects{ display:flex; gap:7px; margin-top:8px; flex-wrap:wrap; }
+  .selects select{ flex:1 1 auto; min-width:120px; padding:9px 10px; border:1px solid var(--linea); border-radius:10px; background:var(--panel); font-size:.85rem; font-weight:500; color:var(--hueso); }
+  .contador{ font-size:.82rem; color:var(--gris); margin-top:9px; font-weight:500; }
+  .contador b{ color:var(--oro-claro); }
 
-  /* Grid tarjetas */
-  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px;margin-top:6px}
-  .card{background:var(--papel);border:1px solid var(--linea);border-radius:var(--radio);box-shadow:var(--sombra);
-    padding:14px;display:flex;flex-direction:column;gap:9px;position:relative;text-decoration:none;color:inherit;
-    transition:transform .12s,box-shadow .12s}
-  .card:hover{transform:translateY(-2px);box-shadow:0 2px 4px rgba(20,25,40,.08),0 14px 30px rgba(20,25,40,.09)}
-  .card .top-row{display:flex;align-items:center;gap:8px}
-  .ofi{font-size:.68rem;font-weight:800;padding:3px 8px;border-radius:6px;color:#fff;letter-spacing:.02em;white-space:nowrap}
-  .op{font-size:.68rem;font-weight:800;letter-spacing:.05em;color:var(--tinta-2);text-transform:uppercase;margin-left:auto}
-  .reserv{position:absolute;top:0;right:0;background:var(--tinta);color:#fff;font-size:.62rem;font-weight:800;
-    padding:3px 8px;border-bottom-left-radius:10px;letter-spacing:.05em}
-  .precio{font-size:1.5rem;font-weight:800;letter-spacing:-.02em}
-  .precio .mes{font-size:.8rem;font-weight:600;color:var(--tinta-2)}
-  .specs{display:flex;gap:10px;font-size:.82rem;color:var(--tinta-2);font-weight:600;flex-wrap:wrap}
-  .specs .tt{color:var(--tinta);font-weight:800}
-  .titulo{font-size:.86rem;line-height:1.35;color:var(--tinta);
-    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-  .ver{font-size:.78rem;font-weight:800;color:var(--acento);margin-top:auto}
-  .vacio{text-align:center;color:var(--tinta-2);padding:48px 0;font-weight:600}
+  /* Grid + tarjetas de inmueble (inclinación "de oficio", como tu web) */
+  .grid{ display:grid; grid-template-columns:repeat(auto-fill, minmax(250px,1fr)); gap:14px; margin-top:8px; }
+  .card{ background:var(--panel); border:1px solid var(--linea); border-radius:14px; box-shadow:0 6px 20px rgba(0,0,0,.28);
+    padding:15px; display:flex; flex-direction:column; gap:9px; position:relative; text-decoration:none; color:inherit;
+    transition:transform .3s ease, box-shadow .3s ease; }
+  .grid > .card:nth-child(3n+1){ transform:rotate(-1.1deg); }
+  .grid > .card:nth-child(3n+2){ transform:rotate(.8deg); }
+  .grid > .card:nth-child(3n){ transform:rotate(-.4deg); }
+  .card:hover{ transform:rotate(0deg); box-shadow:0 12px 30px rgba(0,0,0,.5), 0 0 0 1px var(--oro); }
+  .card .top-row{ display:flex; align-items:center; gap:8px; }
+  .ofi{ font-size:.66rem; font-weight:700; padding:3px 8px; border-radius:6px; color:var(--negro); letter-spacing:.02em; white-space:nowrap; }
+  .op{ font-size:.66rem; font-weight:700; letter-spacing:.06em; color:var(--gris); text-transform:uppercase; margin-left:auto; }
+  .reserv{ position:absolute; top:0; right:0; background:var(--oro); color:var(--negro); font-size:.6rem; font-weight:700; padding:3px 9px; border-bottom-left-radius:10px; letter-spacing:.05em; }
+  .precio{ font-family:var(--serif); font-size:1.7rem; font-weight:600; color:var(--oro-claro); }
+  .precio .mes{ font-size:.8rem; font-weight:500; color:var(--gris); font-family:var(--sans); }
+  .specs{ display:flex; gap:10px; font-size:.82rem; color:var(--gris); font-weight:500; flex-wrap:wrap; }
+  .specs .tt{ color:var(--hueso); font-weight:700; }
+  .titulo{ font-size:.86rem; line-height:1.35; color:var(--hueso); display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+  .ver{ font-size:.78rem; font-weight:700; color:var(--oro); margin-top:auto; }
+  .vacio{ text-align:center; color:var(--gris); padding:48px 0; font-weight:500; }
 
-  footer{margin-top:28px;padding-top:16px;border-top:1px solid var(--linea);color:var(--tinta-2);font-size:.76rem;line-height:1.5}
-  @media(max-width:560px){ .brand h1{font-size:1.15rem} .precio{font-size:1.35rem} }
+  footer{ margin-top:30px; padding-top:16px; border-top:1px solid var(--linea); color:var(--gris); font-size:.78rem; line-height:1.5; }
+  @media(max-width:560px){ .brand h1{ font-size:1.5rem; } .precio{ font-size:1.5rem; } }
+
+  /* ---------- Puerta con PIN (para despistar; el contenido no es secreto) ---------- */
+  #gate{ position:fixed; inset:0; background:var(--negro); display:none; place-items:center; z-index:100;
+    background-image:radial-gradient(120% 80% at 50% 30%, rgba(178,142,68,.12), transparent 60%); }
+  body:not(.abierta) #gate{ display:grid; }
+  #gate .box{ text-align:center; max-width:320px; padding:0 20px; }
+  #gate .g-marca{ font-family:var(--serif); font-weight:600; font-size:1.9rem; color:var(--oro); }
+  #gate .g-marca small{ display:block; font-family:var(--sans); font-size:.72rem; color:var(--gris); letter-spacing:.14em; text-transform:uppercase; margin-top:6px; }
+  #gate p{ color:var(--gris); font-size:.92rem; margin:16px 0 18px; }
+  #pin{ width:240px; text-align:center; letter-spacing:.08em; font-size:1.5rem; font-family:var(--serif); color:var(--hueso); background:var(--panel); border:1px solid var(--linea); border-radius:10px; padding:11px; outline:none; }
+  #pin:focus{ border-color:var(--oro); box-shadow:0 0 0 3px rgba(178,142,68,.18); }
+  #gate button{ display:block; margin:14px auto 0; background:var(--oro); color:var(--negro); font-weight:600; border:none; border-radius:999px; padding:11px 30px; font-size:.95rem; cursor:pointer; }
+  #gate button:hover{ background:var(--oro-claro); }
+  #pin-err{ display:none; color:var(--rojo); font-size:.82rem; margin-top:12px; }
 </style>
 </head>
 <body>
+
+<!-- PANTALLA DEL PIN (se oculta al meter el PIN correcto) -->
+<div id="gate"><div class="box">
+  <div class="g-marca">CABAS<small>Cartera de inmuebles</small></div>
+  <p>🔒 Introduce la clave de esta semana</p>
+  <form id="pin-form">
+    <input id="pin" type="text" maxlength="16" autocomplete="off" placeholder="clave" aria-label="Clave">
+    <button type="submit">Entrar</button>
+    <div id="pin-err">Clave incorrecta. Revisa el mensaje de esta semana.</div>
+  </form>
+</div></div>
+
 <div class="wrap">
   <header class="top">
     <div class="brand">
@@ -134,6 +163,25 @@
 </div>
 
 <script>
+  // El PIN de la semana llega DENTRO de cartera.json (campo "pin"). Así la
+  // generación de los lunes solo escribe cartera.json (inmuebles + pin nuevo)
+  // y NO toca esta plantilla. Si no hay pin, usa "cabas26" por defecto.
+  var PIN_SEMANA = null;
+  (function () {
+    var inp = document.getElementById('pin'), err = document.getElementById('pin-err');
+    window.__abrirCartera = function () { document.body.classList.add('abierta'); try { sessionStorage.setItem('cartera_ok', PIN_SEMANA); } catch (e) {} };
+    document.getElementById('pin-form').addEventListener('submit', function (e) {
+      e.preventDefault();
+      if (!PIN_SEMANA) return;   // aún cargando cartera.json
+      // Comparación SIN distinguir mayúsculas/minúsculas ni espacios sobrantes
+      if (inp.value.trim().toLowerCase() === String(PIN_SEMANA).trim().toLowerCase()) window.__abrirCartera();
+      else { err.style.display = 'block'; inp.value = ''; inp.focus(); }
+    });
+    inp.focus();
+  })();
+</script>
+
+<script>
 /* ------- CÓDIGO DE COLOR POR OFICINA (info real: oficina propietaria) ------- */
 const COLOR_OFI = {
   "Chamberí (Bravo Murillo)":"var(--o1)","San Bernardo · Malasaña":"var(--o2)",
@@ -159,10 +207,13 @@ async function cargar(){
     CARTERA = j.inmuebles || j;
     if(j.digest) DIGEST = j.digest;
     if(j.generado) document.getElementById('fecha').textContent = j.generado;
+    PIN_SEMANA = (j && j.pin) ? String(j.pin) : "cabas26";
   }catch(e){
     CARTERA = DATOS_DEMO;
     document.getElementById('fecha').textContent = new Date().toLocaleDateString('es-ES',{day:'numeric',month:'long'})+" · demo";
+    PIN_SEMANA = "cabas26";
   }
+  try{ if(window.__abrirCartera && sessionStorage.getItem('cartera_ok')===PIN_SEMANA) window.__abrirCartera(); }catch(e){}
   init();
 }
 
@@ -209,7 +260,7 @@ function render(){
   document.getElementById('contador').innerHTML = `<b>${res.length}</b> inmueble${res.length!==1?'s':''} · de ${CARTERA.length} en cartera`;
   if(!res.length){grid.innerHTML='<p class="vacio">Sin resultados con esos filtros. Prueba a quitar alguno.</p>';return;}
   grid.innerHTML = res.map(d=>{
-    const col = COLOR_OFI[d.oficina]||'var(--tinta-2)';
+    const col = COLOR_OFI[d.oficina]||'var(--gris)';
     const mes = d.operacion==='Alquiler' ? '<span class="mes">/mes</span>':'';
     const specs=[]; if(d.habitaciones) specs.push(`<span class="tt">${d.habitaciones}</span> hab`);
     if(d.banos) specs.push(`<span class="tt">${d.banos}</span> baño${d.banos>1?'s':''}`);
@@ -234,8 +285,8 @@ function pintarDigest(){
   const html =
     secc('Nuevas altas', DIGEST.altas, d=>`<div class="nov-item"><span class="dot" style="background:${COLOR_OFI[d.oficina]||'#999'}"></span><a href="${d.url}" target="_blank">${d.titulo||d.tipo} · ${d.oficina}</a> — ${eur(d.precio)}</div>`)+
     secc('Bajadas de precio', DIGEST.bajadas, d=>`<div class="nov-item"><span class="dot" style="background:${COLOR_OFI[d.oficina]||'#999'}"></span><a href="${d.url}" target="_blank">${d.titulo||d.tipo} · ${d.oficina}</a> <span class="delta baja">${eur(d.precio)} (▼ ${eur(d.antes-d.precio)})</span></div>`)+
-    secc('Ya no disponibles', DIGEST.ya_no_disponibles||[], d=>`<div class="nov-item"><span class="dot" style="background:#c9ccd4"></span>${d.titulo||d.tipo} · ${d.oficina} — ${eur(d.precio)} <span style="color:var(--tinta-2);font-weight:700">(${d.motivo||'retirado'})</span></div>`);
-  cont.innerHTML = html || '<p style="color:var(--tinta-2);font-size:.86rem;padding:10px 0">Sin cambios registrados esta semana. El primer lunes que corra la tarea se guardará la foto de partida; a partir del siguiente ya verás altas, bajas y bajadas de precio.</p>';
+    secc('Ya no disponibles', DIGEST.ya_no_disponibles||[], d=>`<div class="nov-item"><span class="dot" style="background:#c9ccd4"></span>${d.titulo||d.tipo} · ${d.oficina} — ${eur(d.precio)} <span style="color:var(--gris);font-weight:700">(${d.motivo||'retirado'})</span></div>`);
+  cont.innerHTML = html || '<p style="color:var(--gris);font-size:.86rem;padding:10px 0">Sin cambios registrados esta semana. El primer lunes que corra la tarea se guardará la foto de partida; a partir del siguiente ya verás altas, bajas y bajadas de precio.</p>';
 }
 
 document.getElementById('foot').innerHTML =
