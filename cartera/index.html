@@ -48,21 +48,37 @@
 
   /* Novedades de la semana — en crema como el resto de las celdas */
   .novedades{ background:#fffdf8; border:1px solid rgba(150,116,46,.30); border-radius:14px; margin:18px 0 10px; overflow:hidden; }
-  .novedades summary{ cursor:pointer; list-style:none; padding:14px 16px; display:flex; align-items:center; gap:10px; font-weight:600; font-size:.95rem; color:#3f3a31; }
-  .novedades summary::-webkit-details-marker{ display:none; }
-  .novedades summary .tag{ background:var(--oro); color:#20190a; font-size:.68rem; font-weight:700; padding:3px 9px; border-radius:999px; letter-spacing:.05em; }
-  .novedades summary .chev{ margin-left:auto; color:#8a7f6b; transition:transform .2s; }
-  .novedades[open] summary .chev{ transform:rotate(180deg); }
+  .nov-head{ display:flex; align-items:center; gap:10px; padding:14px 16px; font-weight:600; font-size:.95rem; color:#3f3a31; }
+  .nov-head .tag{ background:var(--oro); color:#20190a; font-size:.68rem; font-weight:700; padding:3px 9px; border-radius:999px; letter-spacing:.05em; }
+  .nov-title{ font-weight:600; }
+  .nov-toggle{ margin-left:auto; width:32px; height:32px; display:grid; place-items:center; cursor:pointer;
+    background:#fff; border:1px solid rgba(150,116,46,.40); border-radius:9px; color:#8a6b27; font-size:.95rem; line-height:1;
+    transition:transform .2s, background .2s; }
+  .nov-toggle:hover{ background:#f3ecdd; }
+  .novedades.contraida .nov-toggle{ transform:rotate(180deg); }
+  .novedades.contraida .nov-body{ display:none; }
   .nov-body{ padding:2px 16px 16px; border-top:1px solid rgba(150,116,46,.25); }
   .nov-grupo{ margin-top:12px; }
   .nov-grupo h4{ font-size:.76rem; text-transform:uppercase; letter-spacing:.08em; color:#8a6b27; margin-bottom:6px; }
-  .nov-item{ font-size:.87rem; padding:6px 0; border-bottom:1px dashed rgba(150,116,46,.30); display:flex; gap:8px; flex-wrap:wrap; align-items:baseline; }
+  .nov-item{ font-size:.87rem; padding:7px 0; border-bottom:1px dashed rgba(150,116,46,.30); display:flex; gap:8px; flex-wrap:wrap; align-items:baseline; color:#3f3a31; }
   .nov-item:last-child{ border-bottom:0; }
   .nov-item .dot{ width:8px; height:8px; border-radius:50%; margin-top:6px; flex:0 0 auto; box-shadow:0 0 0 1px rgba(0,0,0,.15); }
   .nov-item a{ color:#3f3a31; text-decoration:none; font-weight:600; }
   .nov-item a:hover{ color:#8a6b27; }
-  .nov-item .delta{ font-weight:700; }
-  .delta.baja{ color:#5f7d3e; } .delta.alta{ color:#8a6b27; }
+  /* precio SIEMPRE al principio de la línea */
+  .np-precio{ font-weight:800; color:#8a6b27; font-variant-numeric:lining-nums; font-feature-settings:'lnum' 1,'tnum' 1; white-space:nowrap; }
+  .np-precio .drop{ color:#5f7d3e; font-weight:800; }
+  .np-meta{ color:#6b6152; font-weight:500; }
+  .np-meta b{ color:#161310; font-weight:700; }
+  .np-ofi{ color:#8a7f6b; font-weight:600; }
+  /* Ya no disponibles — LEGIBLE: texto oscuro, precio tachado, motivo en color */
+  .nov-item.baja-off{ color:#5c5446; }
+  .nov-item.baja-off .np-precio{ color:#8a7f6b; font-weight:700; text-decoration:line-through; }
+  .nov-item.baja-off .tt-off{ color:#5c5446; font-weight:600; }
+  .motivo{ font-weight:700; font-size:.7rem; text-transform:uppercase; letter-spacing:.04em; padding:2px 8px; border-radius:999px; white-space:nowrap; }
+  .motivo.vendido{ background:#efdcd9; color:#8f3b33; }
+  .motivo.reservado{ background:#efe4c6; color:#8a6b27; }
+  .motivo.retirado{ background:#e6e1d6; color:#5c5446; }
 
   /* Filtros */
   .filtros{ position:sticky; top:0; z-index:20; background:var(--negro); padding:12px 0 10px; margin-top:8px; }
@@ -141,10 +157,14 @@
     <p class="sub">6 oficinas en red · pisos de venta y alquiler de todas las oficinas, en un sitio. Si tienes un cliente o un cambio de casa, busca aquí primero.</p>
   </header>
 
-  <details class="novedades" open id="novedades">
-    <summary><span class="tag">NOVEDADES</span> Cambios de la semana <span class="chev">▾</span></summary>
+  <section class="novedades" id="novedades">
+    <div class="nov-head">
+      <span class="tag">NOVEDADES</span>
+      <span class="nov-title">y cambios de la semana</span>
+      <button type="button" class="nov-toggle" id="nov-toggle" aria-expanded="true" aria-controls="nov-body" title="Contraer / desplegar">▾</button>
+    </div>
     <div class="nov-body" id="nov-body"><!-- lo rellena el digest --></div>
-  </details>
+  </section>
 
   <div class="filtros">
     <input class="busca" id="busca" type="search" placeholder="Buscar por calle, zona, referencia…" autocomplete="off">
@@ -259,6 +279,9 @@ function init(){
     document.querySelectorAll('#chips-op .chip').forEach(x=>x.setAttribute('aria-pressed','false'));
     c.setAttribute('aria-pressed','true'); render();
   }));
+  // Contraer/desplegar novedades — SOLO con el botón de la derecha (no al pinchar el título)
+  const nvT=document.getElementById('nov-toggle'), nvBox=document.getElementById('novedades');
+  if(nvT&&nvBox){ nvT.addEventListener('click',()=>{ const c=nvBox.classList.toggle('contraida'); nvT.setAttribute('aria-expanded', c?'false':'true'); }); }
 }
 
 function estadoFiltros(){
@@ -309,13 +332,42 @@ function render(){
   }).join('');
 }
 
+// Misma info que las tarjetas de la cartera: tipo · m² · hab · baños
+function specsLinea(d){
+  const s=[]; if(d.tipo) s.push(d.tipo);
+  if(d.m2) s.push(`<b>${d.m2}</b> m²`);
+  if(d.habitaciones) s.push(`<b>${d.habitaciones}</b> hab`);
+  if(d.banos) s.push(`<b>${d.banos}</b> baño${d.banos>1?'s':''}`);
+  return s.join(' · ');
+}
 function pintarDigest(){
   const cont=document.getElementById('nov-body');
   const secc=(t,arr,fn)=>arr.length?`<div class="nov-grupo"><h4>${t} (${arr.length})</h4>${arr.map(fn).join('')}</div>`:'';
+  const mes = d => d.operacion==='Alquiler' ? '<span class="mes">/mes</span>' : '';
+  // ALTA: precio primero, luego misma info que la cartera + título + oficina
+  const alta = d=>`<div class="nov-item"><span class="dot" style="background:${ofiCol(d.oficina).bg}"></span>`+
+      `<span class="np-precio">${eur(d.precio)}${mes(d)}</span>`+
+      `<span class="np-meta">${specsLinea(d)}</span>`+
+      `<a href="${d.url}" target="_blank">${d.titulo||d.tipo}</a>`+
+      `<span class="np-ofi">· ${d.oficina}</span></div>`;
+  // BAJADA: precio nuevo + bajada al principio, luego misma info + título + oficina
+  const baja = d=>`<div class="nov-item"><span class="dot" style="background:${ofiCol(d.oficina).bg}"></span>`+
+      `<span class="np-precio">${eur(d.precio)}${mes(d)} <span class="drop">(▼ ${eur(d.antes-d.precio)})</span></span>`+
+      `<span class="np-meta">${specsLinea(d)}</span>`+
+      `<a href="${d.url}" target="_blank">${d.titulo||d.tipo}</a>`+
+      `<span class="np-ofi">· ${d.oficina}</span></div>`;
+  // YA NO DISPONIBLE: legible (texto oscuro, precio tachado) + motivo en badge
+  const off = d=>{ const m=(d.motivo||'retirado').toLowerCase();
+    const cls = m==='vendido'?'vendido':(m==='reservado'?'reservado':'retirado');
+    return `<div class="nov-item baja-off"><span class="dot" style="background:#9a8f79"></span>`+
+      `<span class="np-precio">${eur(d.precio)}${mes(d)}</span>`+
+      `<span class="np-meta">${specsLinea(d)}</span>`+
+      `<span class="tt-off">${d.titulo||d.tipo} <span class="np-ofi">· ${d.oficina}</span></span>`+
+      `<span class="motivo ${cls}">${d.motivo||'retirado'}</span></div>`; };
   const html =
-    secc('Nuevas altas', DIGEST.altas, d=>`<div class="nov-item"><span class="dot" style="background:${ofiCol(d.oficina).bg}"></span><a href="${d.url}" target="_blank">${d.titulo||d.tipo} · ${d.oficina}</a> — ${eur(d.precio)}</div>`)+
-    secc('Bajadas de precio', DIGEST.bajadas, d=>`<div class="nov-item"><span class="dot" style="background:${ofiCol(d.oficina).bg}"></span><a href="${d.url}" target="_blank">${d.titulo||d.tipo} · ${d.oficina}</a> <span class="delta baja">${eur(d.precio)} (▼ ${eur(d.antes-d.precio)})</span></div>`)+
-    secc('Ya no disponibles', DIGEST.ya_no_disponibles||[], d=>`<div class="nov-item"><span class="dot" style="background:#9a8f79"></span>${d.titulo||d.tipo} · ${d.oficina} — ${eur(d.precio)} <span style="color:#8a7f6b;font-weight:700">(${d.motivo||'retirado'})</span></div>`);
+    secc('Nuevas altas', DIGEST.altas, alta)+
+    secc('Bajadas de precio', DIGEST.bajadas, baja)+
+    secc('Ya no disponibles', DIGEST.ya_no_disponibles||[], off);
   cont.innerHTML = html || '<p style="color:#6b6152;font-size:.86rem;padding:10px 0">Sin cambios registrados esta semana. El primer lunes que corra la tarea se guardará la foto de partida; a partir del siguiente ya verás altas, bajas y bajadas de precio.</p>';
 }
 
