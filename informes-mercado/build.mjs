@@ -105,6 +105,26 @@ const meses = [...mesesSet.values()].sort((a, b) => a.key - b.key);
 const mesUltimo = meses[meses.length - 1];
 const N_MESES = meses.length;
 
+// Bloque "En contexto" — editable en informes-mercado/contraste.md (formato
+// tolerante: líneas "titular:", "lectura:" y datos "tipo | etiqueta | valor | fuente").
+function parseContraste(txt) {
+  const c = { titular: '', lectura: '', puntos: [] };
+  for (const raw of txt.split('\n')) {
+    const line = raw.trim();
+    if (!line || line.startsWith('#')) continue;
+    const low = line.toLowerCase();
+    if (low.startsWith('titular:')) c.titular = line.slice(line.indexOf(':') + 1).trim();
+    else if (low.startsWith('lectura:')) c.lectura = line.slice(line.indexOf(':') + 1).trim();
+    else if (line.includes('|')) {
+      const p = line.split('|').map(s => s.trim());
+      if (p.length >= 4 && p[1]) c.puntos.push({ tipo: p[0].toLowerCase(), etiqueta: p[1], valor: p[2], fuente: p[3] });
+    }
+  }
+  return c;
+}
+let CONTRASTE = null;
+try { CONTRASTE = parseContraste(fs.readFileSync(path.join(__dirname, 'contraste.md'), 'utf8')); } catch (e) { CONTRASTE = null; }
+
 // ============================================================
 // Utilidades de presentación
 // ============================================================
@@ -160,6 +180,27 @@ const tablaEnvuelta = (cap, cuerpo, id) =>
 // Botón de descarga POR TABLA: clona ESA tarjeta a la hoja del PDF.
 const botonPDF = (cardId, titulo, sub) => `<p class="im-pdf"><button type="button" class="im-pdf-btn" data-card="${cardId}" data-titulo="${esc(titulo)}" data-sub="${esc(sub)}">⬇ Descargar en PDF</button></p>`;
 const bloque = (id, cap, cuerpo, titulo, sub) => tablaEnvuelta(cap, cuerpo, id) + botonPDF(id, titulo, sub);
+
+// Bloque destacado "En contexto" (NO es una tabla; estilo propio). Distingue
+// visualmente precio de OFERTA (idealista) de OPERACIÓN CERRADA (INE).
+function bloqueContraste(c) {
+  if (!c || !c.titular || !c.puntos.length) return '';
+  const tag = t => t === 'cerrada'
+    ? '<span class="im-c-tag cerrada">Operación cerrada</span>'
+    : '<span class="im-c-tag oferta">Precio de oferta</span>';
+  const puntos = c.puntos.map(p => `<div class="im-c-punto ${p.tipo === 'cerrada' ? 'cerrada' : 'oferta'}">`
+    + tag(p.tipo)
+    + `<div class="im-c-dato">${esc(p.valor)}</div>`
+    + `<div class="im-c-etq">${esc(p.etiqueta)}</div>`
+    + `<div class="im-c-fte">${esc(p.fuente)}</div></div>`).join('');
+  return `<aside class="im-contraste" aria-label="El mercado en contexto">`
+    + `<span class="im-c-eyebrow">En contexto · ${esc(mesUltimo.label)}</span>`
+    + `<h2 class="im-c-titular">${esc(c.titular)}</h2>`
+    + `<div class="im-c-grid">${puntos}</div>`
+    + (c.lectura ? `<p class="im-c-lectura"><b>Lectura:</b> ${esc(c.lectura)}</p>` : '')
+    + `<p class="im-c-nota">No se comparan en la misma tabla: <b>idealista</b> mide <b>precio de oferta</b> (lo que se pide) y el <b>INE</b> mide <b>operaciones cerradas</b> (lo que se firma). Son magnitudes distintas.</p>`
+    + `</aside>`;
+}
 
 // ---------- filas del mes más reciente por familia ----------
 const delUltimoMes = fam => filas[fam].filter(r => mesInfo(r.mes).key === mesUltimo.key);
@@ -304,14 +345,31 @@ const TITULO = 'Informes de Mercado — precios de vivienda en Madrid y España 
 const DESC = `Evolución de los precios de vivienda en venta (€/m²) por distritos y barrios de Chamberí y Chamartín, los 21 distritos de Madrid y las comunidades autónomas. Actualizado a ${esc(mesUltimo.label)}. Datos de oferta publicada.`;
 const URL = `${BASE_URL}/informes-mercado/`;
 
+const ORG = {
+  '@type': 'Organization', name: 'Cabas Realtor', alternateName: 'Alberto Cabas', url: BASE_URL,
+  logo: `${BASE_URL}/assets/logo-c.png`,
+  founder: { '@type': 'Person', name: 'Alberto Cabas Ortiz' },
+  address: { '@type': 'PostalAddress', streetAddress: 'Calle Bravo Murillo 23', postalCode: '28015', addressLocality: 'Madrid', addressCountry: 'ES' },
+  contactPoint: { '@type': 'ContactPoint', telephone: '+34662669014', email: 'alberto@cabas.es', contactType: 'customer service' },
+};
 const JSONLD = {
   '@context': 'https://schema.org', '@type': 'Dataset',
   name: 'Informes de Mercado — precios de vivienda en venta (Madrid y España)',
   description: DESC, url: URL, inLanguage: 'es',
-  creator: { '@type': 'Person', name: 'Alberto Cabas Ortiz', url: BASE_URL },
-  isAccessibleForFree: true, temporalCoverage: mesUltimo.iso.slice(0, 7),
-  dateModified: mesUltimo.iso, spatialCoverage: 'Madrid, España',
-  variableMeasured: 'Precio de oferta de vivienda en venta (€/m²)',
+  keywords: ['precio vivienda', 'euro por metro cuadrado', 'Madrid', 'Chamberí', 'Chamartín', 'España', 'mercado inmobiliario', 'precio de oferta'],
+  creator: ORG, publisher: ORG, isAccessibleForFree: true, license: `${URL}`,
+  temporalCoverage: mesUltimo.iso.slice(0, 7), dateModified: mesUltimo.iso, datePublished: mesUltimo.iso,
+  spatialCoverage: [
+    { '@type': 'Place', name: 'España' },
+    { '@type': 'Place', name: 'Madrid, España' },
+    { '@type': 'Place', name: 'Chamberí, Madrid' },
+    { '@type': 'Place', name: 'Chamartín, Madrid' },
+  ],
+  variableMeasured: [
+    { '@type': 'PropertyValue', name: 'Precio de oferta de vivienda en venta', unitText: 'EUR/m²' },
+    { '@type': 'PropertyValue', name: 'Variación mensual, trimestral y anual del precio', unitText: '%' },
+  ],
+  measurementTechnique: 'Precios de oferta publicada agregados por ámbito (fuente: idealista).',
 };
 
 const SVG_JS = N_MESES >= 3 ? `
@@ -383,6 +441,24 @@ const HTML = `<!DOCTYPE html>
   .pg-informes .im-aviso{ margin:18px 0 8px; padding:11px 14px; border:1px solid rgba(150,116,46,.30); border-radius:10px; background:var(--hueso); color:#20190a; font-size:.9rem; }
   .pg-informes .im-aviso b{ color:#8a6b27; }
   .pg-informes .im-actualizado{ color:var(--gris); font-size:.85rem; margin-top:4px; }
+  /* Bloque "En contexto" (destacado, NO es una tabla) */
+  .pg-informes .im-contraste{ position:relative; overflow:hidden; margin:26px 0 8px; padding:22px 22px 18px 26px; border:1px solid var(--linea); border-radius:16px; background:linear-gradient(160deg,#151310,#0d0b08); }
+  .pg-informes .im-contraste::before{ content:''; position:absolute; left:0; top:0; bottom:0; width:4px; background:linear-gradient(var(--oro-claro),var(--oro)); }
+  .pg-informes .im-c-eyebrow{ text-transform:uppercase; letter-spacing:.14em; font-size:.7rem; font-weight:700; color:var(--oro); }
+  .pg-informes .im-c-titular{ font-family:var(--serif); color:var(--hueso); font-size:clamp(1.5rem,3.4vw,2rem); line-height:1.1; margin-top:6px; border:none; padding:0; }
+  .pg-informes .im-c-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:12px; margin-top:16px; }
+  .pg-informes .im-c-punto{ background:rgba(255,255,255,.025); border:1px solid var(--linea); border-radius:12px; padding:13px 14px; }
+  .pg-informes .im-c-punto.cerrada{ border-color:rgba(120,150,180,.35); }
+  .pg-informes .im-c-tag{ display:inline-block; font-size:.62rem; font-weight:700; letter-spacing:.05em; text-transform:uppercase; padding:3px 9px; border-radius:999px; margin-bottom:9px; }
+  .pg-informes .im-c-tag.oferta{ background:rgba(178,142,68,.16); color:var(--oro-claro); border:1px solid rgba(178,142,68,.5); }
+  .pg-informes .im-c-tag.cerrada{ background:rgba(120,150,180,.16); color:#a9c6de; border:1px solid rgba(120,150,180,.5); }
+  .pg-informes .im-c-dato{ font-family:var(--sans); font-size:1.45rem; font-weight:700; color:var(--hueso); line-height:1.12; }
+  .pg-informes .im-c-etq{ color:var(--gris); font-size:.86rem; margin-top:3px; }
+  .pg-informes .im-c-fte{ color:#837a63; font-size:.72rem; margin-top:7px; font-style:italic; }
+  .pg-informes .im-c-lectura{ color:var(--hueso); font-size:.96rem; margin-top:16px; padding-top:14px; border-top:1px solid var(--linea); }
+  .pg-informes .im-c-lectura b{ color:var(--oro-claro); }
+  .pg-informes .im-c-nota{ color:var(--gris); font-size:.78rem; margin-top:10px; line-height:1.5; }
+  .pg-informes .im-c-nota b{ color:var(--hueso); }
   /* Pestañas en CSS puro (radios ocultos): funcionan sin JS y las 3 tablas
      siguen en el HTML (indexables); solo se muestra la seleccionada. */
   .pg-informes .im-radio{ position:absolute; width:1px; height:1px; opacity:0; clip:rect(0 0 0 0); overflow:hidden; }
@@ -463,6 +539,8 @@ ${NAV}
   <p class="im-intro">Evolución de los precios de vivienda <b>en venta</b> (€/m²): el detalle por barrios de las zonas donde están mis oficinas —Chamberí, Chamartín y Malasaña-Universidad—, los 21 distritos de Madrid capital y todas las comunidades autónomas.</p>
   <p class="im-aviso"><b>Fuente:</b> precios de <b>oferta publicada</b> en idealista, no de operación cerrada. El <b>€/m² Est. Venta</b> descuenta el <b>6,2 %</b> de margen medio de negociación entre precio publicado y precio final de venta (media nacional; Cátedra Grupo Tecnocasa–UPF, vía idealista, feb. 2026).</p>
   <p class="im-actualizado">Última actualización: <b>${esc(mesUltimo.label)}</b>.</p>
+
+  ${bloqueContraste(CONTRASTE)}
 
   <div class="im-tabs">
     <input type="radio" name="imtab" id="t-zonas" class="im-radio" checked>
