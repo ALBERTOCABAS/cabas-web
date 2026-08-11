@@ -33,24 +33,23 @@
   .pg-informes .im-aviso{ margin:18px 0 8px; padding:11px 14px; border:1px solid rgba(150,116,46,.30); border-radius:10px; background:var(--hueso); color:#20190a; font-size:.9rem; }
   .pg-informes .im-aviso b{ color:#8a6b27; }
   .pg-informes .im-actualizado{ color:var(--gris); font-size:.85rem; margin-top:4px; }
-  /* Bloque "En contexto" (destacado, NO es una tabla) */
-  .pg-informes .im-contraste{ position:relative; overflow:hidden; margin:26px 0 8px; padding:22px 22px 18px 26px; border:1px solid var(--linea); border-radius:16px; background:linear-gradient(160deg,#151310,#0d0b08); }
-  .pg-informes .im-contraste::before{ content:''; position:absolute; left:0; top:0; bottom:0; width:4px; background:linear-gradient(var(--oro-claro),var(--oro)); }
-  .pg-informes .im-c-eyebrow{ text-transform:uppercase; letter-spacing:.14em; font-size:.7rem; font-weight:700; color:var(--oro); }
-  .pg-informes .im-c-titular{ font-family:var(--serif); color:var(--hueso); font-size:clamp(1.5rem,3.4vw,2rem); line-height:1.1; margin-top:6px; border:none; padding:0; }
+  /* Bloque "En contexto" — panel DORADO (franja izq. gruesa, resto fina) con
+     las 3 tarjetas de dentro en claro/beige y texto oscuro. */
+  .pg-informes .im-contraste{ margin:26px 0 8px; padding:22px 24px 18px; border:1px solid rgba(0,0,0,.28); border-left:6px solid #7a5d29; border-radius:16px; background:linear-gradient(160deg,#c2a256,#ac8a41); box-shadow:0 10px 30px rgba(0,0,0,.32); }
+  .pg-informes .im-c-eyebrow{ text-transform:uppercase; letter-spacing:.14em; font-size:.7rem; font-weight:700; color:#4a3813; }
+  .pg-informes .im-c-titular{ font-family:var(--serif); color:#1c1406; font-size:clamp(1.5rem,3.4vw,2rem); line-height:1.1; margin-top:6px; border:none; padding:0; }
   .pg-informes .im-c-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:12px; margin-top:16px; }
-  .pg-informes .im-c-punto{ background:rgba(255,255,255,.025); border:1px solid var(--linea); border-radius:12px; padding:13px 14px; }
-  .pg-informes .im-c-punto.cerrada{ border-color:rgba(120,150,180,.35); }
-  .pg-informes .im-c-tag{ display:inline-block; font-size:.62rem; font-weight:700; letter-spacing:.05em; text-transform:uppercase; padding:3px 9px; border-radius:999px; margin-bottom:9px; }
-  .pg-informes .im-c-tag.oferta{ background:rgba(178,142,68,.16); color:var(--oro-claro); border:1px solid rgba(178,142,68,.5); }
-  .pg-informes .im-c-tag.cerrada{ background:rgba(120,150,180,.16); color:#a9c6de; border:1px solid rgba(120,150,180,.5); }
-  .pg-informes .im-c-dato{ font-family:var(--sans); font-size:1.45rem; font-weight:700; color:var(--hueso); line-height:1.12; }
-  .pg-informes .im-c-etq{ color:var(--gris); font-size:.86rem; margin-top:3px; }
-  .pg-informes .im-c-fte{ color:#837a63; font-size:.72rem; margin-top:7px; font-style:italic; }
-  .pg-informes .im-c-lectura{ color:var(--hueso); font-size:.96rem; margin-top:16px; padding-top:14px; border-top:1px solid var(--linea); }
-  .pg-informes .im-c-lectura b{ color:var(--oro-claro); }
-  .pg-informes .im-c-nota{ color:var(--gris); font-size:.78rem; margin-top:10px; line-height:1.5; }
-  .pg-informes .im-c-nota b{ color:var(--hueso); }
+  .pg-informes .im-c-punto{ background:#fffdf8; border:1px solid rgba(0,0,0,.10); border-radius:12px; padding:13px 14px; box-shadow:0 3px 10px rgba(0,0,0,.14); }
+  .pg-informes .im-c-tag{ display:inline-block; font-size:.62rem; font-weight:700; letter-spacing:.05em; text-transform:uppercase; padding:3px 9px; border-radius:999px; margin-bottom:9px; color:#fff; }
+  .pg-informes .im-c-tag.oferta{ background:#b08e44; }
+  .pg-informes .im-c-tag.cerrada{ background:#5b7089; }
+  .pg-informes .im-c-dato{ font-family:var(--sans); font-size:1.45rem; font-weight:700; color:#1c1406; line-height:1.12; }
+  .pg-informes .im-c-etq{ color:#5c5446; font-size:.86rem; margin-top:3px; }
+  .pg-informes .im-c-fte{ color:#8a7f6b; font-size:.72rem; margin-top:7px; font-style:italic; }
+  .pg-informes .im-c-lectura{ color:#1c1406; font-size:.96rem; margin-top:16px; padding-top:14px; border-top:1px solid rgba(0,0,0,.22); }
+  .pg-informes .im-c-lectura b{ color:#4a3813; }
+  .pg-informes .im-c-nota{ color:#3f3114; font-size:.78rem; margin-top:10px; line-height:1.5; }
+  .pg-informes .im-c-nota b{ color:#1c1406; }
   /* Pestañas en CSS puro (radios ocultos): funcionan sin JS y las 3 tablas
      siguen en el HTML (indexables); solo se muestra la seleccionada. */
   .pg-informes .im-radio{ position:absolute; width:1px; height:1px; opacity:0; clip:rect(0 0 0 0); overflow:hidden; }
