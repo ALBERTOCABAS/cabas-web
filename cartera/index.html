@@ -80,6 +80,24 @@
   .motivo.reservado{ background:#efe4c6; color:#8a6b27; }
   .motivo.retirado{ background:#e6e1d6; color:#5c5446; }
 
+  /* Ranking de oficinas por cartera */
+  .ranking{ background:#fffdf8; border:1px solid rgba(150,116,46,.30); border-radius:14px; margin:10px 0; overflow:hidden; }
+  .rk-head{ display:flex; align-items:center; gap:10px; padding:14px 16px; font-weight:600; font-size:.95rem; color:#3f3a31; }
+  .rk-head .tag{ background:var(--oro); color:#20190a; font-size:.68rem; font-weight:700; padding:3px 9px; border-radius:999px; letter-spacing:.05em; }
+  .rk-toggle{ margin-left:auto; width:32px; height:32px; display:grid; place-items:center; cursor:pointer;
+    background:#fff; border:1px solid rgba(150,116,46,.40); border-radius:9px; color:#8a6b27; font-size:.95rem; line-height:1; transition:transform .2s, background .2s; }
+  .rk-toggle:hover{ background:#f3ecdd; }
+  .ranking.contraida .rk-toggle{ transform:rotate(180deg); }
+  .ranking.contraida .rk-body{ display:none; }
+  .rk-body{ padding:8px 16px 16px; border-top:1px solid rgba(150,116,46,.25); display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:20px; }
+  .rk-col h4{ font-size:.78rem; text-transform:uppercase; letter-spacing:.06em; color:#8a6b27; margin:2px 0 9px; }
+  .rk-row{ display:grid; grid-template-columns:16px 104px 1fr 24px; align-items:center; gap:8px; margin-bottom:8px; }
+  .rk-pos{ font-size:.76rem; font-weight:800; color:#b0a690; text-align:center; }
+  .rk-name{ font-size:.77rem; font-weight:700; color:#3f3a31; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .rk-bar-wrap{ background:#efe9dc; border-radius:6px; height:16px; overflow:hidden; }
+  .rk-bar{ height:100%; border-radius:6px; min-width:4px; }
+  .rk-num{ font-size:.83rem; font-weight:800; color:#3f3a31; text-align:right; }
+
   /* Filtros */
   .filtros{ position:sticky; top:0; z-index:20; background:var(--negro); padding:12px 0 10px; margin-top:8px; }
   .busca{ width:100%; padding:12px 14px; border:1px solid rgba(150,116,46,.30); border-radius:12px; font-size:1rem; background:#fffdf8; color:#3f3a31; }
@@ -183,6 +201,15 @@
       <button type="button" class="nov-toggle" id="nov-toggle" aria-expanded="true" aria-controls="nov-body" title="Contraer / desplegar">▾</button>
     </div>
     <div class="nov-body" id="nov-body"><!-- lo rellena el digest --></div>
+  </section>
+
+  <section class="ranking contraida" id="ranking">
+    <div class="rk-head">
+      <span class="tag">🏆 RANKING</span>
+      <span class="nov-title">Cartera de inmuebles por oficina</span>
+      <button type="button" class="rk-toggle" id="rk-toggle" aria-expanded="false" aria-controls="rk-body" title="Ver / ocultar ranking">▾</button>
+    </div>
+    <div class="rk-body" id="rk-body"><!-- lo rellena pintarRanking --></div>
   </section>
 
   <div class="filtros">
@@ -346,7 +373,7 @@ function init(){
   pintarOpciones(document.getElementById('m-max'), OPC_METROS, v=>v+' m²', 'Hasta');
   pintarOpciones(document.getElementById('h-min'), OPC_HAB, v=>v, 'Desde');
   pintarOpciones(document.getElementById('h-max'), OPC_HAB, v=>v, 'Hasta');
-  pintarDigest(); actualizarPrecioUI(); actualizarSubtipos(); render();
+  pintarDigest(); pintarRanking(); actualizarPrecioUI(); actualizarSubtipos(); render();
   // listeners
   document.getElementById('busca').addEventListener('input',render);
   ['f-oficina','f-zona','f-subtipo','f-ascensor','f-banos','p-min','p-max','m-min','m-max','h-min','h-max']
@@ -360,6 +387,30 @@ function init(){
   // Contraer/desplegar novedades — SOLO con el botón de la derecha (no al pinchar el título)
   const nvT=document.getElementById('nov-toggle'), nvBox=document.getElementById('novedades');
   if(nvT&&nvBox){ nvT.addEventListener('click',()=>{ const c=nvBox.classList.toggle('contraida'); nvT.setAttribute('aria-expanded', c?'false':'true'); }); }
+  // Ranking: desplegar/ocultar con su botón
+  const rkT=document.getElementById('rk-toggle'), rkBox=document.getElementById('ranking');
+  if(rkT&&rkBox){ rkT.addEventListener('click',()=>{ const c=rkBox.classList.toggle('contraida'); rkT.setAttribute('aria-expanded', c?'false':'true'); }); }
+}
+
+// Ranking de oficinas por nº de inmuebles en cartera (total / venta / alquiler).
+// Siempre sobre la cartera completa, independiente de los filtros.
+function pintarRanking(){
+  const cont=document.getElementById('rk-body'); if(!cont) return;
+  const conteo = pred => Object.entries(CARTERA.reduce((m,d)=>{ if(pred(d)) m[d.oficina]=(m[d.oficina]||0)+1; return m; },{}))
+                              .sort((a,b)=>b[1]-a[1]);
+  const corto = of => (of||'').replace(/\s*\(.*?\)\s*/,'').split(/\s*·\s*/)[0].trim();
+  const bloque = (titulo,rows) => {
+    const max = rows.length ? rows[0][1] : 1;
+    const filas = rows.map(([of,n],i)=>{
+      const c=ofiCol(of), w=Math.max(4, Math.round(n/max*100));
+      const bar=`background:${c.bg};${c.bd?'border:1px solid '+c.bd+';':''}`;
+      return `<div class="rk-row"><span class="rk-pos">${i+1}</span><span class="rk-name" title="${of}">${corto(of)}</span><span class="rk-bar-wrap"><span class="rk-bar" style="width:${w}%;${bar}"></span></span><span class="rk-num">${n}</span></div>`;
+    }).join('');
+    return `<div class="rk-col"><h4>${titulo}</h4>${filas||'<p style="color:#9a8f79;font-size:.8rem">—</p>'}</div>`;
+  };
+  cont.innerHTML = bloque('Total', conteo(()=>true))
+                 + bloque('Venta', conteo(d=>d.operacion==='Venta'))
+                 + bloque('Alquiler', conteo(d=>d.operacion==='Alquiler'));
 }
 
 function resetFiltros(){
