@@ -1,0 +1,28 @@
+{
+  "mes": "julio 2026",
+  "titular": "El precio sube más que las operaciones",
+  "lectura": "Se está pidiendo bastante más sin que se cierren muchas más operaciones.",
+  "indicadores": [
+    {
+      "etiqueta": "Precio de oferta en España",
+      "valor": "+13,1% anual",
+      "fuente": "idealista",
+      "periodo": "julio 2026",
+      "tipo_dato": "oferta publicada"
+    },
+    {
+      "etiqueta": "Compraventas de vivienda inscritas",
+      "valor": "+1,6% interanual",
+      "fuente": "INE, Transmisiones de Derechos de la Propiedad",
+      "periodo": "junio 2026",
+      "tipo_dato": "transacción cerrada"
+    },
+    {
+      "etiqueta": "Índice de Precios de Vivienda",
+      "valor": "+12,9% anual nacional · +13,5% segunda mano",
+      "fuente": "INE, IPV",
+      "periodo": "1T 2026",
+      "tipo_dato": "transacción cerrada"
+    }
+  ]
+}

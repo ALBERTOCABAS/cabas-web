@@ -32,13 +32,15 @@ const DRIVE = '/Users/albertocabas/Library/CloudStorage/GoogleDrive-cabasrealtor
 
 const BASE_URL = 'https://www.cabas.es';
 
-// ---------- patrones de los 3 tipos de CSV ----------
+// ---------- patrones de los archivos de Drive ----------
 const RE = {
   madrid: /^datos_madrid_[a-zñáéíóú]+_\d{4}\.csv$/i,
   espana: /^datos_espana_[a-zñáéíóú]+_\d{4}\.csv$/i,
   zonas:  /^datos_(?!madrid_|espana_)[a-zñáéíóú]+_\d{4}\.csv$/i,
+  contraste: /^contraste_[a-zñáéíóú]+_\d{4}\.json$/i,   // bloque "En contexto"
 };
-const esDato    = f => RE.madrid.test(f) || RE.espana.test(f) || RE.zonas.test(f);
+const esDato     = f => RE.madrid.test(f) || RE.espana.test(f) || RE.zonas.test(f);
+const esCopiable = f => esDato(f) || RE.contraste.test(f);   // lo que el build baja de Drive
 const familiaDe = f => RE.madrid.test(f) ? 'madrid' : RE.espana.test(f) ? 'espana' : 'zonas';
 
 // ---------- meses ----------
@@ -74,7 +76,7 @@ fs.mkdirSync(DATA_DIR, { recursive: true });
 const copiados = [];
 let driveOk = true;
 try {
-  for (const f of fs.readdirSync(DRIVE).filter(esDato)) {
+  for (const f of fs.readdirSync(DRIVE).filter(esCopiable)) {
     const dest = path.join(DATA_DIR, f);
     if (!fs.existsSync(dest)) { fs.copyFileSync(path.join(DRIVE, f), dest); copiados.push(f); }
   }
@@ -105,10 +107,20 @@ const meses = [...mesesSet.values()].sort((a, b) => a.key - b.key);
 const mesUltimo = meses[meses.length - 1];
 const N_MESES = meses.length;
 
-// Bloque "En contexto" — editable en informes-mercado/contraste.md (formato
-// tolerante: líneas "titular:", "lectura:" y datos "tipo | etiqueta | valor | fuente").
-function parseContraste(txt) {
-  const c = { titular: '', lectura: '', puntos: [] };
+// Bloque "En contexto". Prioridad: el contraste_*.json MÁS RECIENTE que baja de
+// Drive (automático). Si no hay JSON válido, el contraste.md manual (respaldo).
+function parseContrasteJSON(obj) {
+  return {
+    titular: obj.titular || '', lectura: obj.lectura || '', mes: obj.mes || '',
+    puntos: (obj.indicadores || []).map(i => ({
+      tipo: /oferta/i.test(i.tipo_dato || '') ? 'oferta' : 'cerrada',
+      etiqueta: i.etiqueta || '', valor: i.valor || '',
+      fuente: [i.fuente, i.periodo].filter(Boolean).join(', '),
+    })).filter(p => p.etiqueta),
+  };
+}
+function parseContrasteMD(txt) {   // formato tolerante: "titular:", "lectura:" y "tipo | etiqueta | valor | fuente"
+  const c = { titular: '', lectura: '', mes: '', puntos: [] };
   for (const raw of txt.split('\n')) {
     const line = raw.trim();
     if (!line || line.startsWith('#')) continue;
@@ -117,13 +129,21 @@ function parseContraste(txt) {
     else if (low.startsWith('lectura:')) c.lectura = line.slice(line.indexOf(':') + 1).trim();
     else if (line.includes('|')) {
       const p = line.split('|').map(s => s.trim());
-      if (p.length >= 4 && p[1]) c.puntos.push({ tipo: p[0].toLowerCase(), etiqueta: p[1], valor: p[2], fuente: p[3] });
+      if (p.length >= 4 && p[1]) c.puntos.push({ tipo: p[0].toLowerCase().includes('cerr') ? 'cerrada' : 'oferta', etiqueta: p[1], valor: p[2], fuente: p[3] });
     }
   }
   return c;
 }
-let CONTRASTE = null;
-try { CONTRASTE = parseContraste(fs.readFileSync(path.join(__dirname, 'contraste.md'), 'utf8')); } catch (e) { CONTRASTE = null; }
+const mesDeArchivo = f => mesInfo(f.replace(/^contraste_/i, '').replace(/\.json$/i, '').replace(/_/g, ' ')).key;
+let CONTRASTE = null, contrasteOrigen = '—';
+const jsonsContraste = fs.readdirSync(DATA_DIR).filter(f => RE.contraste.test(f)).sort((a, b) => mesDeArchivo(a) - mesDeArchivo(b));
+if (jsonsContraste.length) {
+  const ult = jsonsContraste[jsonsContraste.length - 1];
+  try { CONTRASTE = parseContrasteJSON(JSON.parse(fs.readFileSync(path.join(DATA_DIR, ult), 'utf8'))); contrasteOrigen = ult; } catch (e) { CONTRASTE = null; }
+}
+if (!CONTRASTE || !CONTRASTE.puntos.length) {
+  try { CONTRASTE = parseContrasteMD(fs.readFileSync(path.join(__dirname, 'contraste.md'), 'utf8')); contrasteOrigen = 'contraste.md (respaldo)'; } catch (e) { /* sin bloque */ }
+}
 
 // ============================================================
 // Utilidades de presentación
@@ -194,7 +214,7 @@ function bloqueContraste(c) {
     + `<div class="im-c-etq">${esc(p.etiqueta)}</div>`
     + `<div class="im-c-fte">${esc(p.fuente)}</div></div>`).join('');
   return `<aside class="im-contraste" aria-label="El mercado en contexto">`
-    + `<span class="im-c-eyebrow">En contexto · ${esc(mesUltimo.label)}</span>`
+    + `<span class="im-c-eyebrow">En contexto · ${esc(c.mes || mesUltimo.label)}</span>`
     + `<h2 class="im-c-titular">${esc(c.titular)}</h2>`
     + `<div class="im-c-grid">${puntos}</div>`
     + (c.lectura ? `<p class="im-c-lectura"><b>Lectura:</b> ${esc(c.lectura)}</p>` : '')
@@ -671,5 +691,6 @@ console.log(driveOk ? `Drive leído OK. CSV nuevos copiados: ${copiados.length ?
 console.log(`CSV en data/: ${locales.length}  ·  meses en serie: ${N_MESES} (${meses.map(m => m.label).join(' → ')})`);
 console.log(`Filas · zonas:${filas.zonas.length}  madrid:${filas.madrid.length}  espana:${filas.espana.length}`);
 console.log(`Gráficos: ${N_MESES >= 3 ? 'SÍ (>=3 meses)' : 'aún no (aparecen con 3 meses)'}`);
+console.log(`Bloque "En contexto": ${CONTRASTE && CONTRASTE.puntos.length ? contrasteOrigen + ' · ' + CONTRASTE.puntos.length + ' indicadores' : 'sin datos (no aparece)'}`);
 console.log(`Generado: informes-mercado/index.html  +  sitemap.xml   ·  última actualización: ${mesUltimo.label}`);
 console.log('─────────────────────────────────────────────────');
