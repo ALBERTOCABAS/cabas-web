@@ -90,8 +90,26 @@
   .chip[aria-pressed="true"]{ background:var(--oro); color:#20190a; border-color:var(--oro); }
   .selects{ display:flex; gap:7px; margin-top:8px; flex-wrap:wrap; }
   .selects select{ flex:1 1 auto; min-width:120px; padding:9px 10px; border:1px solid rgba(150,116,46,.30); border-radius:10px; background:#fffdf8; font-size:.85rem; font-weight:500; color:#3f3a31; }
+  /* Rangos desde/hasta (precio, metros, habitaciones) + baños */
+  .rangos{ display:grid; grid-template-columns:repeat(auto-fit,minmax(215px,1fr)); gap:7px; margin-top:7px; }
+  .rango{ display:flex; align-items:center; gap:6px; background:#fffdf8; border:1px solid rgba(150,116,46,.30); border-radius:10px; padding:6px 10px; }
+  .rango > label{ font-size:.78rem; font-weight:700; color:#6b6152; min-width:74px; }
+  .rango input{ width:100%; min-width:0; border:none; background:transparent; font-size:.85rem; color:#3f3a31; padding:3px 2px; -moz-appearance:textfield; }
+  .rango input::-webkit-outer-spin-button,.rango input::-webkit-inner-spin-button{ -webkit-appearance:none; margin:0; }
+  .rango input:focus{ outline:none; }
+  .rango input::placeholder{ color:#b0a690; }
+  .rango .sep{ color:#b0a690; }
+  .rango .u{ font-size:.78rem; color:#9a8f79; font-weight:600; white-space:nowrap; }
+  .rango select{ width:100%; border:none; background:transparent; font-size:.85rem; font-weight:500; color:#3f3a31; }
+  .rango select:focus{ outline:none; }
+  .quick{ display:flex; gap:6px; margin-top:7px; flex-wrap:wrap; align-items:center; }
+  .quick .qlbl{ font-size:.76rem; color:#9a8f79; font-weight:600; }
+  .qchip{ border:1px solid rgba(150,116,46,.30); background:#fffdf8; border-radius:999px; padding:5px 11px; font-size:.78rem; font-weight:600; color:#6b6152; cursor:pointer; user-select:none; }
+  .qchip:hover{ background:#f3ecdd; }
+  .qchip[aria-pressed="true"]{ background:var(--oro); color:#20190a; border-color:var(--oro); }
   .contador{ font-size:.82rem; color:var(--gris); margin-top:9px; font-weight:500; }
   .contador b{ color:var(--oro-claro); }
+  .btn-reset{ margin-left:8px; font-size:.78rem; color:#8a6b27; background:none; border:none; cursor:pointer; text-decoration:underline; font-weight:600; }
 
   /* Grid + tarjetas de inmueble (inclinación "de oficio", como tu web) */
   .grid{ display:grid; grid-template-columns:repeat(auto-fill, minmax(250px,1fr)); gap:14px; margin-top:8px; }
@@ -111,8 +129,12 @@
   .reserv{ position:absolute; top:0; right:0; background:var(--oro); color:#20190a; font-size:.6rem; font-weight:700; padding:3px 9px; border-bottom-left-radius:10px; letter-spacing:.05em; }
   .precio{ font-family:var(--serif); font-size:1.7rem; font-weight:600; color:#8a6b27; font-variant-numeric:lining-nums; font-feature-settings:'lnum' 1,'tnum' 1; }
   .precio .mes{ font-size:.8rem; font-weight:500; color:#9a8f79; font-family:var(--sans); }
-  .specs{ display:flex; gap:10px; font-size:.82rem; color:#6b6152; font-weight:500; flex-wrap:wrap; }
+  .specs{ display:flex; gap:10px; font-size:.82rem; color:#6b6152; font-weight:500; flex-wrap:wrap; align-items:center; }
   .specs .tt{ color:#161310; font-weight:700; }
+  .specs .asc-si{ color:#5f7d3e; font-weight:700; }
+  .specs .asc-no{ color:#9a8f79; font-weight:600; }
+  .zona-line{ margin-top:-2px; }
+  .zona{ font-size:.78rem; color:#8a6b27; font-weight:700; background:#f3ecdd; padding:2px 9px; border-radius:999px; }
   .titulo{ font-size:.86rem; line-height:1.35; color:#5c5446; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
   .ver{ font-size:.78rem; font-weight:700; color:#8a6b27; margin-top:auto; }
   .vacio{ text-align:center; color:var(--gris); padding:48px 0; font-weight:500; }
@@ -175,21 +197,21 @@
     </div>
     <div class="selects">
       <select id="f-oficina"><option value="">Todas las oficinas</option></select>
+      <select id="f-zona"><option value="">Todas las zonas</option></select>
       <select id="f-tipo"><option value="">Todos los tipos</option></select>
-      <select id="f-precio">
-        <option value="">Cualquier precio</option>
-        <option value="0-150000">Hasta 150.000 €</option>
-        <option value="150000-300000">150.000 – 300.000 €</option>
-        <option value="300000-500000">300.000 – 500.000 €</option>
-        <option value="500000-800000">500.000 – 800.000 €</option>
-        <option value="800000-99999999">Más de 800.000 €</option>
-      </select>
-      <select id="f-hab">
-        <option value="">Habitaciones</option>
-        <option value="1">1+</option><option value="2">2+</option>
-        <option value="3">3+</option><option value="4">4+</option>
+      <select id="f-ascensor">
+        <option value="">Ascensor: todos</option>
+        <option value="si">Con ascensor</option>
+        <option value="no">Sin ascensor</option>
       </select>
     </div>
+    <div class="rangos">
+      <div class="rango"><label>Precio</label><input id="p-min" type="number" inputmode="numeric" placeholder="Desde"><span class="sep">–</span><input id="p-max" type="number" inputmode="numeric" placeholder="Hasta"><span class="u" id="p-u">€</span></div>
+      <div class="rango"><label>Metros</label><input id="m-min" type="number" inputmode="numeric" placeholder="Desde"><span class="sep">–</span><input id="m-max" type="number" inputmode="numeric" placeholder="Hasta"><span class="u">m²</span></div>
+      <div class="rango"><label>Habitaciones</label><input id="h-min" type="number" inputmode="numeric" min="0" placeholder="Desde"><span class="sep">–</span><input id="h-max" type="number" inputmode="numeric" min="0" placeholder="Hasta"></div>
+      <div class="rango"><label>Baños</label><select id="f-banos"><option value="">Todos</option><option value="1">1+</option><option value="2">2+</option><option value="3">3+</option><option value="4">4+</option></select></div>
+    </div>
+    <div class="quick" id="quick-precio"></div>
     <div class="contador" id="contador"></div>
   </div>
 
@@ -263,21 +285,48 @@ async function cargar(){
   init();
 }
 
+// Rangos rápidos de precio, distintos para venta y alquiler
+const QUICK = {
+  Venta:   [["Hasta 300.000",0,300000],["300–500 mil",300000,500000],["500–800 mil",500000,800000],["800 mil – 1,2M",800000,1200000],["Más de 1,2M",1200000,null]],
+  Alquiler:[["Hasta 1.000",0,1000],["1.000–1.500",1000,1500],["1.500–2.500",1500,2500],["Más de 2.500",2500,null]]
+};
+function opActual(){ return document.querySelector('#chips-op .chip[aria-pressed="true"]').dataset.op; }
+function limpiarQuick(){ document.querySelectorAll('#quick-precio .qchip').forEach(x=>x.setAttribute('aria-pressed','false')); }
+function actualizarPrecioUI(){
+  const op = opActual();
+  document.getElementById('p-u').textContent = op==='Alquiler' ? '€/mes' : '€';
+  const cont = document.getElementById('quick-precio');
+  const sets = op==='' ? null : QUICK[op];
+  if(!sets){ cont.innerHTML=''; return; }   // en "Todas" no mostramos rangos (venta y alquiler no son comparables)
+  cont.innerHTML = '<span class="qlbl">Rangos '+op.toLowerCase()+':</span>' +
+    sets.map((r,i)=>`<span class="qchip" data-i="${i}" aria-pressed="false">${r[0]}</span>`).join('') +
+    '<button type="button" class="btn-reset" id="q-reset">limpiar precio</button>';
+  cont.querySelectorAll('.qchip').forEach(ch=>ch.addEventListener('click',()=>{
+    const r=sets[+ch.dataset.i], pressed=ch.getAttribute('aria-pressed')==='true';
+    limpiarQuick();
+    if(pressed){ pmin.value=''; pmax.value=''; }
+    else{ ch.setAttribute('aria-pressed','true'); pmin.value=r[1]||''; pmax.value=(r[2]==null?'':r[2]); }
+    render();
+  }));
+  document.getElementById('q-reset').addEventListener('click',()=>{ pmin.value=''; pmax.value=''; limpiarQuick(); render(); });
+}
+let pmin,pmax;
+
 function init(){
-  // poblar selects
-  const ofis = [...new Set(CARTERA.map(d=>d.oficina))];
-  const selO = document.getElementById('f-oficina');
-  ofis.forEach(o=>{const op=document.createElement('option');op.value=o;op.textContent=o;selO.appendChild(op)});
-  const tipos = [...new Set(CARTERA.map(d=>d.tipo))].sort();
-  const selT = document.getElementById('f-tipo');
-  tipos.forEach(t=>{const op=document.createElement('option');op.value=t;op.textContent=t;selT.appendChild(op)});
-  pintarDigest(); render();
+  pmin=document.getElementById('p-min'); pmax=document.getElementById('p-max');
+  const uniq = k => [...new Set(CARTERA.map(d=>d[k]).filter(Boolean))];
+  const fill = (id,vals) => { const s=document.getElementById(id); vals.forEach(v=>{const o=document.createElement('option');o.value=v;o.textContent=v;s.appendChild(o)}); };
+  fill('f-oficina', uniq('oficina'));
+  fill('f-zona',   uniq('zona').sort((a,b)=>a.localeCompare(b,'es')));
+  fill('f-tipo',   uniq('tipo').sort((a,b)=>a.localeCompare(b,'es')));
+  pintarDigest(); actualizarPrecioUI(); render();
   // listeners
   document.getElementById('busca').addEventListener('input',render);
-  ['f-oficina','f-tipo','f-precio','f-hab'].forEach(id=>document.getElementById(id).addEventListener('change',render));
+  ['f-oficina','f-zona','f-tipo','f-ascensor','f-banos'].forEach(id=>document.getElementById(id).addEventListener('change',render));
+  ['p-min','p-max','m-min','m-max','h-min','h-max'].forEach(id=>document.getElementById(id).addEventListener('input',()=>{ limpiarQuick(); render(); }));
   document.querySelectorAll('#chips-op .chip').forEach(c=>c.addEventListener('click',()=>{
     document.querySelectorAll('#chips-op .chip').forEach(x=>x.setAttribute('aria-pressed','false'));
-    c.setAttribute('aria-pressed','true'); render();
+    c.setAttribute('aria-pressed','true'); actualizarPrecioUI(); render();
   }));
   // Contraer/desplegar novedades — SOLO con el botón de la derecha (no al pinchar el título)
   const nvT=document.getElementById('nov-toggle'), nvBox=document.getElementById('novedades');
@@ -285,13 +334,19 @@ function init(){
 }
 
 function estadoFiltros(){
-  const q = document.getElementById('busca').value.trim().toLowerCase();
-  const op = document.querySelector('#chips-op .chip[aria-pressed="true"]').dataset.op;
-  const of = document.getElementById('f-oficina').value;
-  const ti = document.getElementById('f-tipo').value;
-  const pr = document.getElementById('f-precio').value;
-  const hb = parseInt(document.getElementById('f-hab').value)||0;
-  return {q,op,of,ti,pr,hb};
+  const num = id => { const v=parseInt(document.getElementById(id).value,10); return isNaN(v)?null:v; };
+  return {
+    q: document.getElementById('busca').value.trim().toLowerCase(),
+    op: opActual(),
+    of: document.getElementById('f-oficina').value,
+    zo: document.getElementById('f-zona').value,
+    ti: document.getElementById('f-tipo').value,
+    asc: document.getElementById('f-ascensor').value,
+    pmin:num('p-min'), pmax:num('p-max'),
+    mmin:num('m-min'), mmax:num('m-max'),
+    hmin:num('h-min'), hmax:num('h-max'),
+    ba: parseInt(document.getElementById('f-banos').value)||0
+  };
 }
 
 function render(){
@@ -299,10 +354,18 @@ function render(){
   let res = CARTERA.filter(d=>{
     if(f.op && d.operacion!==f.op) return false;
     if(f.of && d.oficina!==f.of) return false;
+    if(f.zo && d.zona!==f.zo) return false;
     if(f.ti && d.tipo!==f.ti) return false;
-    if(f.hb && (d.habitaciones||0) < f.hb) return false;
-    if(f.pr){const[a,b]=f.pr.split('-').map(Number); if(d.precio==null||d.precio<a||d.precio>b) return false;}
-    if(f.q){const blob=(d.titulo+' '+d.ref+' '+d.oficina+' '+d.url).toLowerCase(); if(!blob.includes(f.q)) return false;}
+    if(f.asc==='si' && d.ascensor!==true) return false;
+    if(f.asc==='no' && d.ascensor!==false) return false;
+    if(f.pmin!=null && (d.precio==null || d.precio<f.pmin)) return false;
+    if(f.pmax!=null && (d.precio==null || d.precio>f.pmax)) return false;
+    if(f.mmin!=null && (d.m2==null || d.m2<f.mmin)) return false;
+    if(f.mmax!=null && (d.m2==null || d.m2>f.mmax)) return false;
+    if(f.hmin!=null && ((d.habitaciones||0) < f.hmin)) return false;
+    if(f.hmax!=null && (d.habitaciones==null || d.habitaciones > f.hmax)) return false;
+    if(f.ba && (d.banos||0) < f.ba) return false;
+    if(f.q){const blob=(d.titulo+' '+d.ref+' '+d.oficina+' '+(d.zona||'')+' '+d.url).toLowerCase(); if(!blob.includes(f.q)) return false;}
     return true;
   });
   const grid = document.getElementById('grid');
@@ -318,6 +381,9 @@ function render(){
     const specs=[]; if(d.habitaciones) specs.push(`<span class="tt">${d.habitaciones}</span> hab`);
     if(d.banos) specs.push(`<span class="tt">${d.banos}</span> baño${d.banos>1?'s':''}`);
     if(d.m2) specs.push(`<span class="tt">${d.m2}</span> m²`);
+    if(d.ascensor===true) specs.push(`<span class="asc-si">🛗 Ascensor</span>`);
+    else if(d.ascensor===false) specs.push(`<span class="asc-no">Sin ascensor</span>`);
+    const zonaHtml = d.zona ? `<span class="zona">📍 ${d.zona}</span>` : '';
     return `<a class="card" href="${d.url}" target="_blank" rel="noopener">
       ${d.reservado?'<span class="reserv">RESERVADO</span>':''}
       <div class="top-row">
@@ -326,6 +392,7 @@ function render(){
       </div>
       <div class="precio">${eur(d.precio)}${mes}</div>
       <div class="specs">${specs.join('<span>·</span>')||'<span>—</span>'}</div>
+      ${zonaHtml?`<div class="zona-line">${zonaHtml}</div>`:''}
       <div class="titulo">${d.titulo||d.tipo}</div>
       <div class="ver">Ver ficha →</div>
     </a>`;
