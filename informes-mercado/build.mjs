@@ -443,7 +443,7 @@ const HTML = `<!DOCTYPE html>
   .pg-informes .im-actualizado{ color:var(--gris); font-size:.85rem; margin-top:4px; }
   /* Bloque "En contexto" — panel DORADO (franja izq. gruesa, resto fina) con
      las 3 tarjetas de dentro en claro/beige y texto oscuro. */
-  .pg-informes .im-contraste{ margin:26px 0 8px; padding:22px 24px 18px; border:1px solid rgba(0,0,0,.28); border-left:6px solid #7a5d29; border-radius:16px; background:linear-gradient(160deg,#c2a256,#ac8a41); box-shadow:0 10px 30px rgba(0,0,0,.32); }
+  .pg-informes .im-contraste{ margin:26px 0 8px; padding:22px 24px 18px; border:1px solid rgba(0,0,0,.28); border-radius:16px; background:linear-gradient(160deg,#c2a256,#ac8a41); box-shadow:0 10px 30px rgba(0,0,0,.32); }
   .pg-informes .im-c-eyebrow{ text-transform:uppercase; letter-spacing:.14em; font-size:.7rem; font-weight:700; color:#4a3813; }
   .pg-informes .im-c-titular{ font-family:var(--serif); color:#1c1406; font-size:clamp(1.5rem,3.4vw,2rem); line-height:1.1; margin-top:6px; border:none; padding:0; }
   .pg-informes .im-c-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:12px; margin-top:16px; }
