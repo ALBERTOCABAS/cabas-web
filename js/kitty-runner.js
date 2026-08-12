@@ -11,11 +11,23 @@
 // ============================================================
 (function (raiz) {
   'use strict';
-  // ---- dependencias: globales del navegador O require en Node ----
-  var _req = (typeof require !== 'undefined') ? require : null;
-  var _g = raiz.KITTY_GUION || (_req && _req('./kitty-guion.js'));
-  var TEXTOS = raiz.TEXTOS || (_req && _req('./kitty-textos.js').TEXTOS);
-  var GUION = _g.GUION, SUBFLUJOS = _g.SUBFLUJOS, nombreCCAA = _g.nombreCCAA, avisoEdad = _g.avisoEdad, primerNombre = _g.primerNombre;
+  // ---- dependencias ----
+  // OJO: en Node/Cloudflare hay que usar require LITERAL (el empaquetador
+  // esbuild solo sabe incluir require("./ruta") escritos tal cual; un require
+  // "dinámico" —guardado en variable— revienta el Worker en tiempo de arranque).
+  // En el navegador no existe `module`, así que esa rama se salta y se usan las
+  // globales que dejaron los <script> de kitty-textos.js / kitty-guion.js.
+  var TEXTOS, GUION, SUBFLUJOS, nombreCCAA, avisoEdad, primerNombre;
+  if (typeof module !== 'undefined' && module.exports) {
+    TEXTOS = require('./kitty-textos.js').TEXTOS;
+    var _g = require('./kitty-guion.js');
+    GUION = _g.GUION; SUBFLUJOS = _g.SUBFLUJOS; nombreCCAA = _g.nombreCCAA; avisoEdad = _g.avisoEdad; primerNombre = _g.primerNombre;
+  } else {
+    var _b = raiz.KITTY_GUION || {};
+    TEXTOS = raiz.TEXTOS;
+    GUION = raiz.GUION || _b.GUION; SUBFLUJOS = raiz.SUBFLUJOS || _b.SUBFLUJOS;
+    nombreCCAA = _b.nombreCCAA; avisoEdad = _b.avisoEdad; primerNombre = _b.primerNombre;
+  }
 
 
 // ---------- texto ----------
