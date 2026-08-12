@@ -18,20 +18,33 @@
   // En el navegador no existe `module`, así que esa rama se salta y se usan las
   // globales que dejaron los <script> de kitty-textos.js / kitty-guion.js.
   var TEXTOS, GUION, SUBFLUJOS, nombreCCAA, avisoEdad, primerNombre;
+  // Traducciones a mano (bots): mapas planos { 'menu.saludo1': '...' } por idioma.
+  // En el navegador NO se cargan (la web usa el idioma de la página); si falta
+  // una clave, tx() cae al español. Los archivos-idioma son opcionales.
+  var _tr = { en: {}, fr: {} };
   if (typeof module !== 'undefined' && module.exports) {
     TEXTOS = require('./kitty-textos.js').TEXTOS;
     var _g = require('./kitty-guion.js');
     GUION = _g.GUION; SUBFLUJOS = _g.SUBFLUJOS; nombreCCAA = _g.nombreCCAA; avisoEdad = _g.avisoEdad; primerNombre = _g.primerNombre;
+    _tr.en = require('./kitty-textos-en.js').TEXTOS_EN || {};
+    _tr.fr = require('./kitty-textos-fr.js').TEXTOS_FR || {};
   } else {
     var _b = raiz.KITTY_GUION || {};
     TEXTOS = raiz.TEXTOS;
     GUION = raiz.GUION || _b.GUION; SUBFLUJOS = raiz.SUBFLUJOS || _b.SUBFLUJOS;
     nombreCCAA = _b.nombreCCAA; avisoEdad = _b.avisoEdad; primerNombre = _b.primerNombre;
+    _tr.en = raiz.TEXTOS_EN || {};
+    _tr.fr = raiz.TEXTOS_FR || {};
   }
+  var _lang = 'es';   // idioma activo del turno (lo fija iniciar/entrada)
 
 
 // ---------- texto ----------
-function tx(id) { const p = String(id).split('.'); let o = TEXTOS; for (const k of p) o = o && o[k]; return (o && o.es) || ('??' + id); }
+// Elige el idioma activo; si no hay traducción de esa clave, cae al español.
+function tx(id) {
+  if (_lang !== 'es' && _tr[_lang] && _tr[_lang][id] != null) return _tr[_lang][id];
+  const p = String(id).split('.'); let o = TEXTOS; for (const k of p) o = o && o[k]; return (o && o.es) || ('??' + id);
+}
 function fill(s, v) { return String(s).replace(/\{(\w+)\}/g, (m, k) => (v && v[k] != null) ? v[k] : m); }
 function idDe(texto, scope, preg) {
   if (typeof texto === 'function') return texto(scope);
@@ -278,7 +291,8 @@ function parsear(entrada, texto) {
 // ============================================================
 function crearEstado(origin) { return { flow: null, a: {}, sent: 0, eventSent: 0, pending: null, ruta: [], origin: origin || null, turno: 0 }; }
 
-function iniciar(estado) {
+function iniciar(estado, lang) {
+  _lang = lang || (estado && estado.lang) || 'es'; if (estado) estado.lang = _lang;
   estado.flow = 'menu'; estado.a = {}; estado.sent = 0; estado.pending = null; estado.ruta = [];
   const salidas = [{ texto: tx('menu.saludo1') }, { texto: tx('menu.saludo2') }];
   const eventos = [{ evento: 'inicio', origin: estado.origin }];
@@ -286,8 +300,9 @@ function iniciar(estado) {
   return { salidas, estado, leads: [], eventos };
 }
 
-function entrada(estado, inp) {
-  if (!estado.flow) return iniciar(estado);
+function entrada(estado, inp, lang) {
+  _lang = lang || (estado && estado.lang) || 'es'; if (estado) estado.lang = _lang;
+  if (!estado.flow) return iniciar(estado, _lang);
   const salidas = [], leads = [], eventos = [];
   if (estado.pending) {
     const err = aplicar(estado, inp);
