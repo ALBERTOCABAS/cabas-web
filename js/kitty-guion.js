@@ -92,6 +92,15 @@
       ]
     },
 
+    // Despedida reutilizable: mensaje de cierre + web + compartir, y CIERRA
+    // la conversación (no reaparece el menú; el usuario escribe "Hola" para volver).
+    despedir: {
+      id: 'despedir',
+      pasos: [
+        { id: 'fin', tipo: 'despedir', texto: 'lead.despedida' }
+      ]
+    },
+
     // ============================================================
     // FLUJO: Valorar un inmueble  (CONTACTO primero, inmueble al final)
     // ============================================================
@@ -173,7 +182,7 @@
         { id: 'oc', tipo: 'chips', texto: 'contacto.pregunta', guardar: 'quiere',
           opciones: [
             { texto: 'contacto.chip_lead', valor: 'lead' },
-            { texto: 'contacto.chip_menu', valor: 'menu', saltarA: '@menu' }
+            { texto: 'contacto.chip_menu', valor: 'menu', saltarA: '@menu' }, { texto: 'contacto.chip_nada', valor: 'nada', irAFlujo: 'despedir' }
           ] },
         { id: 'ped', tipo: 'pedirContacto' },
         { id: 'entrega', tipo: 'entregarLead',
@@ -252,7 +261,7 @@
         { id: 'oc', tipo: 'chips', texto: 'contacto.pregunta', guardar: 'quiere',
           opciones: [
             { texto: 'contacto.chip_lead', valor: 'lead' },
-            { texto: 'contacto.chip_menu', valor: 'menu', saltarA: '@menu' }
+            { texto: 'contacto.chip_menu', valor: 'menu', saltarA: '@menu' }, { texto: 'contacto.chip_nada', valor: 'nada', irAFlujo: 'despedir' }
           ] },
         { id: 'ped', tipo: 'pedirContacto' },
         { id: 'entrega', tipo: 'entregarLead',
@@ -312,7 +321,7 @@
             disc: 'comprar.disc'
           } },
         { id: 'oc', tipo: 'chips', texto: 'contacto.pregunta', guardar: 'quiere',
-          opciones: [ { texto: 'contacto.chip_lead', valor: 'lead' }, { texto: 'contacto.chip_menu', valor: 'menu', saltarA: '@menu' } ] },
+          opciones: [ { texto: 'contacto.chip_lead', valor: 'lead' }, { texto: 'contacto.chip_menu', valor: 'menu', saltarA: '@menu' }, { texto: 'contacto.chip_nada', valor: 'nada', irAFlujo: 'despedir' } ] },
         { id: 'ped', tipo: 'pedirContacto' },
         { id: 'entrega', tipo: 'entregarLead',
           resumen:  { texto: { segun: 'conHip', casos: { 'true': 'comprar.lead_resumen_hip', 'false': 'comprar.lead_resumen_contado' } },
@@ -388,7 +397,7 @@
             disc: 'vender.disc'
           } },
         { id: 'oc', tipo: 'chips', texto: 'contacto.pregunta', guardar: 'quiere',
-          opciones: [ { texto: 'contacto.chip_lead', valor: 'lead' }, { texto: 'contacto.chip_menu', valor: 'menu', saltarA: '@menu' } ] },
+          opciones: [ { texto: 'contacto.chip_lead', valor: 'lead' }, { texto: 'contacto.chip_menu', valor: 'menu', saltarA: '@menu' }, { texto: 'contacto.chip_nada', valor: 'nada', irAFlujo: 'despedir' } ] },
         { id: 'ped', tipo: 'pedirContacto' },
         { id: 'entrega', tipo: 'entregarLead',
           resumen:  { texto: 'vender.lead_resumen',
@@ -481,7 +490,7 @@
 
         // ---- común ----
         { id: 'oc', tipo: 'chips', texto: 'contacto.pregunta', guardar: 'quiere',
-          opciones: [ { texto: 'contacto.chip_lead', valor: 'lead' }, { texto: 'contacto.chip_menu', valor: 'menu', saltarA: '@menu' } ] },
+          opciones: [ { texto: 'contacto.chip_lead', valor: 'lead' }, { texto: 'contacto.chip_menu', valor: 'menu', saltarA: '@menu' }, { texto: 'contacto.chip_nada', valor: 'nada', irAFlujo: 'despedir' } ] },
         { id: 'ped', tipo: 'pedirContacto' },
         { id: 'entrega', tipo: 'entregarLead',
           resumen:  { texto: function (a) { return a.modo === 'flipping' ? 'inversion.lead_resumen_fl' : (a.conHip ? 'inversion.lead_resumen_alq_hip' : 'inversion.lead_resumen_alq_contado'); },
@@ -559,7 +568,11 @@
         { id: 'confirma', tipo: 'handoff', texto: 'lead.confirmacion',
           valores: function (a) { return { nombre: primerNombre(a.nombre) }; },
           botones: ['whatsapp', 'llamar'], nota: 'lead.privacidad_nota', notaEnlace: 'lead.privacidad_link' },
-        { id: 'algo_mas', tipo: 'decir', texto: 'lead.algo_mas' }
+        { id: 'algo_mas', tipo: 'chips', texto: 'lead.algo_mas', guardar: 'quiere_mas',
+          opciones: [
+            { texto: 'lead.algo_si', valor: true, saltarA: '@menu' },
+            { texto: 'lead.algo_no', valor: false, irAFlujo: 'despedir' }
+          ] }
       ]
     },
 

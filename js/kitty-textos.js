@@ -27,7 +27,7 @@
 
     // ---------- Menú y saludo (entrada / /start) ----------
     menu: {
-      saludo1: { es: 'Hola 👋 Soy <b>Kitty</b>, la asistente de <b>Alberto Cabas</b>.' },
+      saludo1: { es: 'Hola 👋 Soy <b>Kitty</b>, la <b>asistente virtual</b> (un bot) de <b>Alberto Cabas</b>.' },
       saludo2: { es: 'Puedo hacerte <b>cálculos al instante</b> —lo que te queda al vender, gastos de compra, cuota de hipoteca o hasta qué precio puedes comprar— o ponerte en contacto con Alberto para <b>valorar un inmueble</b> o <b>asesorarte sobre una herencia</b>.' },
       elige:    { es: '¿Qué necesitas? 👇' },
       m_valorar:   { es: '🏡 Valorar un inmueble' },
@@ -138,7 +138,8 @@
       // una frase corta (en la web no hacía falta). Es texto NUEVO para Telegram.
       pregunta:  { es: '¿Quieres que <b>Alberto</b> te lo vea contigo?' },
       chip_lead: { es: '📲 Que me contacte Alberto' },
-      chip_menu: { es: 'Calcular otra cosa' }
+      chip_menu: { es: 'Calcular otra cosa' },
+      chip_nada: { es: 'No necesito nada más' }
     },
 
     // ---------- Subflujo compartido: captación de lead (con RGPD) ----------
@@ -158,7 +159,7 @@
       tel_preg:      { es: 'Encantada, {nombre}. ¿A qué <b>teléfono</b> te viene bien que te contacte?' },
       tel_ph:        { es: 'Tu teléfono' },
 
-      confirmacion:  { es: 'Perfecto, {nombre}. Le paso tu consulta a Alberto y <b>te contacta en menos de 24 h</b>. Si quieres hablar <b>ahora mismo</b>, pulsa WhatsApp o llámale al <b>662 669 014</b>.' },
+      confirmacion:  { es: 'Perfecto, {nombre}. Le paso tu consulta y <b>Alberto o alguien de su equipo te contactarán en menos de 24 h laborables</b>. Si quieres hablar <b>antes</b>, escríbele por WhatsApp o llámale al <b>662 669 014</b>.' },
       btn_whatsapp:  { es: 'Enviar por WhatsApp' },
       btn_llamar:    { es: 'Llamar ahora' },
       privacidad_nota: { es: 'Tus datos solo se usan para que Alberto te contacte. <a href="https://www.cabas.es/privacidad.html">Política de privacidad</a>.' },
@@ -167,7 +168,11 @@
       // ===== Salida cuando el cliente NO acepta — no se le echa =====
       no_consent:    { es: 'Sin problema 🙂 Puedes seguir usando las <b>calculadoras</b> todo lo que quieras, sin dejar ningún dato. Y si quieres hablar con Alberto, puedes <b>escribirle por WhatsApp</b> o <b>llamarle al 662 669 014</b> tú directamente cuando te venga bien.' },
 
-      algo_mas:      { es: '¿Quieres calcular o consultar algo más?' }
+      algo_mas:      { es: '¿Quieres calcular o consultar algo más?' },
+      algo_si:       { es: 'Sí, otra cosa' },
+      algo_no:       { es: 'No, gracias' },
+      // Despedida: cierra la conversación (no reaparece el menú) + web + compartir.
+      despedida:     { es: 'Espero haberte sido de ayuda 🙂 Si necesitas algo más, escribe <b>Hola</b> y te enseño el menú otra vez.\n\nMientras, en <b>www.cabas.es</b> tienes las <b>calculadoras</b> (vender, comprar, hipoteca e inversión) y los <b>informes de mercado</b> con la evolución de precios por zonas.\n\nY si Kitty te ha resultado útil, <b>compártela</b> con quien pueda necesitarla 🙌' }
     },
 
     // ---------- Flujo: Herencia ----------
