@@ -236,7 +236,7 @@
     'vender.l_neto': `Estimated net for you`,
     'vender.val_exenta': `Exempt`,
     'vender.val_exento': `Exempt`,
-    'vender.disc': `Local capital gains tax using maximum national coefficients (RDL 8/2023) and an estimated municipal rate. Income tax on the savings base (19-30%). Approximate estimate, not tax advice.`,
+    'vender.disc': `Local capital gains tax using maximum national coefficients (RDL 8/2023) and an estimated municipal rate. Income tax on the savings base (19-30%). Approximate estimate, not tax advice. Calculation for individuals; it does not cover sales through a company.`,
 
     // Inversión
     'inversion.intro': `I'll work out the <b>return</b> on the investment. Which strategy?`,
@@ -279,14 +279,14 @@
     'inversion.l_flujo': `Cash flow`,
     'inversion.l_coc': `Return on your capital`,
     'inversion.l_rentneta': `Net yield`,
-    'inversion.disc_alq': `Approximate estimate. The net yield does not deduct income tax on the rent, which depends on your tax return.`,
+    'inversion.disc_alq': `Approximate estimate. The net yield does not deduct income tax on the rent, which depends on your tax return. Calculation for individuals; it does not cover operations through a company.`,
     'inversion.card_titulo_fl': `🔨 Buy, renovate and sell`,
     'inversion.l_venta_fl': `Sale price`,
     'inversion.l_roi': `ROI on your capital`,
     'inversion.l_margen': `Margin on the sale`,
     'inversion.l_roi_anual': `Annualised ROI`,
     'inversion.l_beneficio': `Profit (before tax)`,
-    'inversion.disc_fl': `Approximate estimate. The profit is before tax: taxation depends on whether the operation is one-off or habitual.`
+    'inversion.disc_fl': `Approximate estimate. The profit is before tax: taxation depends on whether the operation is one-off or habitual. Calculation for individuals; it does not cover operations through a company.`
   };
 
   if (typeof module !== 'undefined' && module.exports) module.exports = { TEXTOS_EN: TEXTOS_EN };

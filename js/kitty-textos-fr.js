@@ -232,7 +232,7 @@
     'vender.l_neto': `Net estimé pour toi`,
     'vender.val_exenta': `Exonérée`,
     'vender.val_exento': `Exonéré`,
-    'vender.disc': `Taxe sur la plus-value avec les coefficients nationaux maximaux (RDL 8/2023) et un taux municipal estimé. Impôt sur le revenu au barème de l'épargne (19-30 %). Estimation indicative, pas un conseil fiscal.`,
+    'vender.disc': `Taxe sur la plus-value avec les coefficients nationaux maximaux (RDL 8/2023) et un taux municipal estimé. Impôt sur le revenu au barème de l'épargne (19-30 %). Estimation indicative, pas un conseil fiscal. Calcul pour les particuliers ; ne couvre pas les ventes via une société.`,
 
     // Inversión
     'inversion.intro': `Je te calcule la <b>rentabilité</b> de l'investissement. Quelle stratégie ?`,
@@ -275,14 +275,14 @@
     'inversion.l_flujo': `Cash-flow`,
     'inversion.l_coc': `Rentab. sur ton capital`,
     'inversion.l_rentneta': `Rentabilité nette`,
-    'inversion.disc_alq': `Estimation indicative. La rentabilité nette ne déduit pas l'impôt sur les loyers, qui dépend de ta déclaration.`,
+    'inversion.disc_alq': `Estimation indicative. La rentabilité nette ne déduit pas l'impôt sur les loyers, qui dépend de ta déclaration. Calcul pour les particuliers ; ne couvre pas les opérations via une société.`,
     'inversion.card_titulo_fl': `🔨 Acheter, rénover et revendre`,
     'inversion.l_venta_fl': `Prix de vente`,
     'inversion.l_roi': `ROI sur ton capital`,
     'inversion.l_margen': `Marge sur la vente`,
     'inversion.l_roi_anual': `ROI annualisé`,
     'inversion.l_beneficio': `Bénéfice (avant impôts)`,
-    'inversion.disc_fl': `Estimation indicative. Le bénéfice est avant impôts : la fiscalité dépend du caractère ponctuel ou habituel de l'opération.`
+    'inversion.disc_fl': `Estimation indicative. Le bénéfice est avant impôts : la fiscalité dépend du caractère ponctuel ou habituel de l'opération. Calcul pour les particuliers ; ne couvre pas les opérations via une société.`
   };
 
   if (typeof module !== 'undefined' && module.exports) module.exports = { TEXTOS_FR: TEXTOS_FR };
