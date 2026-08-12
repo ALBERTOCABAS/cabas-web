@@ -556,7 +556,11 @@
           valores: function (a) { return { nombre: primerNombre(a.nombre) }; }, saltarA: '@fin' },
         // Rama NO acepta:
         { id: 'no_consent', tipo: 'handoff', texto: 'lead.no_consent', botones: ['whatsapp', 'llamar'] },
-        { id: 'algo_mas',   tipo: 'decir',   texto: 'lead.algo_mas' }
+        { id: 'algo_mas', tipo: 'chips', texto: 'lead.algo_mas', guardar: 'mas_nc',
+          opciones: [
+            { texto: 'lead.algo_si', valor: true, saltarA: '@menu' },
+            { texto: 'lead.algo_no', valor: false, irAFlujo: 'despedir' }
+          ] }
       ]
     },
 
