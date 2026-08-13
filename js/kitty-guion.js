@@ -190,7 +190,10 @@
               if (r.esfuerzo != null) {
                 var t = r.esfuerzo <= 30 ? 'verde' : (r.esfuerzo <= 35 ? 'ambar' : 'rojo');
                 var k = r.esfuerzo <= 30 ? 'hipoteca.aviso_esf_ok' : (r.esfuerzo <= 35 ? 'hipoteca.aviso_esf_justa' : 'hipoteca.aviso_esf_alta');
-                A.push({ t: t, texto: k, valores: { esf: r.esfuerzo.toFixed(1).replace('.', ',') } });
+                var av = { t: t, texto: k, valores: { esf: r.esfuerzo.toFixed(1).replace('.', ',') } };
+                // Si hay otras deudas, aclara que el % es cuota + deudas sobre ingresos.
+                if (r.deudaMes > 0) av.piezas = [{ texto: 'hipoteca.aviso_esf_detalle', valores: { cuota: _eur2(r.cuota), deuda: _eur2(r.deudaMes), total: _eur2(r.cuota + r.deudaMes) } }];
+                A.push(av);
               }
               return A;
             },

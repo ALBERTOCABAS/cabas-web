@@ -126,6 +126,7 @@
       aviso_esf_ok:    { es: 'Tasa de esfuerzo {esf}% — cómoda (por debajo del 30%).' },
       aviso_esf_justa: { es: 'Tasa de esfuerzo {esf}% — justa (30-35%). Poco margen.' },
       aviso_esf_alta:  { es: 'Tasa de esfuerzo {esf}% — excesiva (>35%). La mayoría de bancos no la aprueban.' },
+      aviso_esf_detalle: { es: 'Incluye tu cuota ({cuota}) + tus otras deudas ({deuda}) = {total}/mes sobre tus ingresos.' },
 
       // Textos internos del lead (a Cabas)
       lead_resumen:  { es: 'HIPOTECA · Importe {capital} · {plazo} años · TIN {tin}% · Titular {edad} años · Cuota {cuota}/mes' },

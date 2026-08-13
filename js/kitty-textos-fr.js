@@ -76,6 +76,7 @@
     'hipoteca.aviso_esf_ok': `Taux d'effort {esf}% — confortable (en dessous de 30%).`,
     'hipoteca.aviso_esf_justa': `Taux d'effort {esf}% — juste (30-35%). Peu de marge.`,
     'hipoteca.aviso_esf_alta': `Taux d'effort {esf}% — excessif (plus de 35%). La plupart des banques ne l'approuvent pas.`,
+    'hipoteca.aviso_esf_detalle': `Cela inclut ta mensualité ({cuota}) + tes autres dettes ({deuda}) = {total}/mois sur tes revenus.`,
 
     // Titulares
     'titulares.una_o_dos': `L'achat se fait-il à <b>une personne ou deux</b> ?`,

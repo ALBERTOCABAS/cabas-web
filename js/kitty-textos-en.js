@@ -80,6 +80,7 @@
     'hipoteca.aviso_esf_ok': `Effort ratio {esf}% — comfortable (below 30%).`,
     'hipoteca.aviso_esf_justa': `Effort ratio {esf}% — tight (30-35%). Little margin.`,
     'hipoteca.aviso_esf_alta': `Effort ratio {esf}% — excessive (over 35%). Most banks won't approve it.`,
+    'hipoteca.aviso_esf_detalle': `It includes your payment ({cuota}) + your other debts ({deuda}) = {total}/month against your income.`,
 
     // Titulares
     'titulares.una_o_dos': `Is it being bought by <b>one person or two</b>?`,
