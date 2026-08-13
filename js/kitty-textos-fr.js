@@ -7,7 +7,7 @@
   var TEXTOS_FR = {
     // Menú y saludo
     'menu.saludo1': `Bonjour 👋 Je suis <b>Kitty</b>, l'<b>assistante virtuelle</b> (un bot) d'<b>Alberto Cabas</b>.`,
-    'menu.saludo2': `Je peux te faire des <b>calculs instantanés</b> —ce qu'il te reste à la vente, les frais d'achat, ta mensualité de crédit ou jusqu'à quel prix tu peux acheter— ou te mettre en contact avec Alberto pour <b>estimer un bien</b> ou <b>te conseiller sur une succession</b>.`,
+    'menu.saludo2': `Je peux te faire des <b>calculs instantanés</b> —ce qu'il te reste à la vente, les frais d'achat, ta mensualité de crédit ou jusqu'à quel prix tu peux acheter— ou te mettre en contact avec Cabas pour <b>estimer un bien</b> ou <b>te conseiller sur une succession</b>.`,
     'menu.elige': `De quoi as-tu besoin ? 👇`,
     'menu.m_valorar': `🏡 Estimer un bien`,
     'menu.m_herencia': `⚖️ J'ai une succession`,
@@ -16,7 +16,7 @@
     'menu.m_hipoteca': `🏦 Simuler mon crédit`,
     'menu.m_capacidad': `📈 Jusqu'à quel prix je peux acheter`,
     'menu.m_inversion': `📊 Rentabilité d'un investissement`,
-    'menu.m_contacto': `📞 Parler à Alberto`,
+    'menu.m_contacto': `📞 Parler à Cabas`,
 
     // Comunes
     'comun.ccaa_madrid': `Madrid`,
@@ -39,7 +39,7 @@
     'comun.anios_ph': `Ans`,
 
     // Valorar
-    'valorar.intro': `Parfait. Alberto te prépare une <b>estimation réaliste</b> de ton bien, sans engagement et avec des données du secteur.`,
+    'valorar.intro': `Parfait. Cabas te prépare une <b>estimation réaliste</b> de ton bien, sans engagement et avec des données du secteur.`,
     'valorar.cuantos_preg': `Est-ce un <b>seul bien</b> ou <b>plusieurs</b> ?`,
     'valorar.opt_uno': `Un seul bien`,
     'valorar.opt_varios': `Plusieurs biens`,
@@ -79,43 +79,43 @@
     'titulares.edad_ph': `ex. 42`,
 
     // Ofrecer contacto
-    'contacto.pregunta': `Veux-tu qu'<b>Alberto</b> le voie avec toi ?`,
-    'contacto.chip_lead': `📲 Qu'Alberto me contacte`,
+    'contacto.pregunta': `Veux-tu que <b>Cabas</b> le voie avec toi ?`,
+    'contacto.chip_lead': `📲 Que Cabas me contacte`,
     'contacto.chip_menu': `Calculer autre chose`,
     'contacto.chip_nada': `Je n'ai besoin de rien d'autre`,
 
     // Lead
-    'lead.consent_texto': `Une chose avant de continuer 🙂 Pour qu'<b>Alberto Cabas Ortiz</b> t'appelle, j'ai seulement besoin de <b>ton nom et d'un téléphone</b>. Il les utilise <b>uniquement pour te contacter au sujet de ta demande</b> — pas de listes ni de publicité, et tu peux lui demander de les supprimer quand tu veux. Ici tu peux voir <a href="https://www.cabas.es/privacidad.html">comment il traite tes données</a>. On continue ?`,
+    'lead.consent_texto': `Une chose avant de continuer 🙂 Pour que <b>Cabas ou quelqu'un de son équipe</b> t'appelle, j'ai seulement besoin de <b>ton nom et d'un téléphone</b>. Il les utilise <b>uniquement pour te contacter au sujet de ta demande</b> — pas de listes ni de publicité, et tu peux lui demander de les supprimer quand tu veux. Ici tu peux voir <a href="https://www.cabas.es/privacidad.html">comment il traite tes données</a>. On continue ?`,
     'lead.consent_link': `comment il traite tes données`,
     'lead.consent_si': `✅ Oui, qu'il m'appelle`,
     'lead.consent_no': `Pas maintenant, merci`,
-    'lead.nombre_preg': `Super. Pour qu'Alberto s'occupe de toi personnellement, comment t'appelles-tu ?`,
+    'lead.nombre_preg': `Super. Pour que Cabas s'occupe de toi personnellement, comment t'appelles-tu ?`,
     'lead.nombre_ph': `Ton nom`,
     'lead.tel_preg': `Enchantée, {nombre}. À quel <b>téléphone</b> préfères-tu qu'il te contacte ?`,
     'lead.tel_ph': `Ton téléphone`,
-    'lead.confirmacion': `Parfait, {nombre}. Je transmets ta demande et <b>Alberto ou quelqu'un de son équipe te contactera sous 24 h ouvrées</b>. Si tu veux parler <b>plus tôt</b>, écris-lui sur WhatsApp ou appelle le <b>662 669 014</b>.`,
+    'lead.confirmacion': `Parfait, {nombre}. Je transmets ta demande et <b>Cabas ou quelqu'un de son équipe te contactera sous 24 h ouvrées</b>. Si tu veux parler <b>plus tôt</b>, écris-lui sur WhatsApp ou appelle le <b>662 669 014</b>.`,
     'lead.btn_whatsapp': `Envoyer par WhatsApp`,
     'lead.btn_llamar': `Appeler maintenant`,
-    'lead.privacidad_nota': `Tes données servent uniquement à ce qu'Alberto te contacte. <a href="https://www.cabas.es/privacidad.html">Politique de confidentialité</a>.`,
+    'lead.privacidad_nota': `Tes données servent uniquement à ce que Cabas te contacte. <a href="https://www.cabas.es/privacidad.html">Politique de confidentialité</a>.`,
     'lead.privacidad_link': `Politique de confidentialité`,
-    'lead.no_consent': `Pas de souci 🙂 Tu peux continuer à utiliser les <b>calculatrices</b> autant que tu veux, sans laisser aucune donnée. Et si tu veux parler à Alberto, tu peux lui <b>écrire sur WhatsApp</b> ou l'<b>appeler au 662 669 014</b> toi-même quand ça t'arrange.`,
+    'lead.no_consent': `Pas de souci 🙂 Tu peux continuer à utiliser les <b>calculatrices</b> autant que tu veux, sans laisser aucune donnée. Et si tu veux parler à Cabas, tu peux lui <b>écrire sur WhatsApp</b> ou l'<b>appeler au 662 669 014</b> toi-même quand ça t'arrange.`,
     'lead.algo_mas': `Veux-tu calculer ou consulter autre chose ?`,
     'lead.algo_si': `Oui, autre chose`,
     'lead.algo_no': `Non, merci`,
     'lead.despedida': `J'espère t'avoir été utile 🙂 Si tu as besoin d'autre chose, écris <b>Bonjour</b> et je te remontre le menu.\n\nEn attendant, sur <b>www.cabas.es</b> tu as les <b>calculatrices</b> (vendre, acheter, crédit et investissement) et les <b>rapports de marché</b> avec l'évolution des prix par secteur.\n\nEt si Kitty t'a été utile, <b>partage-la</b> avec ceux qui pourraient en avoir besoin 🙌`,
 
     // Herencia
-    'herencia.intro': `Gérer une <b>succession</b> avec un logement est la spécialité d'Alberto : estimation, accord entre héritiers et vente en toute sécurité juridique. Où en es-tu ?`,
+    'herencia.intro': `Gérer une <b>succession</b> avec un logement est la spécialité de Cabas : estimation, accord entre héritiers et vente en toute sécurité juridique. Où en es-tu ?`,
     'herencia.opt_nuevo': `Je viens d'hériter`,
     'herencia.opt_coherederos': `Nous sommes plusieurs héritiers`,
     'herencia.opt_vender': `Je veux vendre l'héritage`,
     'herencia.opt_info': `Je veux juste des informations`,
-    'herencia.resp_nuevo': `La première chose est d'avoir une <b>estimation réaliste</b> et de mettre les documents en ordre. Alberto t'accompagne dans tout le processus, sans que tu aies à te battre avec la paperasse.`,
-    'herencia.resp_coherederos': `Quand il y a <b>plusieurs héritiers</b>, l'essentiel est un accord clair et juste. Alberto joue les médiateurs entre cohéritiers : plus de 80 % des cas se terminent par un accord.`,
-    'herencia.resp_vender': `Si tu veux déjà <b>vendre l'héritage</b>, je peux estimer ici même ce qu'il te resterait après impôts, ou te mettre directement en relation avec Alberto.`,
-    'herencia.resp_info': `Parfait. Alberto peut répondre à tes questions sur la succession sans engagement : délais, impôts (succession et plus-value) et ce qu'il convient de faire du logement.`,
+    'herencia.resp_nuevo': `La première chose est d'avoir une <b>estimation réaliste</b> et de mettre les documents en ordre. Cabas t'accompagne dans tout le processus, sans que tu aies à te battre avec la paperasse.`,
+    'herencia.resp_coherederos': `Quand il y a <b>plusieurs héritiers</b>, l'essentiel est un accord clair et juste. Cabas joue les médiateurs entre cohéritiers : plus de 80 % des cas se terminent par un accord.`,
+    'herencia.resp_vender': `Si tu veux déjà <b>vendre l'héritage</b>, je peux estimer ici même ce qu'il te resterait après impôts, ou te mettre directement en relation avec Cabas.`,
+    'herencia.resp_info': `Parfait. Cabas peut répondre à tes questions sur la succession sans engagement : délais, impôts (succession et plus-value) et ce qu'il convient de faire du logement.`,
     'herencia.vender_calc': `Calculer ce qu'il me resterait`,
-    'herencia.vender_hablar': `Parler à Alberto`,
+    'herencia.vender_hablar': `Parler à Cabas`,
 
     // Capacidad
     'capacidad.intro': `Je te dis <b>jusqu'à quel prix</b> tu pourrais acheter selon tes revenus et ton épargne. C'est une estimation indicative, <b>non contractuelle</b>.`,

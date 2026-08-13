@@ -28,7 +28,7 @@
     // ---------- Menú y saludo (entrada / /start) ----------
     menu: {
       saludo1: { es: 'Hola 👋 Soy <b>Kitty</b>, la <b>asistente virtual</b> (un bot) de <b>Alberto Cabas</b>.' },
-      saludo2: { es: 'Puedo hacerte <b>cálculos al instante</b> —lo que te queda al vender, gastos de compra, cuota de hipoteca o hasta qué precio puedes comprar— o ponerte en contacto con Alberto para <b>valorar un inmueble</b> o <b>asesorarte sobre una herencia</b>.' },
+      saludo2: { es: 'Puedo hacerte <b>cálculos al instante</b> —lo que te queda al vender, gastos de compra, cuota de hipoteca o hasta qué precio puedes comprar— o ponerte en contacto con Cabas para <b>valorar un inmueble</b> o <b>asesorarte sobre una herencia</b>.' },
       elige:    { es: '¿Qué necesitas? 👇' },
       m_valorar:   { es: '🏡 Valorar un inmueble' },
       m_herencia:  { es: '⚖️ Tengo una herencia' },
@@ -37,10 +37,10 @@
       m_hipoteca:  { es: '🏦 Simular mi hipoteca' },
       m_capacidad: { es: '📈 Hasta qué precio puedo comprar' },
       m_inversion: { es: '📊 Rentabilidad de inversión' },
-      m_contacto:  { es: '📞 Hablar con Alberto' }
+      m_contacto:  { es: '📞 Hablar con Cabas' }
     },
 
-    // ---------- "Hablar con Alberto" directo (desde el menú) ----------
+    // ---------- "Hablar con Cabas" directo (desde el menú) ----------
     contacto_directo: {
       lead_resumen:  { es: 'CONTACTO DIRECTO' },
       lead_contexto: { es: 'me gustaría que me llamaras para comentar mi caso.' }
@@ -75,7 +75,7 @@
 
     // ---------- Flujo: Valorar un inmueble ----------
     valorar: {
-      intro:        { es: 'Perfecto. Alberto te prepara una <b>valoración realista</b> de tu inmueble, sin compromiso y con datos de la zona.' },
+      intro:        { es: 'Perfecto. Cabas te prepara una <b>valoración realista</b> de tu inmueble, sin compromiso y con datos de la zona.' },
       cuantos_preg: { es: '¿Es un <b>solo inmueble</b> o <b>varios</b>?' },
       opt_uno:      { es: 'Un solo inmueble' },
       opt_varios:   { es: 'Varios inmuebles' },
@@ -84,7 +84,7 @@
       dir_ph:       { es: 'Ej. C/ Bravo Murillo 23, Madrid' },
       varios_preg:  { es: '¿<b>Dónde están</b> y cuántos son? Dime las direcciones o zonas.' },
       varios_ph:    { es: 'Ej. 2 pisos: Bravo Murillo 23 (Madrid) y Toledo centro' },
-      // Textos internos del lead (van a Alberto). AHORA como plantillas:
+      // Textos internos del lead (van a Cabas). AHORA como plantillas:
       lead_resumen_uno:     { es: 'VALORACIÓN · 1 inmueble · {ccaa} · {dir}' },
       lead_resumen_varios:  { es: 'VALORACIÓN · Varios inmuebles · {dir}' },
       lead_contexto_uno:    { es: 'quiero valorar un inmueble situado en {ccaa} ({dir}).' },
@@ -117,7 +117,7 @@
       aviso_edad_supera_cuota:{ es: 'A {plazoMax} años la cuota sería {cuotaMax}/mes.' },
       aviso_edad_cierre:      { es: 'Varía según la entidad.' },
 
-      // Textos internos del lead (a Alberto)
+      // Textos internos del lead (a Cabas)
       lead_resumen:  { es: 'HIPOTECA · Importe {capital} · {plazo} años · TIN {tin}% · Titular {edad} años · Cuota {cuota}/mes' },
       lead_contexto: { es: 'quiero simular una hipoteca.' }
     },
@@ -136,8 +136,8 @@
     contacto: {
       // En Telegram, los botones cuelgan de un mensaje: por eso aquí SÍ hay
       // una frase corta (en la web no hacía falta). Es texto NUEVO para Telegram.
-      pregunta:  { es: '¿Quieres que <b>Alberto</b> te lo vea contigo?' },
-      chip_lead: { es: '📲 Que me contacte Alberto' },
+      pregunta:  { es: '¿Quieres que <b>Cabas</b> te lo vea contigo?' },
+      chip_lead: { es: '📲 Que me contacte Cabas' },
       chip_menu: { es: 'Calcular otra cosa' },
       chip_nada: { es: 'No necesito nada más' }
     },
@@ -145,28 +145,28 @@
     // ---------- Subflujo compartido: captación de lead (con RGPD) ----------
     lead: {
       // ===== PUERTA DE CONSENTIMIENTO — BORRADOR (revisar el gestor) =====
-      // Elementos RGPD incluidos: responsable (Alberto), finalidad (llamarte
+      // Elementos RGPD incluidos: responsable (Cabas), finalidad (llamarte
       // por tu consulta), datos (nombre + teléfono), sin otros usos (ni listas
       // ni publicidad), derecho de supresión (borrar cuando quieras) y enlace a
       // la política. El botón "Sí" es el consentimiento explícito.
-      consent_texto: { es: 'Una cosa antes de seguir 🙂 Para que <b>Alberto Cabas Ortiz</b> te llame solo necesito <b>tu nombre y un teléfono</b>. Los usa <b>únicamente para contactarte por tu consulta</b> — nada de listas ni publicidad, y puedes pedirle que los borre cuando quieras. (Esta conversación es a través de <b>Telegram</b>.) Aquí puedes ver <a href="https://www.cabas.es/privacidad.html">cómo trata tus datos</a>. ¿Seguimos?' },
+      consent_texto: { es: 'Una cosa antes de seguir 🙂 Para que <b>Cabas o alguien de su equipo</b> te llame solo necesito <b>tu nombre y un teléfono</b>. Los usa <b>únicamente para contactarte por tu consulta</b> — nada de listas ni publicidad, y puedes pedirle que los borre cuando quieras. (Esta conversación es a través de <b>Telegram</b>.) Aquí puedes ver <a href="https://www.cabas.es/privacidad.html">cómo trata tus datos</a>. ¿Seguimos?' },
       consent_link:  { es: 'cómo trata tus datos' },
       consent_si:    { es: '✅ Sí, que me llame' },
       consent_no:    { es: 'Ahora no, gracias' },
 
-      nombre_preg:   { es: 'Genial. Para que Alberto te atienda personalmente, ¿cómo te llamas?' },
+      nombre_preg:   { es: 'Genial. Para que Cabas te atienda personalmente, ¿cómo te llamas?' },
       nombre_ph:     { es: 'Tu nombre' },
       tel_preg:      { es: 'Encantada, {nombre}. ¿A qué <b>teléfono</b> te viene bien que te contacte?' },
       tel_ph:        { es: 'Tu teléfono' },
 
-      confirmacion:  { es: 'Perfecto, {nombre}. Le paso tu consulta y <b>Alberto o alguien de su equipo te contactarán en menos de 24 h laborables</b>. Si quieres hablar <b>antes</b>, escríbele por WhatsApp o llámale al <b>662 669 014</b>.' },
+      confirmacion:  { es: 'Perfecto, {nombre}. Le paso tu consulta y <b>Cabas o alguien de su equipo te contactarán en menos de 24 h laborables</b>. Si quieres hablar <b>antes</b>, escríbele por WhatsApp o llámale al <b>662 669 014</b>.' },
       btn_whatsapp:  { es: 'Enviar por WhatsApp' },
       btn_llamar:    { es: 'Llamar ahora' },
-      privacidad_nota: { es: 'Tus datos solo se usan para que Alberto te contacte. <a href="https://www.cabas.es/privacidad.html">Política de privacidad</a>.' },
+      privacidad_nota: { es: 'Tus datos solo se usan para que Cabas te contacte. <a href="https://www.cabas.es/privacidad.html">Política de privacidad</a>.' },
       privacidad_link: { es: 'Política de privacidad' },
 
       // ===== Salida cuando el cliente NO acepta — no se le echa =====
-      no_consent:    { es: 'Sin problema 🙂 Puedes seguir usando las <b>calculadoras</b> todo lo que quieras, sin dejar ningún dato. Y si quieres hablar con Alberto, puedes <b>escribirle por WhatsApp</b> o <b>llamarle al 662 669 014</b> tú directamente cuando te venga bien.' },
+      no_consent:    { es: 'Sin problema 🙂 Puedes seguir usando las <b>calculadoras</b> todo lo que quieras, sin dejar ningún dato. Y si quieres hablar con Cabas, puedes <b>escribirle por WhatsApp</b> o <b>llamarle al 662 669 014</b> tú directamente cuando te venga bien.' },
 
       algo_mas:      { es: '¿Quieres calcular o consultar algo más?' },
       algo_si:       { es: 'Sí, otra cosa' },
@@ -177,17 +177,17 @@
 
     // ---------- Flujo: Herencia ----------
     herencia: {
-      intro:           { es: 'Gestionar una <b>herencia</b> con una vivienda de por medio es la especialidad de Alberto: valoración, acuerdo entre herederos y venta con seguridad jurídica. ¿En qué punto estás?' },
+      intro:           { es: 'Gestionar una <b>herencia</b> con una vivienda de por medio es la especialidad de Cabas: valoración, acuerdo entre herederos y venta con seguridad jurídica. ¿En qué punto estás?' },
       opt_nuevo:       { es: 'Acabo de heredar' },
       opt_coherederos: { es: 'Somos varios herederos' },
       opt_vender:      { es: 'Quiero vender lo heredado' },
       opt_info:        { es: 'Solo quiero información' },
-      resp_nuevo:      { es: 'Lo primero es tener una <b>valoración realista</b> y ordenar la documentación. Alberto te acompaña en todo el proceso, sin que tengas que pelearte con el papeleo.' },
-      resp_coherederos:{ es: 'Cuando hay <b>varios herederos</b>, lo clave es un acuerdo claro y justo. Alberto media entre coherederos: más del 80% de los casos terminan en acuerdo.' },
-      resp_vender:     { es: 'Si ya quieres <b>vender lo heredado</b>, te puedo estimar aquí mismo lo que te quedaría tras impuestos, o pasarte directamente con Alberto.' },
-      resp_info:       { es: 'Perfecto. Alberto puede resolverte las dudas de herencia sin compromiso: plazos, impuestos (sucesiones y plusvalía) y qué conviene hacer con la vivienda.' },
+      resp_nuevo:      { es: 'Lo primero es tener una <b>valoración realista</b> y ordenar la documentación. Cabas te acompaña en todo el proceso, sin que tengas que pelearte con el papeleo.' },
+      resp_coherederos:{ es: 'Cuando hay <b>varios herederos</b>, lo clave es un acuerdo claro y justo. Cabas media entre coherederos: más del 80% de los casos terminan en acuerdo.' },
+      resp_vender:     { es: 'Si ya quieres <b>vender lo heredado</b>, te puedo estimar aquí mismo lo que te quedaría tras impuestos, o pasarte directamente con Cabas.' },
+      resp_info:       { es: 'Perfecto. Cabas puede resolverte las dudas de herencia sin compromiso: plazos, impuestos (sucesiones y plusvalía) y qué conviene hacer con la vivienda.' },
       vender_calc:     { es: 'Calcular lo que me quedaría' },
-      vender_hablar:   { es: 'Hablar con Alberto' },
+      vender_hablar:   { es: 'Hablar con Cabas' },
       lead_resumen:    { es: 'HERENCIA · Situación: {situacion}' },
       lead_contexto:   { es: 'tengo una consulta sobre una herencia con una vivienda.' }
     },

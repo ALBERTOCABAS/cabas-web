@@ -2,7 +2,7 @@
 // kitty-textos-en.js — Traducción al INGLÉS de los textos de Kitty (bots).
 // Mapa plano { 'ruta.clave': 'texto' } con las MISMAS claves que kitty-textos.js.
 // Si falta una clave, el runner cae al español. Hecho a mano (sin traductor
-// automático). NO se traducen los textos internos del lead (van a Alberto en
+// automático). NO se traducen los textos internos del lead (van a Cabas en
 // español), ni las rutas, ni los avisos generados por el motor de cálculo.
 // Se conservan {huecos} y las etiquetas <b>/<i>/<a>.
 // ============================================================
@@ -11,7 +11,7 @@
   var TEXTOS_EN = {
     // Menú y saludo
     'menu.saludo1': `Hi 👋 I'm <b>Kitty</b>, <b>Alberto Cabas'</b> <b>virtual assistant</b> (a bot).`,
-    'menu.saludo2': `I can run <b>instant calculations</b> for you —what you keep when selling, purchase costs, your mortgage payment or how much you can afford— or put you in touch with Alberto to <b>value a property</b> or <b>advise you on an inheritance</b>.`,
+    'menu.saludo2': `I can run <b>instant calculations</b> for you —what you keep when selling, purchase costs, your mortgage payment or how much you can afford— or put you in touch with Cabas to <b>value a property</b> or <b>advise you on an inheritance</b>.`,
     'menu.elige': `What do you need? 👇`,
     'menu.m_valorar': `🏡 Value a property`,
     'menu.m_herencia': `⚖️ I have an inheritance`,
@@ -20,7 +20,7 @@
     'menu.m_hipoteca': `🏦 Simulate my mortgage`,
     'menu.m_capacidad': `📈 How much can I afford`,
     'menu.m_inversion': `📊 Investment return`,
-    'menu.m_contacto': `📞 Talk to Alberto`,
+    'menu.m_contacto': `📞 Talk to Cabas`,
 
     // Comunes
     'comun.ccaa_madrid': `Madrid`,
@@ -43,7 +43,7 @@
     'comun.anios_ph': `Years`,
 
     // Valorar
-    'valorar.intro': `Great. Alberto will prepare a <b>realistic valuation</b> of your property, with no obligation and using local data.`,
+    'valorar.intro': `Great. Cabas will prepare a <b>realistic valuation</b> of your property, with no obligation and using local data.`,
     'valorar.cuantos_preg': `Is it a <b>single property</b> or <b>several</b>?`,
     'valorar.opt_uno': `A single property`,
     'valorar.opt_varios': `Several properties`,
@@ -83,43 +83,43 @@
     'titulares.edad_ph': `e.g. 42`,
 
     // Ofrecer contacto
-    'contacto.pregunta': `Would you like <b>Alberto</b> to go through it with you?`,
-    'contacto.chip_lead': `📲 Have Alberto contact me`,
+    'contacto.pregunta': `Would you like <b>Cabas</b> to go through it with you?`,
+    'contacto.chip_lead': `📲 Have Cabas contact me`,
     'contacto.chip_menu': `Calculate something else`,
     'contacto.chip_nada': `I don't need anything else`,
 
     // Lead (RGPD, nombre, teléfono, confirmación, despedida)
-    'lead.consent_texto': `One thing before we go on 🙂 For <b>Alberto Cabas Ortiz</b> to call you I just need <b>your name and a phone number</b>. He uses them <b>only to contact you about your enquiry</b> — no mailing lists or ads, and you can ask him to delete them whenever you like. Here you can see <a href="https://www.cabas.es/privacidad.html">how he handles your data</a>. Shall we continue?`,
+    'lead.consent_texto': `One thing before we go on 🙂 For <b>Cabas or someone from his team</b> to call you I just need <b>your name and a phone number</b>. He uses them <b>only to contact you about your enquiry</b> — no mailing lists or ads, and you can ask him to delete them whenever you like. Here you can see <a href="https://www.cabas.es/privacidad.html">how he handles your data</a>. Shall we continue?`,
     'lead.consent_link': `how he handles your data`,
     'lead.consent_si': `✅ Yes, have him call me`,
     'lead.consent_no': `Not now, thanks`,
-    'lead.nombre_preg': `Great. So Alberto can help you personally, what's your name?`,
+    'lead.nombre_preg': `Great. So Cabas can help you personally, what's your name?`,
     'lead.nombre_ph': `Your name`,
     'lead.tel_preg': `Nice to meet you, {nombre}. What <b>phone number</b> works best for him to reach you?`,
     'lead.tel_ph': `Your phone number`,
-    'lead.confirmacion': `Perfect, {nombre}. I'll pass your enquiry on and <b>Alberto or someone from his team will get in touch within 24 working hours</b>. If you'd like to talk <b>sooner</b>, message him on WhatsApp or call <b>662 669 014</b>.`,
+    'lead.confirmacion': `Perfect, {nombre}. I'll pass your enquiry on and <b>Cabas or someone from his team will get in touch within 24 working hours</b>. If you'd like to talk <b>sooner</b>, message him on WhatsApp or call <b>662 669 014</b>.`,
     'lead.btn_whatsapp': `Send via WhatsApp`,
     'lead.btn_llamar': `Call now`,
-    'lead.privacidad_nota': `Your details are only used for Alberto to contact you. <a href="https://www.cabas.es/privacidad.html">Privacy policy</a>.`,
+    'lead.privacidad_nota': `Your details are only used for Cabas to contact you. <a href="https://www.cabas.es/privacidad.html">Privacy policy</a>.`,
     'lead.privacidad_link': `Privacy policy`,
-    'lead.no_consent': `No problem 🙂 You can keep using the <b>calculators</b> as much as you like, without leaving any details. And if you'd like to talk to Alberto, you can <b>message him on WhatsApp</b> or <b>call 662 669 014</b> yourself whenever suits you.`,
+    'lead.no_consent': `No problem 🙂 You can keep using the <b>calculators</b> as much as you like, without leaving any details. And if you'd like to talk to Cabas, you can <b>message him on WhatsApp</b> or <b>call 662 669 014</b> yourself whenever suits you.`,
     'lead.algo_mas': `Would you like to calculate or check anything else?`,
     'lead.algo_si': `Yes, something else`,
     'lead.algo_no': `No, thanks`,
     'lead.despedida': `Hope I've been helpful 🙂 If you need anything else, type <b>Hi</b> and I'll show you the menu again.\n\nMeanwhile, at <b>www.cabas.es</b> you have the <b>calculators</b> (sell, buy, mortgage and investment) and the <b>market reports</b> with price trends by area.\n\nAnd if Kitty was useful, <b>share her</b> with anyone who might need her 🙌`,
 
     // Herencia
-    'herencia.intro': `Handling an <b>inheritance</b> with a home involved is Alberto's speciality: valuation, agreement among heirs and a legally secure sale. Where are you in the process?`,
+    'herencia.intro': `Handling an <b>inheritance</b> with a home involved is Cabas's speciality: valuation, agreement among heirs and a legally secure sale. Where are you in the process?`,
     'herencia.opt_nuevo': `I've just inherited`,
     'herencia.opt_coherederos': `There are several heirs`,
     'herencia.opt_vender': `I want to sell what I inherited`,
     'herencia.opt_info': `I just want information`,
-    'herencia.resp_nuevo': `The first step is a <b>realistic valuation</b> and getting the paperwork in order. Alberto guides you through the whole process, so you don't have to wrestle with the red tape.`,
-    'herencia.resp_coherederos': `When there are <b>several heirs</b>, the key is a clear, fair agreement. Alberto mediates between co-heirs: over 80% of cases end in agreement.`,
-    'herencia.resp_vender': `If you already want to <b>sell what you inherited</b>, I can estimate right here what you'd keep after taxes, or put you straight through to Alberto.`,
-    'herencia.resp_info': `Perfect. Alberto can answer your inheritance questions with no obligation: deadlines, taxes (inheritance and capital gains) and what's best to do with the property.`,
+    'herencia.resp_nuevo': `The first step is a <b>realistic valuation</b> and getting the paperwork in order. Cabas guides you through the whole process, so you don't have to wrestle with the red tape.`,
+    'herencia.resp_coherederos': `When there are <b>several heirs</b>, the key is a clear, fair agreement. Cabas mediates between co-heirs: over 80% of cases end in agreement.`,
+    'herencia.resp_vender': `If you already want to <b>sell what you inherited</b>, I can estimate right here what you'd keep after taxes, or put you straight through to Cabas.`,
+    'herencia.resp_info': `Perfect. Cabas can answer your inheritance questions with no obligation: deadlines, taxes (inheritance and capital gains) and what's best to do with the property.`,
     'herencia.vender_calc': `Calculate what I'd keep`,
-    'herencia.vender_hablar': `Talk to Alberto`,
+    'herencia.vender_hablar': `Talk to Cabas`,
 
     // Capacidad
     'capacidad.intro': `I'll tell you <b>how much you could pay</b> for a home based on your income and savings. It's an approximate, <b>non-binding</b> estimate.`,
