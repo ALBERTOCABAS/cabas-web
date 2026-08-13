@@ -41,6 +41,8 @@
     'comun.plazo_30a': `30 years`,
     'comun.otro': `Other`,
     'comun.anios_ph': `Years`,
+    'comun.deudas_preg': `Do you have <b>other mortgages or loans</b> ongoing (or that you'll have)?`,
+    'comun.deudas_monto_preg': `<b>How much do you pay per month</b> in total for those loans or mortgages?`,
 
     // Valorar
     'valorar.intro': `Great. Cabas will prepare a <b>realistic valuation</b> of your property, with no obligation and using local data.`,
@@ -73,6 +75,11 @@
     'hipoteca.aviso_edad_supera': `At {edad}, the usual rule "age + term ≤ 75" leaves an approximate maximum term of {plazoMax} years, below the {plazo} you indicated.`,
     'hipoteca.aviso_edad_supera_cuota': `Over {plazoMax} years the payment would be {cuotaMax}/month.`,
     'hipoteca.aviso_edad_cierre': `It varies by bank.`,
+    'hipoteca.ingresos_preg': `What's the household's <b>net monthly income</b>?`,
+    'hipoteca.ingresos_ph': `e.g. 3000`,
+    'hipoteca.aviso_esf_ok': `Effort ratio {esf}% — comfortable (below 30%).`,
+    'hipoteca.aviso_esf_justa': `Effort ratio {esf}% — tight (30-35%). Little margin.`,
+    'hipoteca.aviso_esf_alta': `Effort ratio {esf}% — excessive (over 35%). Most banks won't approve it.`,
 
     // Titulares
     'titulares.una_o_dos': `Is it being bought by <b>one person or two</b>?`,
@@ -83,7 +90,7 @@
     'titulares.edad_ph': `e.g. 42`,
 
     // Ofrecer contacto
-    'contacto.pregunta': `Would you like <b>Cabas</b> to go through it with you?`,
+    'contacto.pregunta': `Would you like <b>Cabas and his team</b> to go through it with you?`,
     'contacto.chip_lead': `📲 Have Cabas contact me`,
     'contacto.chip_menu': `Calculate something else`,
     'contacto.chip_nada': `I don't need anything else`,
@@ -93,7 +100,7 @@
     'lead.consent_link': `how he handles your data`,
     'lead.consent_si': `✅ Yes, have him call me`,
     'lead.consent_no': `Not now, thanks`,
-    'lead.nombre_preg': `Great. So Cabas can help you personally, what's your name?`,
+    'lead.nombre_preg': `Great 🙂 What's your name? So we know how to address you.`,
     'lead.nombre_ph': `Your name`,
     'lead.tel_preg': `Nice to meet you, {nombre}. What <b>phone number</b> works best for him to reach you?`,
     'lead.tel_ph': `Your phone number`,
@@ -181,7 +188,7 @@
     'comprar.l_cuota': `Monthly payment`,
     'comprar.l_ltv': `Financing (LTV)`,
     'comprar.l_total': `Total cost of the transaction`,
-    'comprar.disc': `Notary, land registry and admin agency are usual estimates based on the price. Agency fees, when they exist, are paid by the buyer and not financed by the bank. This is not tax advice.`,
+    'comprar.disc': `Notary, land registry and admin agency are usual estimates based on the price. When there are agency fees payable by the buyer, the bank does not finance them. This is not tax advice.`,
 
     // Vender
     'vender.intro': `I'll work out <b>what you'd keep clean</b> after selling, once taxes are paid.`,

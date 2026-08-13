@@ -122,6 +122,7 @@ function coreCompra(inp) {
   const plazo = +inp.plazo || 0;
   const tin = +inp.tin || 0;
   const ingresos = +inp.ingresos || 0;
+  const deudaMes = +inp.deudaMes || 0;   // cuotas mensuales de otros préstamos/hipotecas (reducen capacidad)
   const edadRef = inp.edadRef ? +inp.edadRef : null;
   const honorarios = +inp.honorarios || 0;
   const plazoMaxEdad = edadRef ? Math.max(0, LIMITE_EDAD_BANCO_CORE - edadRef) : null;
@@ -152,7 +153,8 @@ function coreCompra(inp) {
     hipoteca = Math.max(0, (precio + gastosTotales) - ahorroFinanciable);
     ltv = precio > 0 ? (hipoteca / precio) * 100 : 0;
     cuota = coreCuota(hipoteca, plazo, tin);
-    if (ingresos > 0 && cuota > 0) esfuerzo = (cuota / ingresos) * 100;
+    // La tasa de esfuerzo suma las OTRAS cuotas mensuales (el banco cuenta toda la deuda).
+    if (ingresos > 0 && cuota > 0) esfuerzo = ((cuota + deudaMes) / ingresos) * 100;
   }
 
   // 4) Avisos (mismo criterio que la web)
@@ -180,7 +182,7 @@ function coreCompra(inp) {
   }
 
   return {
-    precio, tipoViv, ccaaNombre: datos.nombre, conHipoteca, ahorro, plazo, tin, ingresos,
+    precio, tipoViv, ccaaNombre: datos.nombre, conHipoteca, ahorro, plazo, tin, ingresos, deudaMes,
     impuestos, impLabel, gastos: g, gastosTotales, honorarios, costeTotal,
     hipoteca, ltv, cuota, esfuerzo, edadRef, plazoMaxEdad, avisos
   };
@@ -269,6 +271,7 @@ function coreCapacidadCompra(inp) {
   const edadRef = inp.edadRef ? +inp.edadRef : null;
   const ahorro = +inp.ahorro || 0;
   const ingresos = +inp.ingresos || 0;
+  const deudaMes = +inp.deudaMes || 0;   // cuotas de otros préstamos/hipotecas → restan capacidad
   const tin = inp.tin != null ? +inp.tin : 3;
   const ratio = inp.ratioEsfuerzo || 0.35;   // tasa de esfuerzo máx. habitual
   const ltv = inp.ltv || 0.80;               // financiación máx. habitual
@@ -276,7 +279,8 @@ function coreCapacidadCompra(inp) {
 
   const plazoMax = Math.max(5, Math.min(topePlazo, edadRef ? (75 - edadRef) : topePlazo));
   const i = tin / 100 / 12, n = plazoMax * 12;
-  const cuotaMax = ratio * ingresos;
+  // La cuota máxima para la NUEVA hipoteca es el 35% de ingresos MENOS lo que ya pagas de otras deudas.
+  const cuotaMax = Math.max(0, ratio * ingresos - deudaMes);
   const maxHipotecaIngresos = i > 0 ? cuotaMax * (1 - Math.pow(1 + i, -n)) / i : cuotaMax * n;
 
   // Ratio de gastos de compra estimado según la CCAA (impuesto + ~2,5% fijos)
@@ -291,7 +295,7 @@ function coreCapacidadCompra(inp) {
   const cuota = i > 0 ? hipoteca * i / (1 - Math.pow(1 + i, -n)) : (n > 0 ? hipoteca / n : 0);
   const limita = precioPorAhorro < precioPorIngresos ? 'ahorro' : 'ingresos';
 
-  return { plazoMax, maxHipotecaIngresos, maxPrecio, hipoteca, cuota, limita, gR, ccaaNombre: d.nombre, tin, edadRef, ingresos, ahorro };
+  return { plazoMax, maxHipotecaIngresos, maxPrecio, hipoteca, cuota, limita, gR, ccaaNombre: d.nombre, tin, edadRef, ingresos, ahorro, deudaMes };
 }
 
 // ------------------------------------------------------------

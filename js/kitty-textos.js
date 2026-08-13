@@ -70,7 +70,10 @@
       plazo_25a:   { es: '25 años' },
       plazo_30a:   { es: '30 años' },
       otro:        { es: 'Otro' },
-      anios_ph:    { es: 'Años' }
+      anios_ph:    { es: 'Años' },
+      // Deudas vigentes (reducen la capacidad ante el banco) — usado en hipoteca/capacidad/comprar
+      deudas_preg:       { es: '¿Tienes <b>otras hipotecas o préstamos</b> en curso (o que vayas a tener)?' },
+      deudas_monto_preg: { es: '¿<b>Cuánto pagas al mes</b> en total por esos préstamos o hipotecas?' }
     },
 
     // ---------- Flujo: Valorar un inmueble ----------
@@ -117,6 +120,13 @@
       aviso_edad_supera_cuota:{ es: 'A {plazoMax} años la cuota sería {cuotaMax}/mes.' },
       aviso_edad_cierre:      { es: 'Varía según la entidad.' },
 
+      // Ingresos + tasa de esfuerzo (incluye otras deudas) — punto 7
+      ingresos_preg:   { es: '¿Cuáles son los <b>ingresos netos mensuales</b> del hogar?' },
+      ingresos_ph:     { es: 'Ej. 3000' },
+      aviso_esf_ok:    { es: 'Tasa de esfuerzo {esf}% — cómoda (por debajo del 30%).' },
+      aviso_esf_justa: { es: 'Tasa de esfuerzo {esf}% — justa (30-35%). Poco margen.' },
+      aviso_esf_alta:  { es: 'Tasa de esfuerzo {esf}% — excesiva (>35%). La mayoría de bancos no la aprueban.' },
+
       // Textos internos del lead (a Cabas)
       lead_resumen:  { es: 'HIPOTECA · Importe {capital} · {plazo} años · TIN {tin}% · Titular {edad} años · Cuota {cuota}/mes' },
       lead_contexto: { es: 'quiero simular una hipoteca.' }
@@ -136,7 +146,7 @@
     contacto: {
       // En Telegram, los botones cuelgan de un mensaje: por eso aquí SÍ hay
       // una frase corta (en la web no hacía falta). Es texto NUEVO para Telegram.
-      pregunta:  { es: '¿Quieres que <b>Cabas</b> te lo vea contigo?' },
+      pregunta:  { es: '¿Quieres que <b>Cabas y su equipo</b> lo vean contigo?' },
       chip_lead: { es: '📲 Que me contacte Cabas' },
       chip_menu: { es: 'Calcular otra cosa' },
       chip_nada: { es: 'No necesito nada más' }
@@ -154,7 +164,7 @@
       consent_si:    { es: '✅ Sí, que me llame' },
       consent_no:    { es: 'Ahora no, gracias' },
 
-      nombre_preg:   { es: 'Genial. Para que Cabas te atienda personalmente, ¿cómo te llamas?' },
+      nombre_preg:   { es: 'Genial 🙂 ¿Cómo te llamas? Así sabemos cómo dirigirnos a ti.' },
       nombre_ph:     { es: 'Tu nombre' },
       tel_preg:      { es: 'Encantada, {nombre}. ¿A qué <b>teléfono</b> te viene bien que te contacte?' },
       tel_ph:        { es: 'Tu teléfono' },
@@ -270,7 +280,7 @@
       l_cuota:      { es: 'Cuota mensual' },
       l_ltv:        { es: 'Financiación (LTV)' },
       l_total:      { es: 'Coste total de la operación' },
-      disc:         { es: 'Notaría, registro y gestoría son estimaciones habituales según el precio. Los honorarios de intermediación, cuando existen, los paga el comprador y el banco no los financia. No es asesoramiento fiscal.' },
+      disc:         { es: 'Notaría, registro y gestoría son estimaciones habituales según el precio. Cuando hay honorarios de intermediación a cargo del comprador, el banco no los financia. No es asesoramiento fiscal.' },
       lead_resumen_hip:     { es: 'COMPRA · {precio} · {ccaa} · {tipoViv} · Honorarios {hon} · Coste total {coste} · Hipoteca {hipoteca} · Cuota {cuota}/mes · LTV {ltv}% · titular {edad} años' },
       lead_resumen_contado: { es: 'COMPRA · {precio} · {ccaa} · {tipoViv} · Honorarios {hon} · Coste total {coste} · al contado' },
       lead_contexto:{ es: 'estoy mirando comprar una vivienda de {precio} en {ccaa}.' }

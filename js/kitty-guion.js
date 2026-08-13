@@ -153,14 +153,25 @@
         { id: 'tin',     tipo: 'texto', texto: 'hipoteca.tin_preg', placeholder: 'hipoteca.tin_ph',
           entrada: 'decimal', validador: 'tin', guardar: 'tin' },
         { id: 'tit',     tipo: 'sub',   sub: 'titularesEdades', guardar: 'te' },
+        { id: 'ingresos', tipo: 'texto', texto: 'hipoteca.ingresos_preg', placeholder: 'hipoteca.ingresos_ph',
+          entrada: 'dinero', validador: 'money', guardar: 'ingresos' },
+        { id: 'deudas', tipo: 'chips', texto: 'comun.deudas_preg', guardar: 'deudaMes',
+          opciones: [
+            { texto: 'comun.no', valor: 0 },
+            { texto: 'comun.si', valor: '__si', pedir: { entrada: 'dinero', validador: 'money', placeholder: 'comun.deudas_monto_preg' } }
+          ] },
 
         { id: 'resultado', tipo: 'calc',
           calcular: function (a) {
             var capital = a.capital, plazo = a.plazo, tin = a.tin, edad = a.te.edadRef;
+            var ingresos = a.ingresos || 0, deudaMes = a.deudaMes || 0;
             var cuota = _cuota(capital, plazo, tin);
             var totalPagado = cuota * plazo * 12;
+            // Tasa de esfuerzo: (cuota nueva + otras deudas) / ingresos. El banco cuenta toda la deuda.
+            var esfuerzo = ingresos > 0 ? ((cuota + deudaMes) / ingresos) * 100 : null;
             return { capital: capital, plazo: plazo, tin: tin, edad: edad,
-                     cuota: cuota, totalPagado: totalPagado, intereses: totalPagado - capital };
+                     cuota: cuota, totalPagado: totalPagado, intereses: totalPagado - capital,
+                     ingresos: ingresos, deudaMes: deudaMes, esfuerzo: esfuerzo };
           },
           tarjeta: {
             titulo: 'hipoteca.card_titulo',
@@ -174,7 +185,15 @@
               { etiqueta: 'hipoteca.l_intereses', emoji: '💸', valor: function (r) { return _eur2(r.intereses); } },
               { etiqueta: 'hipoteca.l_total_dev', emoji: '🧾', valor: function (r) { return _eur(r.totalPagado); } }
             ],
-            avisos: function (r) { return [ avisoEdad(r.edad, r.plazo, r.capital, r.tin) ]; },
+            avisos: function (r) {
+              var A = [ avisoEdad(r.edad, r.plazo, r.capital, r.tin) ];
+              if (r.esfuerzo != null) {
+                var t = r.esfuerzo <= 30 ? 'verde' : (r.esfuerzo <= 35 ? 'ambar' : 'rojo');
+                var k = r.esfuerzo <= 30 ? 'hipoteca.aviso_esf_ok' : (r.esfuerzo <= 35 ? 'hipoteca.aviso_esf_justa' : 'hipoteca.aviso_esf_alta');
+                A.push({ t: t, texto: k, valores: { esf: r.esfuerzo.toFixed(1).replace('.', ',') } });
+              }
+              return A;
+            },
             disc: 'hipoteca.disc'
           } },
 
@@ -236,9 +255,14 @@
         { id: 'ahorro',   tipo: 'texto', texto: 'capacidad.ahorro_preg', placeholder: 'capacidad.ahorro_ph', entrada: 'dinero', validador: 'money', guardar: 'ahorro' },
         { id: 'ingresos', tipo: 'texto', texto: 'capacidad.ingresos_preg', placeholder: 'capacidad.ingresos_ph', entrada: 'dinero', validador: 'money', guardar: 'ingresos' },
         { id: 'tin',      tipo: 'texto', texto: 'capacidad.tin_preg', placeholder: 'hipoteca.tin_ph', entrada: 'decimal', validador: 'tin', guardar: 'tin' },
+        { id: 'deudas',   tipo: 'chips', texto: 'comun.deudas_preg', guardar: 'deudaMes',
+          opciones: [
+            { texto: 'comun.no', valor: 0 },
+            { texto: 'comun.si', valor: '__si', pedir: { entrada: 'dinero', validador: 'money', placeholder: 'comun.deudas_monto_preg' } }
+          ] },
 
         { id: 'resultado', tipo: 'calc',
-          calcular: function (a) { return coreCapacidadCompra({ ccaaSlug: a.ccaa, edadRef: a.te.edadRef, ahorro: a.ahorro, ingresos: a.ingresos, tin: a.tin }); },
+          calcular: function (a) { return coreCapacidadCompra({ ccaaSlug: a.ccaa, edadRef: a.te.edadRef, ahorro: a.ahorro, ingresos: a.ingresos, tin: a.tin, deudaMes: a.deudaMes }); },
           tarjeta: {
             titulo: 'capacidad.card_titulo',
             total: { etiqueta: 'capacidad.l_precio_max', emoji: '💰', valor: function (r) { return _eur(r.maxPrecio); } },
@@ -295,11 +319,16 @@
                       { texto: 'comun.otro', valor: '__otro', pedir: { entrada: 'numero', validador: 'anios', placeholder: 'comun.anios_ph' } } ] },
         { id: 'tin',      tipo: 'texto', texto: 'comprar.tin_preg', placeholder: 'comprar.tin_ph', entrada: 'decimal', validador: 'tin', guardar: 'tin' },
         { id: 'ingresos', tipo: 'texto', texto: 'comprar.ingresos_preg', placeholder: 'comprar.ingresos_ph', entrada: 'dinero', validador: 'money', guardar: 'ingresos' },
+        { id: 'deudas',   tipo: 'chips', texto: 'comun.deudas_preg', guardar: 'deudaMes',
+          opciones: [
+            { texto: 'comun.no', valor: 0 },
+            { texto: 'comun.si', valor: '__si', pedir: { entrada: 'dinero', validador: 'money', placeholder: 'comun.deudas_monto_preg' } }
+          ] },
         { id: 'tit',      tipo: 'sub',   sub: 'titularesEdades', guardar: 'te' },
         { id: 'calc', tipo: 'calc',
           calcular: function (a) {
             return coreCompra({ precio: a.precio, tipoViv: a.tipoViv, ccaaSlug: a.ccaa, conHipoteca: !!a.conHip,
-              ahorro: a.ahorro || 0, plazo: a.plazo || 0, tin: a.tin || 0, ingresos: a.ingresos || 0,
+              ahorro: a.ahorro || 0, plazo: a.plazo || 0, tin: a.tin || 0, ingresos: a.ingresos || 0, deudaMes: a.deudaMes || 0,
               edadRef: (a.te && a.te.edadRef) || null, honorarios: a.honorarios || 0 });
           },
           tarjeta: {

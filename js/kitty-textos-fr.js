@@ -37,6 +37,8 @@
     'comun.plazo_30a': `30 ans`,
     'comun.otro': `Autre`,
     'comun.anios_ph': `Ans`,
+    'comun.deudas_preg': `As-tu <b>d'autres crédits ou prêts</b> en cours (ou que tu vas avoir) ?`,
+    'comun.deudas_monto_preg': `<b>Combien paies-tu par mois</b> au total pour ces prêts ou crédits ?`,
 
     // Valorar
     'valorar.intro': `Parfait. Cabas te prépare une <b>estimation réaliste</b> de ton bien, sans engagement et avec des données du secteur.`,
@@ -69,6 +71,11 @@
     'hipoteca.aviso_edad_supera': `À {edad} ans, la règle habituelle « âge + durée ≤ 75 » laisse une durée maximale indicative de {plazoMax} ans, en dessous des {plazo} indiqués.`,
     'hipoteca.aviso_edad_supera_cuota': `Sur {plazoMax} ans, la mensualité serait de {cuotaMax}/mois.`,
     'hipoteca.aviso_edad_cierre': `Cela varie selon la banque.`,
+    'hipoteca.ingresos_preg': `Quels sont les <b>revenus nets mensuels</b> du foyer ?`,
+    'hipoteca.ingresos_ph': `ex. 3000`,
+    'hipoteca.aviso_esf_ok': `Taux d'effort {esf}% — confortable (en dessous de 30%).`,
+    'hipoteca.aviso_esf_justa': `Taux d'effort {esf}% — juste (30-35%). Peu de marge.`,
+    'hipoteca.aviso_esf_alta': `Taux d'effort {esf}% — excessif (plus de 35%). La plupart des banques ne l'approuvent pas.`,
 
     // Titulares
     'titulares.una_o_dos': `L'achat se fait-il à <b>une personne ou deux</b> ?`,
@@ -79,7 +86,7 @@
     'titulares.edad_ph': `ex. 42`,
 
     // Ofrecer contacto
-    'contacto.pregunta': `Veux-tu que <b>Cabas</b> le voie avec toi ?`,
+    'contacto.pregunta': `Veux-tu que <b>Cabas et son équipe</b> le voient avec toi ?`,
     'contacto.chip_lead': `📲 Que Cabas me contacte`,
     'contacto.chip_menu': `Calculer autre chose`,
     'contacto.chip_nada': `Je n'ai besoin de rien d'autre`,
@@ -89,7 +96,7 @@
     'lead.consent_link': `comment il traite tes données`,
     'lead.consent_si': `✅ Oui, qu'il m'appelle`,
     'lead.consent_no': `Pas maintenant, merci`,
-    'lead.nombre_preg': `Super. Pour que Cabas s'occupe de toi personnellement, comment t'appelles-tu ?`,
+    'lead.nombre_preg': `Super 🙂 Comment t'appelles-tu ? Pour savoir comment t'appeler.`,
     'lead.nombre_ph': `Ton nom`,
     'lead.tel_preg': `Enchantée, {nombre}. À quel <b>téléphone</b> préfères-tu qu'il te contacte ?`,
     'lead.tel_ph': `Ton téléphone`,
@@ -177,7 +184,7 @@
     'comprar.l_cuota': `Mensualité`,
     'comprar.l_ltv': `Financement (LTV)`,
     'comprar.l_total': `Coût total de l'opération`,
-    'comprar.disc': `Notaire, publicité foncière et formalités sont des estimations habituelles selon le prix. Les honoraires d'agence, lorsqu'ils existent, sont payés par l'acheteur et ne sont pas financés par la banque. Ce n'est pas un conseil fiscal.`,
+    'comprar.disc': `Notaire, publicité foncière et formalités sont des estimations habituelles selon le prix. Lorsqu'il y a des honoraires d'agence à la charge de l'acheteur, la banque ne les finance pas. Ce n'est pas un conseil fiscal.`,
 
     // Vender
     'vender.intro': `Je te calcule <b>ce qu'il te reste net</b> après la vente, une fois les impôts payés.`,
