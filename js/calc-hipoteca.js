@@ -90,9 +90,8 @@ document.getElementById('h-calcular').addEventListener('click', () => {
   const plazo = num('h-plazo');
   const tin = num('h-tin');
   const ingresos = num('h-ingresos');
-  const edad1 = num('h-edad1');
-  const edad2 = num('h-edad2');
-  const edadRef = Math.max(edad1, edad2) || null; // null si no se ha indicado ninguna
+  const edadRef = num('h-edad') || null;   // edad del comprador de más edad
+  const deuda = num('h-deuda') || 0;       // cuota mensual de otros préstamos (el banco la resta de la capacidad)
   const plazoMaxEdad = edadRef ? Math.max(0, LIMITE_EDAD_BANCO - edadRef) : null;
 
   if (!precio) { alert('Necesito al menos el precio de la vivienda.'); return; }
@@ -147,7 +146,7 @@ document.getElementById('h-calcular').addEventListener('click', () => {
     }
     if (edadRef) {
       if (plazo > plazoMaxEdad) {
-        avisos.push({ t: 'ambar', txt: `Con ${edadRef} años${edad2 ? ' (el mayor de los dos titulares)' : ''}, el criterio habitual de "edad + plazo ≤ 75" (algunas entidades llegan a 80) deja un plazo máximo orientativo de ${plazoMaxEdad} años — por debajo de los ${plazo} que has puesto. Varía según la entidad, conviene confirmarlo con la tuya.` });
+        avisos.push({ t: 'ambar', txt: `Con ${edadRef} años, el criterio habitual de "edad + plazo ≤ 75" (algunas entidades llegan a 80) deja un plazo máximo orientativo de ${plazoMaxEdad} años — por debajo de los ${plazo} que has puesto. Varía según la entidad, conviene confirmarlo con la tuya.` });
       }
     }
   }
@@ -155,14 +154,16 @@ document.getElementById('h-calcular').addEventListener('click', () => {
   // 4) Tasa de esfuerzo — solo tiene sentido si hay cuota
   const linEsf = document.getElementById('h-r-esfuerzo-linea');
   if (conHipoteca && ingresos > 0 && cuota > 0) {
-    const esf = (cuota / ingresos) * 100;
+    // El banco cuenta TODA la deuda: cuota nueva + otras cuotas que ya pagas.
+    const esf = ((cuota + deuda) / ingresos) * 100;
     let color, txt;
     if (esf <= 30) { color = 'var(--verde)'; txt = 'Cómoda: por debajo del 30% de tus ingresos, el rango que los bancos consideran saludable.'; }
     else if (esf <= 35) { color = 'var(--ambar)'; txt = 'Justa: entre el 30% y el 35%. Los bancos la aceptan, pero con poco margen para imprevistos.'; }
     else { color = 'var(--rojo)'; txt = 'Excesiva: por encima del 35% la mayoría de bancos no aprueban la operación. Habría que bajar precio, alargar plazo o aportar más ahorro.'; }
     document.getElementById('h-r-esfuerzo').innerHTML = `<span class="semaforo" style="background:${color}"></span>${esf.toFixed(1)}%`;
     linEsf.style.display = 'flex';
-    avisos.push({ t: esf <= 30 ? 'verde' : esf <= 35 ? 'ambar' : 'rojo', txt: 'Tasa de esfuerzo — ' + txt });
+    const detalle = deuda > 0 ? ` Incluye tu cuota (${eur2(cuota)}) + tus otras deudas (${eur2(deuda)}) = ${eur2(cuota + deuda)}/mes sobre tus ingresos.` : '';
+    avisos.push({ t: esf <= 30 ? 'verde' : esf <= 35 ? 'ambar' : 'rojo', txt: 'Tasa de esfuerzo — ' + txt + detalle });
   } else {
     linEsf.style.display = 'none';
   }
@@ -230,7 +231,7 @@ document.getElementById('h-calcular').addEventListener('click', () => {
   ultimoCalculo = {
     oficinaSlug, precio, tipoViv, ccaaNombre: datos.nombre, conHipoteca, ahorro, plazo, tin, ingresos,
     impuestos, impLabel, gastos: g, honorarios, gastosTotales, costeTotal, hipoteca, ltv, cuota,
-    edadRef, edad2Dado: !!edad2, plazoMaxEdad
+    edadRef, deuda, plazoMaxEdad
   };
   document.getElementById('h-descargar-pdf').disabled = false;
 
@@ -289,15 +290,18 @@ document.getElementById('h-descargar-pdf').addEventListener('click', () => {
     const esfFila = document.getElementById('pdf-esfuerzo-fila');
     if (c.ingresos > 0) {
       esfFila.style.display = '';
-      document.getElementById('pdf-esfuerzo-valor').textContent = ((c.cuota / c.ingresos) * 100).toFixed(1).replace('.', ',') + '%';
+      document.getElementById('pdf-esfuerzo-valor').textContent = (((c.cuota + (c.deuda || 0)) / c.ingresos) * 100).toFixed(1).replace('.', ',') + '%';
     } else {
       esfFila.style.display = 'none';
     }
     const puntos = [];
     puntos.push(`Con ${eur(c.ahorro)} de ahorro se financia el ${c.ltv.toFixed(1).replace('.', ',')}% del precio${c.ltv > 80 ? ', por encima del límite habitual del 80%' : ''}.`);
     if (c.ingresos > 0) {
-      const esf = (c.cuota / c.ingresos) * 100;
-      puntos.push(esf <= 30 ? 'La cuota queda por debajo del 30% de los ingresos del hogar — esfuerzo cómodo.' : esf <= 35 ? 'La cuota está entre el 30% y el 35% de los ingresos — esfuerzo justo.' : 'La cuota supera el 35% de los ingresos — esfuerzo elevado, conviene revisar la operación.');
+      const dd = c.deuda || 0;
+      const esf = ((c.cuota + dd) / c.ingresos) * 100;
+      let pEsf = esf <= 30 ? 'La cuota queda por debajo del 30% de los ingresos del hogar — esfuerzo cómodo.' : esf <= 35 ? 'La cuota está entre el 30% y el 35% de los ingresos — esfuerzo justo.' : 'La cuota supera el 35% de los ingresos — esfuerzo elevado, conviene revisar la operación.';
+      if (dd > 0) pEsf += ` Incluye tu cuota (${eur2(c.cuota)}) + otras deudas (${eur2(dd)}) = ${eur2(c.cuota + dd)}/mes.`;
+      puntos.push(pEsf);
     }
     if (c.edadRef) {
       const plazoMaxEdad = c.plazoMaxEdad;
@@ -305,9 +309,9 @@ document.getElementById('h-descargar-pdf').addEventListener('click', () => {
         const i = c.tin / 100 / 12;
         const n = plazoMaxEdad * 12;
         const cuotaEdad = plazoMaxEdad >= 5 ? (i > 0 ? c.hipoteca * i / (1 - Math.pow(1 + i, -n)) : c.hipoteca / n) : null;
-        puntos.push(`Con ${c.edadRef} años${c.edad2Dado ? ' (el mayor de los titulares)' : ''}, el criterio habitual "edad + plazo ≤ 75" (algunas entidades llegan a 80) deja un plazo orientativo de ${plazoMaxEdad} años — por confirmar con la entidad, ya que varía.${cuotaEdad !== null ? ` A ese plazo, la cuota estimada sería de ${eur2(cuotaEdad)}/mes en vez de ${eur2(c.cuota)}/mes.` : ''}`);
+        puntos.push(`Con ${c.edadRef} años, el criterio habitual "edad + plazo ≤ 75" (algunas entidades llegan a 80) deja un plazo orientativo de ${plazoMaxEdad} años — por confirmar con la entidad, ya que varía.${cuotaEdad !== null ? ` A ese plazo, la cuota estimada sería de ${eur2(cuotaEdad)}/mes en vez de ${eur2(c.cuota)}/mes.` : ''}`);
       } else {
-        puntos.push(`Con ${c.edadRef} años${c.edad2Dado ? ' (el mayor de los titulares)' : ''}, el plazo de ${c.plazo} años entra dentro del criterio habitual de edad de la mayoría de entidades.`);
+        puntos.push(`Con ${c.edadRef} años, el plazo de ${c.plazo} años entra dentro del criterio habitual de edad de la mayoría de entidades.`);
       }
     }
     document.getElementById('pdf-lectura').innerHTML = puntos.map(p => `<li>${p}</li>`).join('');

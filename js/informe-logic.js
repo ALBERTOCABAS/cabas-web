@@ -42,7 +42,8 @@ function cuotaFrancesa(hipoteca, tinPct, anios) {
 // y dentro de cada grupo, una fila por combinación aportación x TIN.
 const LIMITE_EDAD_BANCO = 75; // criterio general edad+plazo; algunas entidades llegan a 80
 
-function generarEscenarios({ precio, ccaaSlug, tipoViv, ingresos, honorariosCfg, aportaciones, tins, plazos, edadRef }) {
+function generarEscenarios({ precio, ccaaSlug, tipoViv, ingresos, honorariosCfg, aportaciones, tins, plazos, edadRef, deudaMes }) {
+  deudaMes = +deudaMes || 0;   // cuotas de otros préstamos → se suman a la tasa de esfuerzo
   const gastos = gastosCompra(precio, ccaaSlug, tipoViv);
   const honorarios = calcularHonorarios(precio, honorariosCfg);
   const costeBase = precio + gastos.total; // financiable
@@ -67,7 +68,7 @@ function generarEscenarios({ precio, ccaaSlug, tipoViv, ingresos, honorariosCfg,
         const ltv = precio > 0 ? (hipoteca / precio) * 100 : 0;
         const cuota = cuotaFrancesa(hipoteca, tin, plazo);
         const interesesTotales = cuota * plazo * 12 - hipoteca;
-        const esfuerzo = ingresos > 0 ? (cuota / ingresos) * 100 : null;
+        const esfuerzo = ingresos > 0 ? ((cuota + deudaMes) / ingresos) * 100 : null;
         filas.push({ aportacion, tin, plazo, hipoteca, ltv, cuota, interesesTotales, esfuerzo });
       });
     });

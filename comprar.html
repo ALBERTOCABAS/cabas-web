@@ -167,13 +167,14 @@
 
       <div class="fila-2" id="h-fila-edad">
         <div class="campo">
-          <label for="h-edad1">Edad del comprador <small style="color:var(--gris)">(opcional)</small></label>
-          <input type="number" id="h-edad1" min="18" max="90" step="1" placeholder="35">
+          <label for="h-edad">Edad del comprador de más edad <small style="color:var(--gris)">(opcional)</small></label>
+          <input type="number" id="h-edad" min="18" max="90" step="1" placeholder="40">
+          <small>Si compráis entre dos, pon la del mayor — los bancos suelen exigir liquidar la hipoteca antes de los 75-80 años.</small>
         </div>
         <div class="campo">
-          <label for="h-edad2">Edad del 2º comprador <small style="color:var(--gris)">(opcional, si compráis entre 2)</small></label>
-          <input type="number" id="h-edad2" min="18" max="90" step="1" placeholder="33">
-          <small>Los bancos suelen exigir liquidar la hipoteca antes de los 75-80 años — con dos titulares, cuenta la edad del mayor.</small>
+          <label for="h-deuda">Otros préstamos: cuota al mes (€) <small style="color:var(--gris)">(opcional)</small></label>
+          <input type="number" id="h-deuda" min="0" step="10" placeholder="0">
+          <small>Suma de las cuotas de otros préstamos o hipotecas que ya pagas. El banco las resta de tu capacidad.</small>
         </div>
       </div>
 
