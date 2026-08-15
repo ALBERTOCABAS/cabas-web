@@ -37,13 +37,19 @@
       m_hipoteca:  { es: '🏦 Simular mi hipoteca' },
       m_capacidad: { es: '📈 Hasta qué precio puedo comprar' },
       m_inversion: { es: '📊 Rentabilidad de inversión' },
-      m_contacto:  { es: '📞 Hablar con Cabas' }
+      m_agenda:    { es: '📞 Agendar una llamada' },
+      m_contacto:  { es: '✍️ Que me contacte Cabas' }
     },
 
     // ---------- "Hablar con Cabas" directo (desde el menú) ----------
     contacto_directo: {
       lead_resumen:  { es: 'CONTACTO DIRECTO' },
       lead_contexto: { es: 'me gustaría que me llamaras para comentar mi caso.' }
+    },
+
+    // ---------- Agendar una llamada (página de reservas de Google) ----------
+    agenda: {
+      mensaje: { es: '📞 ¡Genial! Reserva tu <b>llamada gratuita de 30 min</b> con Cabas cuando mejor te venga:\n\n👉 <a href="{url}">Agendar mi llamada</a>\n\nElige el hueco libre que quieras, deja tu nombre y teléfono, y <b>Cabas te llama</b> a esa hora. 🙂' }
     },
 
     // ---------- Comunes (reutilizados por varios flujos) ----------

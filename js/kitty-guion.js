@@ -44,6 +44,11 @@
   // Fecha de hoy (para la fecha de venta en el cálculo del neto del vendedor).
   function hoyISO() { return new Date().toISOString().slice(0, 10); }
 
+  // Página de reservas de Google Calendar (llamada de 30 min con Cabas).
+  // Único sitio donde vive el enlace; los 3 canales lo usan igual. Si algún
+  // día cambia la agenda, se cambia SOLO aquí.
+  var AGENDA_URL = 'https://calendar.app.google/hDaAQhrxYR7k1Xaj7';
+
   // Aviso de edad (hipoteca). Devuelve QUÉ texto y VALORES; piezas = frases
   // completas adicionales que el runner añade en orden.
   function avisoEdad(edad, plazo, capital, tin) {
@@ -76,6 +81,7 @@
             { texto: 'menu.m_hipoteca',  valor: 'hipoteca',  irAFlujo: 'hipoteca' },
             { texto: 'menu.m_capacidad', valor: 'capacidad', irAFlujo: 'capacidad' },
             { texto: 'menu.m_inversion', valor: 'inversion', irAFlujo: 'inversion' },
+            { texto: 'menu.m_agenda',    valor: 'agenda',    irAFlujo: 'agenda' },
             { texto: 'menu.m_contacto',  valor: 'contacto',  irAFlujo: 'contacto_directo' }
           ] }
       ]
@@ -89,6 +95,21 @@
         { id: 'ent', tipo: 'entregarLead',
           resumen:  { texto: 'contacto_directo.lead_resumen' },
           contexto: { texto: 'contacto_directo.lead_contexto' } }
+      ]
+    },
+
+    // Agendar una llamada: enlace a la página de reservas de Google Calendar.
+    // NO pide contacto aquí (el formulario de Google recoge nombre + teléfono
+    // y crea el evento en la agenda de Cabas). Tras el enlace, "¿algo más?".
+    agenda: {
+      id: 'agenda',
+      pasos: [
+        { id: 'msg', tipo: 'decir', texto: 'agenda.mensaje', valores: function () { return { url: AGENDA_URL }; } },
+        { id: 'mas', tipo: 'chips', texto: 'lead.algo_mas', guardar: 'quiere_mas',
+          opciones: [
+            { texto: 'lead.algo_si', valor: true, saltarA: '@menu' },
+            { texto: 'lead.algo_no', valor: false, irAFlujo: 'despedir' }
+          ] }
       ]
     },
 

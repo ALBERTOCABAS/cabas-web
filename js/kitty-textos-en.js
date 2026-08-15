@@ -20,7 +20,9 @@
     'menu.m_hipoteca': `🏦 Simulate my mortgage`,
     'menu.m_capacidad': `📈 How much can I afford`,
     'menu.m_inversion': `📊 Investment return`,
-    'menu.m_contacto': `📞 Talk to Cabas`,
+    'menu.m_agenda': `📞 Book a call`,
+    'menu.m_contacto': `✍️ Have Cabas contact me`,
+    'agenda.mensaje': `📞 Great! Book your <b>free 30-min call</b> with Cabas whenever suits you best:\n\n👉 <a href="{url}">Book my call</a>\n\nPick any free slot, leave your name and phone, and <b>Cabas will call you</b> at that time. 🙂`,
 
     // Comunes
     'comun.ccaa_madrid': `Madrid`,

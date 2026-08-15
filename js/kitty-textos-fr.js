@@ -16,7 +16,9 @@
     'menu.m_hipoteca': `🏦 Simuler mon crédit`,
     'menu.m_capacidad': `📈 Jusqu'à quel prix je peux acheter`,
     'menu.m_inversion': `📊 Rentabilité d'un investissement`,
-    'menu.m_contacto': `📞 Parler à Cabas`,
+    'menu.m_agenda': `📞 Réserver un appel`,
+    'menu.m_contacto': `✍️ Être recontacté par Cabas`,
+    'agenda.mensaje': `📞 Parfait ! Réservez votre <b>appel gratuit de 30 min</b> avec Cabas quand cela vous convient :\n\n👉 <a href="{url}">Réserver mon appel</a>\n\nChoisissez un créneau libre, laissez votre nom et téléphone, et <b>Cabas vous appelle</b> à cette heure. 🙂`,
 
     // Comunes
     'comun.ccaa_madrid': `Madrid`,
