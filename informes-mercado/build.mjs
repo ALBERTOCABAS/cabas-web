@@ -335,9 +335,9 @@ const FOOTER = `<footer class="footer">
     <div>
       <h4>Contacto</h4>
       <ul>
-        <li><a href="tel:+34662669014">+34 662 669 014</a></li>
+        <li><a href="tel:+34604854690">+34 604 854 690</a></li>
         <li><a href="mailto:alberto@cabas.es">alberto@cabas.es</a></li>
-        <li>Calle Bravo Murillo 23, 28015 Madrid</li>
+        <li>Calle San Bernardo 84, 28015 Madrid</li>
       </ul>
     </div>
   </div>
@@ -369,8 +369,8 @@ const ORG = {
   '@type': 'Organization', name: 'Cabas Realtor', alternateName: 'Alberto Cabas', url: BASE_URL,
   logo: `${BASE_URL}/assets/logo-c.png`,
   founder: { '@type': 'Person', name: 'Alberto Cabas Ortiz' },
-  address: { '@type': 'PostalAddress', streetAddress: 'Calle Bravo Murillo 23', postalCode: '28015', addressLocality: 'Madrid', addressCountry: 'ES' },
-  contactPoint: { '@type': 'ContactPoint', telephone: '+34662669014', email: 'alberto@cabas.es', contactType: 'customer service' },
+  address: { '@type': 'PostalAddress', streetAddress: 'Calle San Bernardo 84', postalCode: '28015', addressLocality: 'Madrid', addressCountry: 'ES' },
+  contactPoint: { '@type': 'ContactPoint', telephone: '+34604854690', email: 'alberto@cabas.es', contactType: 'customer service' },
 };
 const JSONLD = {
   '@context': 'https://schema.org', '@type': 'Dataset',
@@ -524,7 +524,7 @@ const HTML = `<!DOCTYPE html>
   .pg-informes .im-fuente{ margin-top:40px; padding-top:16px; border-top:1px solid var(--linea); color:var(--gris); font-size:.82rem; line-height:1.6; }
   /* Botón "Descargar PDF" */
   .pg-informes .im-pdf{ margin:16px 0 2px; }
-  .pg-informes .im-pdf-btn{ display:inline-flex; align-items:center; gap:7px; background:transparent; border:1px solid var(--oro); color:var(--oro-claro); font:inherit; font-weight:600; font-size:.86rem; padding:9px 16px; border-radius:8px; cursor:pointer; }
+  .pg-informes .im-pdf-btn{ display:inline-flex; align-items:center; gap:7px; background:transparent; border:1px solid var(--oro); color:var(--oro-claro); font:inherit; font-weight:600; font-size:.86rem; padding:9px 16px; border-radius:12px; cursor:pointer; }
   .pg-informes .im-pdf-btn:hover{ background:var(--oro); color:var(--negro); }
   /* Tablas clonadas dentro de la hoja del PDF → aspecto informe (blanco, cabecera negra) */
   .pg-informes .hoja .im-card{ background:#fff; box-shadow:none; border:none; border-radius:0; overflow:visible; margin:0 0 1.1rem; }
@@ -617,11 +617,11 @@ ${FOOTER}
     </div>
     <div class="i-footer">
       <strong>Alberto Cabas · Cabas Realtor</strong>
-      <span class="contacto">662 669 014 · alberto@cabas.es · Calle Bravo Murillo 23, 28015 Madrid · cabas.es</span>
+      <span class="contacto">604 854 690 · alberto@cabas.es · Calle San Bernardo 84, 28015 Madrid · cabas.es</span>
     </div>
   </div>
 </div>
-<a class="whatsapp" href="https://wa.me/34662669014?text=Hola%20Alberto%2C%20te%20escribo%20desde%20cabas.es" target="_blank" rel="noopener" aria-label="Escribir por WhatsApp"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2c-1.6 0-3.1-.4-4.4-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2z"/></svg></a>
+<a class="whatsapp" href="https://wa.me/34604854690?text=Hola" target="_blank" rel="noopener" aria-label="Escribir por WhatsApp"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2c-1.6 0-3.1-.4-4.4-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2z"/></svg></a>
 <div id="google_translate_element" style="display:none"></div>
 <script type="application/json" id="im-series">${JSON.stringify(SERIES)}</script>
 <script>
