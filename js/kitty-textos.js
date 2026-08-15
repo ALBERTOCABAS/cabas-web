@@ -176,14 +176,14 @@
       tel_preg:      { es: 'Encantada, {nombre}. ¿A qué <b>teléfono</b> te viene bien que te contacte?' },
       tel_ph:        { es: 'Tu teléfono' },
 
-      confirmacion:  { es: 'Perfecto, {nombre}. Le paso tu consulta y <b>Cabas o alguien de su equipo te contactarán en menos de 24 h laborables</b>. Si quieres hablar <b>antes</b>, escríbele por WhatsApp o llámale al <b>662 669 014</b>.' },
+      confirmacion:  { es: 'Perfecto, {nombre}. Le paso tu consulta y <b>Cabas o alguien de su equipo te contactarán en menos de 24 h laborables</b>. Si quieres hablar <b>antes</b>, escríbele por WhatsApp o llámale al <b>604 854 690</b>.' },
       btn_whatsapp:  { es: 'Enviar por WhatsApp' },
       btn_llamar:    { es: 'Llamar ahora' },
       privacidad_nota: { es: 'Tus datos solo se usan para que Cabas te contacte. <a href="https://www.cabas.es/privacidad.html">Política de privacidad</a>.' },
       privacidad_link: { es: 'Política de privacidad' },
 
       // ===== Salida cuando el cliente NO acepta — no se le echa =====
-      no_consent:    { es: 'Sin problema 🙂 Puedes seguir usando las <b>calculadoras</b> todo lo que quieras, sin dejar ningún dato. Y si quieres hablar con Cabas, puedes <b>escribirle por WhatsApp</b> o <b>llamarle al 662 669 014</b> tú directamente cuando te venga bien.' },
+      no_consent:    { es: 'Sin problema 🙂 Puedes seguir usando las <b>calculadoras</b> todo lo que quieras, sin dejar ningún dato. Y si quieres hablar con Cabas, puedes <b>escribirle por WhatsApp</b> o <b>llamarle al 604 854 690</b> tú directamente cuando te venga bien.' },
 
       algo_mas:      { es: '¿Quieres calcular o consultar algo más?' },
       algo_si:       { es: 'Sí, otra cosa' },
