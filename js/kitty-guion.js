@@ -62,6 +62,31 @@
     return { t: 'verde', texto: 'hipoteca.aviso_edad_ok', valores: { edad: edad, plazo: plazo } };
   }
 
+  // Resumen INTERNO (español, para Cabas) del lead de "Busco vivienda".
+  // Se inserta como {resumen} en buscar.lead_resumen (los leads no se traducen).
+  function resumenBuscar(a) {
+    var zonas = { chamberi: 'Chamberí', chamartin: 'Chamartín', malasana: 'Malasaña/Centro' };
+    var tipos = { obranueva: 'Obra nueva', piso: 'Piso', casa: 'Casa/Chalet', edificio: 'Edificio', local: 'Local/Oficina', garaje: 'Garaje' };
+    var plantas = { igual: 'indiferente', nobajo: 'sin bajo/sótano', nobajo1: 'sin bajo/sótano ni 1º', atico: 'ático/última planta' };
+    var L = [];
+    L.push(a.op === 'comprar' ? '🔑 BUSCA COMPRAR' : '🏠 BUSCA ALQUILAR');
+    L.push('Zona: ' + (a['zona#sel'] === 'otra' ? a.zona : (zonas[a.zona] || a.zona || '—')));
+    L.push('Tipo: ' + (tipos[a.tipo] || a.tipo || '—'));
+    L.push('Presupuesto: ' + _eur(a.presupuesto) + (a.op === 'alquilar' ? '/mes' : ''));
+    if (a.habitaciones) L.push('Habitaciones: ' + (a.habitaciones === 'igual' ? 'indiferente' : a.habitaciones));
+    if (a.banos) L.push('Baños: ' + (a.banos === 'igual' ? 'indiferente' : a.banos));
+    if (a['planta#sel']) L.push('Planta: ' + (a['planta#sel'] === '__desde' ? ('desde la ' + a.planta + 'ª') : (plantas[a['planta#sel']] || '—')));
+    if (a.ascensor !== undefined) L.push('Ascensor: ' + (a.ascensor ? 'indispensable' : 'no imprescindible'));
+    if (a.exterior) L.push('Exterior/interior: ' + a.exterior);
+    if (a.vende === true) {
+      L.push('⚠️ NECESITA VENDER PARA COMPRAR — ' + (a.vende_estado === 'siventa' ? 'ya a la venta' : 'todavía no a la venta'));
+      if (a.vende_donde) L.push('   Inmueble a vender: ' + a.vende_donde);
+      if (a['vende_enlace#sel'] === '__link' && a.vende_enlace) L.push('   Enlace: ' + a.vende_enlace);
+    }
+    L.push('Consentimiento: ' + (a.consent_red === true ? 'RED COMPLETA (Redpiso · DCREDIT · FAI)' : 'SOLO equipo Cabas'));
+    return L.join('\n');
+  }
+
   var GUION = {
 
     // ============================================================
@@ -78,6 +103,7 @@
             { texto: 'menu.m_herencia',  valor: 'herencia',  irAFlujo: 'herencia' },
             { texto: 'menu.m_vender',    valor: 'vender',    irAFlujo: 'vender' },
             { texto: 'menu.m_comprar',   valor: 'comprar',   irAFlujo: 'comprar' },
+            { texto: 'menu.m_buscar',    valor: 'buscar',    irAFlujo: 'buscar' },
             { texto: 'menu.m_hipoteca',  valor: 'hipoteca',  irAFlujo: 'hipoteca' },
             { texto: 'menu.m_capacidad', valor: 'capacidad', irAFlujo: 'capacidad' },
             { texto: 'menu.m_inversion', valor: 'inversion', irAFlujo: 'inversion' },
@@ -110,6 +136,111 @@
             { texto: 'lead.algo_si', valor: true, saltarA: '@menu' },
             { texto: 'lead.algo_no', valor: false, irAFlujo: 'despedir' }
           ] }
+      ]
+    },
+
+    // ============================================================
+    // FLUJO: Busco vivienda (comprar/alquilar) — CUALIFICA y deriva.
+    // NO enseña la cartera. Consentimiento reforzado (compartir con la red:
+    // Redpiso · DCREDIT · FAI) con alternativa "solo equipo Cabas".
+    // Ramas por tipo (criterios solo residencial) y sub-flujo "vender para comprar".
+    // ============================================================
+    buscar: {
+      id: 'buscar',
+      pasos: [
+        { id: 'op', tipo: 'chips', texto: 'buscar.op_preg', guardar: 'op',
+          opciones: [
+            { texto: 'buscar.op_comprar', valor: 'comprar' },
+            { texto: 'buscar.op_alquilar', valor: 'alquilar' }
+          ] },
+        { id: 'zona', tipo: 'chips', texto: 'buscar.zona_preg', guardar: 'zona',
+          opciones: [
+            { texto: 'buscar.zona_chamberi',  valor: 'chamberi' },
+            { texto: 'buscar.zona_chamartin', valor: 'chamartin' },
+            { texto: 'buscar.zona_malasana',  valor: 'malasana' },
+            { texto: 'buscar.zona_otra', valor: 'otra', pedir: { entrada: 'texto', validador: 'texto', placeholder: 'buscar.zona_otra_ph' } }
+          ] },
+
+        // --- Sub-flujo "vender para comprar" (solo COMPRAR) ---
+        { id: 'cond_vende', tipo: 'condicion', segun: 'op', casos: { alquilar: 'tipo_route' } },
+        { id: 'vende', tipo: 'chips', texto: 'buscar.vende_preg', guardar: 'vende',
+          opciones: [
+            { texto: 'comun.si', valor: true },
+            { texto: 'comun.no', valor: false, saltarA: 'tipo_route' }
+          ] },
+        { id: 'vende_estado', tipo: 'chips', texto: 'buscar.vende_estado_preg', guardar: 'vende_estado',
+          opciones: [
+            { texto: 'buscar.vende_ya',    valor: 'siventa' },
+            { texto: 'buscar.vende_noaun', valor: 'noaun' }
+          ] },
+        { id: 'vende_donde', tipo: 'texto', texto: 'buscar.vende_donde_preg', placeholder: 'buscar.vende_donde_ph', entrada: 'texto', validador: 'texto', guardar: 'vende_donde' },
+        { id: 'cond_enlace', tipo: 'condicion', segun: 'vende_estado', casos: { noaun: 'tipo_route' } },
+        { id: 'vende_enlace', tipo: 'chips', texto: 'buscar.vende_enlace_preg', guardar: 'vende_enlace',
+          opciones: [
+            { texto: 'buscar.vende_enlace_si', valor: '__link', pedir: { entrada: 'texto', validador: 'texto', placeholder: 'buscar.vende_enlace_ph' } },
+            { texto: 'buscar.vende_enlace_no', valor: 'no' }
+          ] },
+
+        // --- Tipo (opciones distintas comprar/alquilar) ---
+        { id: 'tipo_route', tipo: 'condicion', segun: 'op', casos: { alquilar: 'tipo_alq' } },
+        { id: 'tipo_compra', tipo: 'chips', texto: 'buscar.tipo_preg', guardar: 'tipo', saltarA: 'presupuesto',
+          opciones: [
+            { texto: 'buscar.tipo_obranueva', valor: 'obranueva' },
+            { texto: 'buscar.tipo_piso',      valor: 'piso' },
+            { texto: 'buscar.tipo_casa',      valor: 'casa' },
+            { texto: 'buscar.tipo_edificio',  valor: 'edificio' },
+            { texto: 'buscar.tipo_local',     valor: 'local' },
+            { texto: 'buscar.tipo_garaje',    valor: 'garaje' }
+          ] },
+        { id: 'tipo_alq', tipo: 'chips', texto: 'buscar.tipo_preg', guardar: 'tipo',
+          opciones: [
+            { texto: 'buscar.tipo_piso',   valor: 'piso' },
+            { texto: 'buscar.tipo_casa',   valor: 'casa' },
+            { texto: 'buscar.tipo_local',  valor: 'local' },
+            { texto: 'buscar.tipo_garaje', valor: 'garaje' }
+          ] },
+
+        { id: 'presupuesto', tipo: 'texto', entrada: 'dinero', validador: 'money', guardar: 'presupuesto',
+          texto: { segun: 'op', casos: { comprar: 'buscar.presu_compra', alquilar: 'buscar.presu_alq' } }, placeholder: 'buscar.presu_ph' },
+
+        // --- Criterios (solo residencial: obra nueva / piso / casa) ---
+        { id: 'cond_resid', tipo: 'condicion', segun: 'tipo', casos: { edificio: 'consent', local: 'consent', garaje: 'consent' } },
+        { id: 'habitaciones', tipo: 'chips', texto: 'buscar.hab_preg', guardar: 'habitaciones',
+          opciones: [ { texto: 'buscar.n1', valor: '1' }, { texto: 'buscar.n2', valor: '2' }, { texto: 'buscar.n3', valor: '3' }, { texto: 'buscar.n4mas', valor: '4+' }, { texto: 'buscar.igual', valor: 'igual' } ] },
+        { id: 'banos', tipo: 'chips', texto: 'buscar.banos_preg', guardar: 'banos',
+          opciones: [ { texto: 'buscar.n1', valor: '1' }, { texto: 'buscar.n2', valor: '2' }, { texto: 'buscar.n3mas', valor: '3+' }, { texto: 'buscar.igual', valor: 'igual' } ] },
+        { id: 'planta', tipo: 'chips', texto: 'buscar.planta_preg', guardar: 'planta',
+          opciones: [
+            { texto: 'buscar.planta_igual',   valor: 'igual' },
+            { texto: 'buscar.planta_nobajo',  valor: 'nobajo' },
+            { texto: 'buscar.planta_nobajo1', valor: 'nobajo1' },
+            { texto: 'buscar.planta_atico',   valor: 'atico' },
+            { texto: 'buscar.planta_desde', valor: '__desde', pedir: { entrada: 'numero', validador: 'anios', placeholder: 'buscar.planta_desde_ph' } }
+          ] },
+        { id: 'cond_asc', tipo: 'condicion', segun: 'tipo', casos: { obranueva: 'cond_ext', casa: 'cond_ext' } },
+        { id: 'ascensor', tipo: 'chips', texto: 'buscar.asc_preg', guardar: 'ascensor',
+          opciones: [ { texto: 'buscar.asc_si', valor: true }, { texto: 'buscar.asc_no', valor: false } ] },
+        { id: 'cond_ext', tipo: 'condicion', segun: 'tipo', casos: { casa: 'consent' } },
+        { id: 'exterior', tipo: 'chips', texto: 'buscar.ext_preg', guardar: 'exterior',
+          opciones: [ { texto: 'buscar.ext_ext', valor: 'exterior' }, { texto: 'buscar.ext_int', valor: 'interior' }, { texto: 'buscar.ext_dep', valor: 'depende' } ] },
+
+        // --- Consentimiento reforzado (+ alternativa solo Cabas) ---
+        { id: 'consent', tipo: 'chips', texto: 'buscar.consent_preg', enlace: 'buscar.consent_link', guardar: 'consent_red',
+          opciones: [
+            { texto: 'buscar.consent_si', valor: true, saltarA: 'nombre' },
+            { texto: 'buscar.consent_no', valor: false }
+          ] },
+        { id: 'consent_solo', tipo: 'chips', texto: 'buscar.consent_solo_preg', guardar: 'consent_solo',
+          opciones: [
+            { texto: 'buscar.consent_solo_si', valor: true },
+            { texto: 'buscar.consent_solo_no', valor: false, irAFlujo: 'despedir' }
+          ] },
+        { id: 'nombre', tipo: 'texto', texto: 'lead.nombre_preg', placeholder: 'lead.nombre_ph', entrada: 'texto', validador: 'nombre', guardar: 'nombre' },
+        { id: 'tel', tipo: 'texto', texto: 'lead.tel_preg', placeholder: 'lead.tel_ph', entrada: 'tel', validador: 'tel', guardar: 'tel',
+          valores: function (a) { return { nombre: primerNombre(a.nombre) }; } },
+        { id: 'entrega', tipo: 'entregarLead',
+          resumen:  { texto: 'buscar.lead_resumen', valores: function (a) { return { resumen: resumenBuscar(a) }; } },
+          contexto: { texto: 'buscar.lead_contexto' } }
       ]
     },
 
