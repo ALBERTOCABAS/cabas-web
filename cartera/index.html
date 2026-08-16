@@ -167,6 +167,10 @@
 
   footer{ margin-top:30px; padding-top:16px; border-top:1px solid var(--linea); color:var(--gris); font-size:.78rem; line-height:1.5; }
   @media(max-width:560px){ .brand h1{ font-size:1.5rem; } .precio{ font-size:1.5rem; } }
+  /* En móvil los filtros ocupan muchas filas: si van "pegados" (sticky) tapan
+     casi toda la pantalla y no dejan ver los pisos. En pantallas estrechas los
+     dejamos en flujo normal (se desplazan con la página). */
+  @media(max-width:720px){ .filtros{ position:static; } }
 
   /* ---------- Puerta con PIN (para despistar; el contenido no es secreto) ---------- */
   #gate{ position:fixed; inset:0; background:var(--negro); display:none; place-items:center; z-index:100;
