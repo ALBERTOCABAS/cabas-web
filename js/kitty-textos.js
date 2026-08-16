@@ -37,6 +37,10 @@
       m_buscar:    { es: '🔎 Busco vivienda' },
       m_hipoteca:  { es: '🏦 Simular mi hipoteca' },
       m_capacidad: { es: '📈 Hasta qué precio puedo comprar' },
+      m_grupo_hip:     { es: '🏦 Hipoteca y capacidad' },
+      grupo_hip_intro: { es: '¿Qué quieres calcular? 👇' },
+      sub_capacidad:   { es: '📈 Cuánto puedo pagar' },
+      grupo_volver:    { es: '↩️ Volver al menú' },
       m_inversion: { es: '📊 Rentabilidad de inversión' },
       m_agenda:    { es: '📞 Agendar una llamada' },
       m_contacto:  { es: '✍️ Que me contacte Cabas' }

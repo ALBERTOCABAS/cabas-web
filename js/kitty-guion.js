@@ -104,11 +104,24 @@
             { texto: 'menu.m_vender',    valor: 'vender',    irAFlujo: 'vender' },
             { texto: 'menu.m_comprar',   valor: 'comprar',   irAFlujo: 'comprar' },
             { texto: 'menu.m_buscar',    valor: 'buscar',    irAFlujo: 'buscar' },
-            { texto: 'menu.m_hipoteca',  valor: 'hipoteca',  irAFlujo: 'hipoteca' },
-            { texto: 'menu.m_capacidad', valor: 'capacidad', irAFlujo: 'capacidad' },
+            { texto: 'menu.m_grupo_hip', valor: 'grupo_hip', irAFlujo: 'financiacion' },
             { texto: 'menu.m_inversion', valor: 'inversion', irAFlujo: 'inversion' },
             { texto: 'menu.m_agenda',    valor: 'agenda',    irAFlujo: 'agenda' },
             { texto: 'menu.m_contacto',  valor: 'contacto',  irAFlujo: 'contacto_directo' }
+          ] }
+      ]
+    },
+
+    // Submenú "Hipoteca y capacidad": agrupa 2 calculadoras para acortar el
+    // menú principal (WhatsApp: lista nativa máx. 10 filas). "Volver" → @menu.
+    financiacion: {
+      id: 'financiacion',
+      pasos: [
+        { id: 'op', tipo: 'chips', texto: 'menu.grupo_hip_intro', guardar: 'sub',
+          opciones: [
+            { texto: 'menu.m_hipoteca',   valor: 'hipoteca',  irAFlujo: 'hipoteca' },
+            { texto: 'menu.sub_capacidad', valor: 'capacidad', irAFlujo: 'capacidad' },
+            { texto: 'menu.grupo_volver',  valor: 'volver',    saltarA: '@menu' }
           ] }
       ]
     },
