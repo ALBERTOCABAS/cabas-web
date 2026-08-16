@@ -67,7 +67,7 @@
   function resumenBuscar(a) {
     var zonas = { chamberi: 'Chamberí', chamartin: 'Chamartín', malasana: 'Malasaña/Centro' };
     var tipos = { obranueva: 'Obra nueva', piso: 'Piso', casa: 'Casa/Chalet', edificio: 'Edificio', local: 'Local/Oficina', garaje: 'Garaje' };
-    var plantas = { igual: 'indiferente', nobajo: 'sin bajo/sótano', nobajo1: 'sin bajo/sótano ni 1º', atico: 'ático/última planta' };
+    var plantas = { igual: 'indiferente', bajo: 'planta baja', nobajo: 'sin bajo/sótano', nobajo1: 'sin bajo/sótano ni 1º', atico: 'ático/última planta' };
     var L = [];
     L.push(a.op === 'comprar' ? '🔑 BUSCA COMPRAR' : '🏠 BUSCA ALQUILAR');
     L.push('Zona: ' + (a['zona#sel'] === 'otra' ? a.zona : (zonas[a.zona] || a.zona || '—')));
@@ -119,9 +119,9 @@
       pasos: [
         { id: 'op', tipo: 'chips', texto: 'menu.grupo_hip_intro', guardar: 'sub',
           opciones: [
-            { texto: 'menu.m_hipoteca',   valor: 'hipoteca',  irAFlujo: 'hipoteca' },
-            { texto: 'menu.sub_capacidad', valor: 'capacidad', irAFlujo: 'capacidad' },
-            { texto: 'menu.grupo_volver',  valor: 'volver',    saltarA: '@menu' }
+            { texto: 'menu.m_hipoteca',  valor: 'hipoteca',  irAFlujo: 'hipoteca' },
+            { texto: 'menu.m_capacidad', valor: 'capacidad', irAFlujo: 'capacidad' },
+            { texto: 'menu.grupo_volver', valor: 'volver',   saltarA: '@menu' }
           ] }
       ]
     },
@@ -225,6 +225,7 @@
         { id: 'planta', tipo: 'chips', texto: 'buscar.planta_preg', guardar: 'planta',
           opciones: [
             { texto: 'buscar.planta_igual',   valor: 'igual' },
+            { texto: 'buscar.planta_bajo',    valor: 'bajo' },
             { texto: 'buscar.planta_nobajo',  valor: 'nobajo' },
             { texto: 'buscar.planta_nobajo1', valor: 'nobajo1' },
             { texto: 'buscar.planta_atico',   valor: 'atico' },
