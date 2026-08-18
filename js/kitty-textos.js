@@ -265,16 +265,48 @@
     herencia: {
       intro:           { es: 'Gestionar una <b>herencia</b> con una vivienda de por medio es la especialidad de Cabas: valoración, acuerdo entre herederos y venta con seguridad jurídica. ¿En qué punto estás?' },
       opt_nuevo:       { es: 'Acabo de heredar' },
-      opt_coherederos: { es: 'Somos varios herederos' },
-      opt_vender:      { es: 'Quiero vender lo heredado' },
-      opt_info:        { es: 'Solo quiero información' },
-      resp_nuevo:      { es: 'Lo primero es tener una <b>valoración realista</b> y ordenar la documentación. Cabas te acompaña en todo el proceso, sin que tengas que pelearte con el papeleo.' },
-      resp_coherederos:{ es: 'Cuando hay <b>varios herederos</b>, lo clave es un acuerdo claro y justo. Cabas media entre coherederos: más del 80% de los casos terminan en acuerdo.' },
-      resp_vender:     { es: 'Si ya quieres <b>vender lo heredado</b>, te puedo estimar aquí mismo lo que te quedaría tras impuestos, o pasarte directamente con Cabas.' },
-      resp_info:       { es: 'Perfecto. Cabas puede resolverte las dudas de herencia sin compromiso: plazos, impuestos (sucesiones y plusvalía) y qué conviene hacer con la vivienda.' },
-      vender_calc:     { es: 'Calcular lo que me quedaría' },
-      vender_hablar:   { es: 'Hablar con Cabas' },
-      lead_resumen:    { es: 'HERENCIA · Situación: {situacion}' },
+      opt_acuerdo:     { es: 'Todos los herederos estamos de acuerdo' },
+      opt_dificil:     { es: 'Varios herederos con difícil acuerdo' },
+      opt_vender:      { es: 'Tengo claro que quiero vender (con o sin acuerdo)' },
+      opt_info:        { es: 'Solo quiero informarme' },
+      // Reconocimiento empático según el punto (antes de las preguntas).
+      ack_nuevo:       { es: 'Siento tu pérdida. Vamos con calma; te hago un par de preguntas para entender bien tu caso y ayudarte de verdad.' },
+      ack_acuerdo:     { es: 'Qué bien que estéis alineados — eso lo hace todo mucho más fácil. Dame un par de datos y te digo cómo lo haría.' },
+      ack_dificil:     { es: 'Tranquilo, es la situación más habitual y tiene solución. Cuéntame un poco más y te explico cómo desatascarla.' },
+      ack_vender:      { es: 'Perfecto, vamos al grano. Un par de preguntas para darte la mejor salida.' },
+      // Q2 · estado legal de la herencia.
+      aceptada_preg:   { es: '¿La <b>herencia ya está aceptada</b> y a nombre de los herederos?' },
+      acept_si:        { es: 'Sí, ya adjudicada' },
+      acept_tramite:   { es: 'En trámite' },
+      acept_no:        { es: 'Todavía no' },
+      acept_nose:      { es: 'No lo sé' },
+      // Q3 · quiénes forman la herencia.
+      quienes_preg:    { es: '¿<b>Quiénes sois</b> en la herencia?' },
+      qui_solo:        { es: 'Yo solo/a' },
+      qui_hermanos:    { es: 'Varios hermanos o sobrinos' },
+      qui_lejana:      { es: 'Familia lejana' },
+      qui_dispares:    { es: 'Propietarios sin lazos familiares' },
+      // Q4 · grado de acuerdo (solo si son varios).
+      acuerdo_preg:    { es: '¿Os habéis puesto de <b>acuerdo sobre el/los inmueble/s</b>?' },
+      ac_todos:        { es: 'Sí, todos queremos vender' },
+      ac_falta:        { es: 'Falta convencer a alguno' },
+      ac_bloquea:      { es: 'Hay quien bloquea o no responde' },
+      ac_nohablado:    { es: 'Aún no lo hemos hablado' },
+      ac_nohablamos:   { es: 'No hablamos entre nosotros (algunos o todos)' },
+      // Q5 · ocupación de la vivienda.
+      vive_preg:       { es: '¿Vive <b>alguien ahora</b> en la vivienda?' },
+      vive_heredero:   { es: 'Sí, un heredero' },
+      vive_alq:        { es: 'Está alquilada' },
+      vive_nopaga:     { es: 'Sí, alguien que no paga' },
+      vive_vacia:      { es: 'Está vacía' },
+      // Bifurcación final: que le llame Cabas, o calcular el neto de la venta.
+      via_preg:        { es: 'Con esto ya me hago una idea de tu caso. ¿Cómo prefieres que sigamos?' },
+      via_llamar:      { es: '📞 Que me llame Cabas' },
+      via_calc:        { es: '🧮 Calcular lo que me quedaría al vender' },
+      // Cierre cálido → contacto (tras elegir "que me llame").
+      cierre:          { es: 'Perfecto. Déjame tu teléfono y te llamo yo personalmente, sin compromiso, y te explico cómo lo haría contigo.' },
+      resp_info:       { es: 'Perfecto. Cabas puede resolverte las dudas de herencia sin compromiso: plazos, impuestos (sucesiones y plusvalía) y qué conviene hacer con la vivienda. Déjame tu teléfono y te lo cuento.' },
+      lead_resumen:    { es: 'HERENCIA · {detalle}' },
       lead_contexto:   { es: 'tengo una consulta sobre una herencia con una vivienda.' }
     },
 

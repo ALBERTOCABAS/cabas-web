@@ -388,25 +388,81 @@
     herencia: {
       id: 'herencia',
       pasos: [
+        // Q1 · en qué punto está el heredero.
         { id: 'punto', tipo: 'chips', texto: 'herencia.intro', guardar: 'punto',
           opciones: [
-            { texto: 'herencia.opt_nuevo',       valor: 'nuevo' },
-            { texto: 'herencia.opt_coherederos', valor: 'coherederos' },
-            { texto: 'herencia.opt_vender',      valor: 'vender', saltarA: 'vender_q' },
-            { texto: 'herencia.opt_info',        valor: 'info' }
+            { texto: 'herencia.opt_nuevo',   valor: 'nuevo' },
+            { texto: 'herencia.opt_acuerdo', valor: 'acuerdo' },
+            { texto: 'herencia.opt_dificil', valor: 'dificil' },
+            { texto: 'herencia.opt_vender',  valor: 'vender' },
+            { texto: 'herencia.opt_info',    valor: 'info' }
           ] },
-        // Respuesta para nuevo / coherederos / info, y directo a captar contacto.
-        { id: 'resp_info', tipo: 'decir', saltarA: 'lead_ped',
-          texto: { segun: 'punto', casos: { nuevo: 'herencia.resp_nuevo', coherederos: 'herencia.resp_coherederos', info: 'herencia.resp_info' } } },
-        // Rama "vender lo heredado": calcular (salta a Vender) u hablar (sigue a lead).
-        { id: 'vender_q', tipo: 'chips', texto: 'herencia.resp_vender', guardar: 'via',
+        // "Solo informarme" → respuesta breve y directo a contacto (sin cualificar).
+        { id: 'cond_info', tipo: 'condicion', segun: 'punto', casos: { info: 'resp_info' } },
+        // Reconocimiento empático según el punto.
+        { id: 'ack', tipo: 'decir',
+          texto: { segun: 'punto', casos: { nuevo: 'herencia.ack_nuevo', acuerdo: 'herencia.ack_acuerdo', dificil: 'herencia.ack_dificil', vender: 'herencia.ack_vender' } } },
+        // Q2 · estado legal.
+        { id: 'aceptada', tipo: 'chips', texto: 'herencia.aceptada_preg', guardar: 'aceptada',
           opciones: [
-            { texto: 'herencia.vender_calc',   valor: 'calc', irAFlujo: 'vender' },
-            { texto: 'herencia.vender_hablar', valor: 'hablar' }
+            { texto: 'herencia.acept_si',      valor: 'adjudicada' },
+            { texto: 'herencia.acept_tramite', valor: 'tramite' },
+            { texto: 'herencia.acept_no',      valor: 'no' },
+            { texto: 'herencia.acept_nose',    valor: 'nose' }
           ] },
+        // Q3 · quiénes son.
+        { id: 'quienes', tipo: 'chips', texto: 'herencia.quienes_preg', guardar: 'quienes',
+          opciones: [
+            { texto: 'herencia.qui_solo',     valor: 'solo' },
+            { texto: 'herencia.qui_hermanos', valor: 'hermanos' },
+            { texto: 'herencia.qui_lejana',   valor: 'lejana' },
+            { texto: 'herencia.qui_dispares', valor: 'dispares' }
+          ] },
+        // Heredero único → no procede preguntar por el acuerdo; salta a la ocupación.
+        { id: 'cond_solo', tipo: 'condicion', segun: 'quienes', casos: { solo: 'vive' } },
+        // Q4 · grado de acuerdo.
+        { id: 'acuerdo', tipo: 'chips', texto: 'herencia.acuerdo_preg', guardar: 'acuerdo',
+          opciones: [
+            { texto: 'herencia.ac_todos',      valor: 'todos' },
+            { texto: 'herencia.ac_falta',      valor: 'falta' },
+            { texto: 'herencia.ac_bloquea',    valor: 'bloquea' },
+            { texto: 'herencia.ac_nohablado',  valor: 'nohablado' },
+            { texto: 'herencia.ac_nohablamos', valor: 'nohablamos' }
+          ] },
+        // Q5 · ocupación de la vivienda.
+        { id: 'vive', tipo: 'chips', texto: 'herencia.vive_preg', guardar: 'vive',
+          opciones: [
+            { texto: 'herencia.vive_heredero', valor: 'heredero' },
+            { texto: 'herencia.vive_alq',      valor: 'alquilada' },
+            { texto: 'herencia.vive_nopaga',   valor: 'nopaga' },
+            { texto: 'herencia.vive_vacia',    valor: 'vacia' }
+          ] },
+        // Bifurcación: que le llame Cabas, o calcular el neto de la venta.
+        //   "calc" salta a la calculadora de venta (que al final también ofrece contacto);
+        //   al saltar de flujo, el lead de venta llega con la miga "HERENCIA → VENTA".
+        { id: 'via', tipo: 'chips', texto: 'herencia.via_preg', guardar: 'via',
+          opciones: [
+            { texto: 'herencia.via_llamar', valor: 'llamar' },
+            { texto: 'herencia.via_calc',   valor: 'calc', irAFlujo: 'vender' }
+          ] },
+        // Cierre cálido → contacto. (saltarA salta el paso resp_info del path informativo.)
+        { id: 'cierre', tipo: 'decir', texto: 'herencia.cierre', saltarA: 'lead_ped' },
+        { id: 'resp_info', tipo: 'decir', texto: 'herencia.resp_info' },
         { id: 'lead_ped', tipo: 'pedirContacto' },
         { id: 'lead_ent', tipo: 'entregarLead',
-          resumen:  { texto: 'herencia.lead_resumen', valores: function (a) { return { situacion: a.punto }; } },
+          resumen:  { texto: 'herencia.lead_resumen', valores: function (a) {
+            var P = { nuevo: 'Acaba de heredar', acuerdo: 'Herederos de acuerdo', dificil: 'Herederos con difícil acuerdo', vender: 'Quiere vender (con o sin acuerdo)', info: 'Solo información' };
+            var AC = { adjudicada: 'adjudicada', tramite: 'en trámite', no: 'aún no aceptada', nose: 'aceptación: no lo sabe' };
+            var Q = { solo: 'heredero único', hermanos: 'hermanos/sobrinos', lejana: 'familia lejana', dispares: 'sin lazos familiares' };
+            var AG = { todos: 'todos quieren vender', falta: 'falta convencer a alguno', bloquea: 'hay quien bloquea/no responde', nohablado: 'no lo han hablado', nohablamos: 'no se hablan entre ellos' };
+            var V = { heredero: 'vive un heredero', alquilada: 'alquilada', nopaga: 'ocupada sin pagar', vacia: 'vacía' };
+            var partes = [ P[a.punto] || a.punto || 'consulta' ];
+            if (a.aceptada) partes.push('Estado: ' + (AC[a.aceptada] || a.aceptada));
+            if (a.quienes)  partes.push('Herederos: ' + (Q[a.quienes] || a.quienes));
+            if (a.acuerdo)  partes.push('Acuerdo: ' + (AG[a.acuerdo] || a.acuerdo));
+            if (a.vive)     partes.push('Vivienda: ' + (V[a.vive] || a.vive));
+            return { detalle: partes.join(' · ') };
+          } },
           contexto: { texto: 'herencia.lead_contexto' } }
       ]
     },
