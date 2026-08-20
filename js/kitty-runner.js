@@ -72,7 +72,7 @@ function renderTarjeta(card, r, scope) {
   const avs = card.avisos ? (card.avisos(r) || []) : [];
   if (avs.length) L.push('');
   for (const av of avs) {
-    const e = av.t === 'verde' ? '✅' : (av.t === 'ambar' ? '⚠️' : '🔴');
+    const e = av.t === 'verde' ? '✅' : (av.t === 'ambar' ? '⚠️' : (av.t === 'info' ? '📄' : '🔴'));
     L.push(e + ' ' + (av.texto ? (fill(tx(av.texto), av.valores || {}) + (av.piezas || []).map(p => ' ' + fill(tx(p.texto), p.valores)).join('')) : (av.txt || '')));
   }
   L.push('', '<i>' + tx(card.disc) + '</i>');
@@ -107,11 +107,11 @@ function simular(flowId, a, meta) {
       const p = pasos[i]; let jump = null;
 
       if (p.tipo === 'decir') {
-        out.fixed.push({ texto: render(p.texto, scope, ctx.preg, p, ctx.i != null ? { i: ctx.i } : null) });
+        out.fixed.push({ texto: render(p.texto, scope, ctx.preg, p, ctx.i != null ? { i: ctx.i, n: ctx.n } : null) });
 
       } else if (p.tipo === 'despedir') {
         // Mensaje de despedida y CIERRA la conversación (no vuelve al menú).
-        out.fixed.push({ texto: render(p.texto, scope, ctx.preg, p, ctx.i != null ? { i: ctx.i } : null) });
+        out.fixed.push({ texto: render(p.texto, scope, ctx.preg, p, ctx.i != null ? { i: ctx.i, n: ctx.n } : null) });
         out.cerrar = true; out.stopped = true; return;
 
       } else if (p.tipo === 'chips') {
@@ -124,7 +124,7 @@ function simular(flowId, a, meta) {
         }
         const sel = getPath(a, selP);
         const op = p.opciones.find(o => o.valor === sel) || p.opciones[0];
-        if (op.irAFlujo) { out.jumpFlow = op.irAFlujo; out.pushRuta = (flowId !== 'menu') ? flowId : null; out.stopped = true; return; }
+        if (op.irAFlujo) { out.jumpFlow = op.irAFlujo; out.pushRuta = (flowId !== 'menu') ? flowId : null; out.sembrar = (typeof op.sembrar === 'function') ? op.sembrar(scope) : (op.sembrar || null); out.stopped = true; return; }
         if (op.pedir) {
           if (!hasPath(a, valP)) {
             out.pregunta = { tipo: 'texto', texto: tx(op.pedir.placeholder ? op.pedir.placeholder : p.texto),
@@ -137,7 +137,7 @@ function simular(flowId, a, meta) {
       } else if (p.tipo === 'texto') {
         const path = scopePath.concat(p.guardar);
         if (!hasPath(a, path)) {
-          out.pregunta = { tipo: 'texto', texto: render(p.texto, scope, ctx.preg, p, ctx.i != null ? { i: ctx.i } : null),
+          out.pregunta = { tipo: 'texto', texto: render(p.texto, scope, ctx.preg, p, ctx.i != null ? { i: ctx.i, n: ctx.n } : null),
             pend: { kind: 'texto', path, entrada: p.entrada, validador: p.validador } };
           out.stopped = true; return;
         }
@@ -165,11 +165,17 @@ function simular(flowId, a, meta) {
       } else if (p.tipo === 'bucle') {
         const st = ensure(a, scopePath.concat('#' + p.id));
         if (!st.iters) st.iters = [];
+        // Modo conteo FIJO: `p.veces` = clave del scope con el nº de vueltas (p. ej. 'npag').
+        // Repite EXACTAMENTE n veces, SIN preguntar "¿otra?" entre medias. El modo
+        // clásico (p.continuar con más/fin, p.max) queda intacto si no hay `veces`.
+        const nFijo = (p.veces != null) ? Math.max(1, parseInt(scope[p.veces], 10) || 1) : null;
+        const total = (nFijo != null) ? nFijo : p.max;   // total → ctx.n (para "Persona {i} de {n}")
         let it = 1;
         while (true) {
           const itemPath = scopePath.concat('#' + p.id, 'iters', String(it - 1));
-          walk(p.itemPasos, itemPath, { i: it });
+          walk(p.itemPasos, itemPath, { i: it, n: total });
           if (out.stopped) return;
+          if (nFijo != null) { if (it >= nFijo) break; it++; continue; }
           if (it >= p.max) break;
           const csP = scopePath.concat('#' + p.id, 'contsel', String(it));
           if (!hasPath(a, csP)) {
@@ -191,12 +197,14 @@ function simular(flowId, a, meta) {
 
       } else if (p.tipo === 'pedirContacto') {
         walk(SUBFLUJOS.pedirContacto.pasos, scopePath, {});   // MISMO scope del flujo
-        if (out.stopped) return;
+        // Si el subflujo terminó la conversación (@menu/despedir/@fin) o paró, no seguir
+        // con los pasos del flujo padre (evita ciclos cuando hay pasos DESPUÉS del macro).
+        if (out.stopped || out.menu || out.jumpFlow || out.done) return;
         if (scope.consiente === false) { out.done = true; out.stopped = true; return; }
 
       } else if (p.tipo === 'entregarLead') {
         walk(SUBFLUJOS.entregarLead.pasos, scopePath, { lead: { resumen: p.resumen, contexto: p.contexto } });
-        if (out.stopped) return;
+        if (out.stopped || out.menu || out.jumpFlow || out.done) return;
 
       } else if (p.tipo === 'guardarLead') {
         // Idempotente: en el modelo de "replay" este paso se re-recorre en cada
@@ -208,7 +216,7 @@ function simular(flowId, a, meta) {
           let resumen = fill(tx(idDe(lead.resumen.texto, scope)), lead.resumen.valores ? lead.resumen.valores(scope, scope.__r) : {});
           if (meta.ruta && meta.ruta.length) resumen = meta.ruta.map(f => tx('rutas.' + f)).join(' → ') + ' → ' + resumen;
           const contexto = fill(tx(idDe(lead.contexto.texto, scope)), lead.contexto.valores ? lead.contexto.valores(scope, scope.__r) : {});
-          out.leads.push({ nombre: scope.nombre, tel: scope.tel, resumen, contexto, flow: flowId, ruta: (meta.ruta || []).slice(), origin: meta.origin || null });
+          out.leads.push({ nombre: scope.nombre, tel: scope.tel, email: scope.email || null, resumen, contexto, flow: flowId, ruta: (meta.ruta || []).slice(), origin: meta.origin || null });
           out.eventos.push({ evento: 'lead', flow: flowId });
           a.__leadSent = true;
         }
@@ -277,7 +285,9 @@ const VALIDADORES = {
   fecha: s => fechaISO(s) ? null : 'Escribe la fecha como día/mes/año, ej. 30/09/2022 (o "hoy").',
   pct: s => { const n = parseFloat(String(s).replace(',', '.')); return (n > 0 && n <= 100) ? null : 'Indica un porcentaje entre 1 y 100.'; },
   tin: s => { const n = parseFloat(String(s).replace(',', '.')); return (!isNaN(n) && n >= 0 && n < 20) ? null : 'Escribe un tipo, ej. 3'; },
-  edad: s => { const n = parseNum(s); return (n >= 18 && n <= 90) ? null : 'Escribe una edad válida (18-90).'; }
+  edad: s => { const n = parseNum(s); return (n >= 18 && n <= 90) ? null : 'Escribe una edad válida (18-90).'; },
+  email: s => /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(String(s).trim()) ? null : 'Escribe un email válido (ej. nombre@correo.com).',
+  pagasn: s => { const n = parseNum(s); return (n >= 1 && n <= 16) ? null : 'Escribe el nº de pagas (normalmente 12 o 14).'; }
 };
 function parsear(entrada, texto) {
   if (entrada === 'dinero' || entrada === 'numero') return parseNum(texto);
@@ -326,7 +336,7 @@ function bucleSimular(estado, salidas, leads, eventos) {
     if (r.cerrar) { estado.flow = null; estado.pending = null; estado.a = {}; estado.sent = 0; estado.eventSent = 0; estado.ruta = []; return; }
     if (r.pregunta) { estado.turno++; salidas.push(prepararPregunta(r.pregunta, estado.turno)); estado.pending = Object.assign({ turno: estado.turno }, r.pregunta.pend); return; }
     estado.pending = null;
-    if (r.jumpFlow) { if (r.pushRuta) estado.ruta = estado.ruta.concat([r.pushRuta]); eventos.push({ evento: 'flujo', flow: r.jumpFlow }); estado.flow = r.jumpFlow; estado.a = {}; estado.sent = 0; estado.eventSent = 0; continue; }
+    if (r.jumpFlow) { if (r.pushRuta) estado.ruta = estado.ruta.concat([r.pushRuta]); eventos.push({ evento: 'flujo', flow: r.jumpFlow }); estado.flow = r.jumpFlow; estado.a = (r.sembrar && typeof r.sembrar === 'object') ? Object.assign({}, r.sembrar) : {}; estado.sent = 0; estado.eventSent = 0; continue; }
     estado.flow = 'menu'; estado.a = {}; estado.sent = 0; estado.eventSent = 0; estado.ruta = []; continue;
   }
 }

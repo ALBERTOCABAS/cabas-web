@@ -84,7 +84,53 @@
       if (a['vende_enlace#sel'] === '__link' && a.vende_enlace) L.push('   Enlace: ' + a.vende_enlace);
     }
     L.push('Consentimiento: ' + (a.consent_red === true ? 'RED COMPLETA (Redpiso · DCREDIT · FAI)' : 'SOLO equipo Cabas'));
+    if (a.solvencia) L.push('', '💶 ' + a.solvencia);   // bloque de solvencia si viene de la calculadora de alquiler (alqmax)
     return L.join('\n');
+  }
+  // ---- Calculadora "Hasta qué alquiler llego" (flujo alqmax) ----
+  function _alqIngresos(personas) {
+    var t = 0; (personas || []).forEach(function (p) { t += Math.round((Number(p.ing) || 0) * (Number(p.pagas) || 12) / 12); }); return t;
+  }
+  function calcAlqmax(a) {
+    var personas = a.personas || [];
+    var ingresos = _alqIngresos(personas);
+    var verde = false;
+    personas.forEach(function (p) {
+      if (p.sit === 'funcionario' || p.sit === 'pensionista') verde = true;
+      else if (p.sit === 'asalariado' && p.contrato === 'indefinido' && p.antig === 'mas2') verde = true;
+      else if (p.sit === 'autonomo' && p.antigaut === 'mas2') verde = true;
+    });
+    return { ingresos: ingresos, hMin: Math.round(ingresos * 0.30), hMax: Math.round(ingresos * 0.35),
+      techo: Math.round(ingresos * 0.40), npag: a.npag || personas.length, avalista: a.avalista,
+      perfil: verde ? 'verde' : 'ambar', personas: personas };
+  }
+  function _descPersona(p) {
+    var SIT = { asalariado: 'asalariado', funcionario: 'funcionario', autonomo: 'autónomo', pensionista: 'pensionista' };
+    var ANTIG = { menos6: '<6m', m6a1: '6m-1a', a1a2: '1-2a', mas2: '+2a' };
+    var ANTAUT = { menos1: '<1a', a1a2: '1-2a', mas2: '+2a' };
+    var TAUT = { individual: 'individual', societario: 'societario', combienes: 'com. de bienes' };
+    var base = SIT[p.sit] || p.sit || '—';
+    if (p.sit === 'asalariado') base += ' ' + (p.contrato === 'temporal' ? 'temporal' : 'indefinido') + ' ' + (ANTIG[p.antig] || '');
+    else if (p.sit === 'autonomo') base += ' ' + (TAUT[p.tipoaut] || '') + ' ' + (ANTAUT[p.antigaut] || '');
+    return base.replace(/\s+/g, ' ').trim() + ' (' + _eur(p.ing).replace(/\s*€/, '') + '×' + (p.pagas || 12) + ')';
+  }
+  function bloqueAlqmax(a, interes) {
+    var r = a.__r || calcAlqmax(a);
+    var n = r.npag || (a.personas || []).length;
+    var av = { si: 'sí', no: 'no', nose: 'no lo sabe' }[a.avalista] || '—';
+    var L = ['Interés: ' + interes, n + (n > 1 ? ' pagadores' : ' pagador'), 'Ingresos ' + _eur(r.ingresos) + '/mes prorrateados'];
+    (a.personas || []).forEach(function (p, i) { L.push('P' + (i + 1) + ': ' + _descPersona(p)); });
+    L.push('Avalista: ' + av, 'Horquilla ' + _eur(r.hMin).replace(/\s*€/, '') + '–' + _eur(r.hMax), 'Techo ' + _eur(r.techo), 'Perfil ' + (r.perfil === 'verde' ? '🟢' : '🟡'));
+    return L.join(' · ');
+  }
+  function docAlqmax(r) {
+    var hayAuto = (r.personas || []).some(function (p) { return p.sit === 'autonomo'; });
+    var hayPens = (r.personas || []).some(function (p) { return p.sit === 'pensionista'; });
+    var seg = '○ 3 últimas nóminas';
+    if (hayAuto || hayPens) seg += ' (o renta/modelos trimestrales si autónomos' + (hayPens ? '; certificado de pensión si pensionistas' : '') + ')';
+    var L = ['✓ Vuestros ingresos — ya me los habéis dicho', seg, '○ DNI de titulares'];
+    if (r.avalista === 'si' || r.avalista === 'nose') L.push('○ Datos del avalista si lo usáis');
+    return 'Documentación: ' + L.join(' / ');
   }
 
   var GUION = {
@@ -106,9 +152,10 @@
             { texto: 'menu.m_buscar',    valor: 'buscar',    irAFlujo: 'buscar' },
             { texto: 'menu.m_grupo_hip', valor: 'grupo_hip', irAFlujo: 'financiacion' },
             { texto: 'menu.m_inversion', valor: 'inversion', irAFlujo: 'inversion' },
+            { texto: 'menu.m_alqmax',    valor: 'alqmax',    irAFlujo: 'alqmax' },
             { texto: 'menu.m_agenda',    valor: 'agenda',    irAFlujo: 'agenda' },
             { texto: 'menu.m_contacto',  valor: 'contacto',  irAFlujo: 'contacto_directo' }
-          ] }
+          ] }   // ⚠️ 10 filas = límite de la lista nativa de WhatsApp; la próxima obliga a reagrupar.
       ]
     },
 
@@ -161,6 +208,9 @@
     buscar: {
       id: 'buscar',
       pasos: [
+        // Si venimos de la calculadora de alquiler (alqmax), op ya es 'alquilar' (sembrado)
+        // y saltamos la 1ª pregunta directamente a la zona.
+        { id: 'entrada', tipo: 'condicion', segun: '_desde', casos: { alqmax: 'zona' } },
         { id: 'op', tipo: 'chips', texto: 'buscar.op_preg', guardar: 'op',
           opciones: [
             { texto: 'buscar.op_comprar', valor: 'comprar' },
@@ -214,7 +264,8 @@
           ] },
 
         { id: 'presupuesto', tipo: 'texto', entrada: 'dinero', validador: 'money', guardar: 'presupuesto',
-          texto: { segun: 'op', casos: { comprar: 'buscar.presu_compra', alquilar: 'buscar.presu_alq' } }, placeholder: 'buscar.presu_ph' },
+          texto: { segun: 'op', casos: { comprar: 'buscar.presu_compra', alquilar: 'buscar.presu_alq' } }, placeholder: 'buscar.presu_ph',
+          valores: function (a) { return { sug: a.presupuesto_sug ? (' <i>(según tu cálculo, hasta ~' + _eur(a.presupuesto_sug) + '/mes — puedes ajustarlo)</i>') : '' }; } },
 
         // --- Criterios (solo residencial: obra nueva / piso / casa) ---
         { id: 'cond_resid', tipo: 'condicion', segun: 'tipo', casos: { edificio: 'consent', local: 'consent', garaje: 'consent' } },
@@ -252,9 +303,143 @@
         { id: 'nombre', tipo: 'texto', texto: 'lead.nombre_preg', placeholder: 'lead.nombre_ph', entrada: 'texto', validador: 'nombre', guardar: 'nombre' },
         { id: 'tel', tipo: 'texto', texto: 'lead.tel_preg', placeholder: 'lead.tel_ph', entrada: 'tel', validador: 'tel', guardar: 'tel',
           valores: function (a) { return { nombre: primerNombre(a.nombre) }; } },
+        { id: 'email', tipo: 'chips', texto: 'lead.email_preg', guardar: 'email',
+          opciones: [
+            { texto: 'lead.email_dar', valor: '__mail', pedir: { entrada: 'texto', validador: 'email', placeholder: 'lead.email_ph' } },
+            { texto: 'lead.email_sin', valor: '' }
+          ] },
         { id: 'entrega', tipo: 'entregarLead',
           resumen:  { texto: 'buscar.lead_resumen', valores: function (a) { return { resumen: resumenBuscar(a) }; } },
           contexto: { texto: 'buscar.lead_contexto' } }
+      ]
+    },
+
+    // ============================================================
+    // FLUJO: "Hasta qué alquiler llego" (alqmax) — capacidad de alquiler.
+    // Bucle de conteo FIJO (veces: 'npag') con chips y condiciones dentro
+    // (asalariado/autónomo ramifican). Dos cierres: garantía (A) y buscar (B).
+    // B=Sí siembra el flujo `buscar` (op='alquilar', techo sugerido, solvencia).
+    // ============================================================
+    alqmax: {
+      id: 'alqmax',
+      pasos: [
+        { id: 'intro', tipo: 'decir', texto: 'alqmax.intro' },
+        { id: 'npag', tipo: 'chips', texto: 'alqmax.npag_preg', guardar: 'npag',
+          opciones: [
+            { texto: 'alqmax.npag_1', valor: 1 },
+            { texto: 'alqmax.npag_2', valor: 2 },
+            { texto: 'alqmax.npag_3', valor: 3 },
+            { texto: 'alqmax.npag_4', valor: 4 }
+          ] },
+
+        // Una vuelta por pagador (n = npag), SIN preguntar "¿otra?" (bucle veces).
+        { id: 'personas', tipo: 'bucle', guardar: 'personas', veces: 'npag',
+          itemPasos: [
+            { id: 'phdr', tipo: 'decir', texto: 'alqmax.persona_hdr' },
+            { id: 'ing', tipo: 'texto', texto: 'alqmax.ing_preg', placeholder: 'alqmax.ing_ph', entrada: 'dinero', validador: 'money', guardar: 'ing' },
+            { id: 'pagas', tipo: 'chips', texto: 'alqmax.pagas_preg', guardar: 'pagas',
+              opciones: [
+                { texto: 'alqmax.pagas_12', valor: 12 },
+                { texto: 'alqmax.pagas_14', valor: 14 },
+                { texto: 'alqmax.pagas_otro', valor: '__otro', pedir: { entrada: 'numero', validador: 'pagasn', placeholder: 'alqmax.pagas_ph' } }
+              ] },
+            { id: 'sit', tipo: 'chips', texto: 'alqmax.sit_preg', guardar: 'sit',
+              opciones: [
+                { texto: 'alqmax.sit_asal', valor: 'asalariado' },
+                { texto: 'alqmax.sit_func', valor: 'funcionario' },
+                { texto: 'alqmax.sit_auto', valor: 'autonomo' },
+                { texto: 'alqmax.sit_pens', valor: 'pensionista' }
+              ] },
+            // Ramas por situación (dentro del bucle). Func/Pens terminan la persona (@fin).
+            { id: 'cond_sit', tipo: 'condicion', segun: 'sit', casos: { asalariado: 'contrato', autonomo: 'tipoaut', funcionario: '@fin', pensionista: '@fin' } },
+            { id: 'tipoaut', tipo: 'chips', texto: 'alqmax.tipoaut_preg', guardar: 'tipoaut',
+              opciones: [
+                { texto: 'alqmax.tipoaut_ind', valor: 'individual' },
+                { texto: 'alqmax.tipoaut_soc', valor: 'societario' },
+                { texto: 'alqmax.tipoaut_cb', valor: 'combienes' }
+              ] },
+            { id: 'antigaut', tipo: 'chips', texto: 'alqmax.antigaut_preg', guardar: 'antigaut',
+              opciones: [
+                { texto: 'alqmax.antaut_1', valor: 'menos1' },
+                { texto: 'alqmax.antaut_2', valor: 'a1a2' },
+                { texto: 'alqmax.antaut_3', valor: 'mas2' }
+              ] },
+            { id: 'aut_fin', tipo: 'condicion', segun: 'sit', casos: { autonomo: '@fin' } },
+            { id: 'contrato', tipo: 'chips', texto: 'alqmax.contrato_preg', guardar: 'contrato',
+              opciones: [
+                { texto: 'alqmax.contrato_ind', valor: 'indefinido' },
+                { texto: 'alqmax.contrato_tmp', valor: 'temporal' }
+              ] },
+            { id: 'antig', tipo: 'chips', texto: 'alqmax.antig_preg', guardar: 'antig',
+              opciones: [
+                { texto: 'alqmax.antig_1', valor: 'menos6' },
+                { texto: 'alqmax.antig_2', valor: 'm6a1' },
+                { texto: 'alqmax.antig_3', valor: 'a1a2' },
+                { texto: 'alqmax.antig_4', valor: 'mas2' }
+              ] }
+          ],
+          item: function (it) { return { ing: it.ing, pagas: it.pagas, sit: it.sit, contrato: it.contrato, antig: it.antig, tipoaut: it.tipoaut, antigaut: it.antigaut }; } },
+
+        { id: 'avalista', tipo: 'chips', texto: 'alqmax.avalista_preg', guardar: 'avalista',
+          opciones: [
+            { texto: 'alqmax.avalista_si', valor: 'si' },
+            { texto: 'alqmax.avalista_no', valor: 'no' },
+            { texto: 'alqmax.avalista_nose', valor: 'nose' }
+          ] },
+
+        { id: 'resultado', tipo: 'calc',
+          calcular: function (a) { return calcAlqmax(a); },
+          tarjeta: {
+            titulo: 'alqmax.card_titulo',
+            total: { emoji: '🎯', etiqueta: 'alqmax.l_horquilla', valor: function (r) { return 'entre ' + _eur(r.hMin).replace(/\s*€/, '') + ' y ' + _eur(r.hMax) + '/mes'; } },
+            lineas: [
+              { emoji: '💶', etiqueta: 'alqmax.l_ingresos', valor: function (r) { return _eur(r.ingresos) + '/mes'; } },
+              { emoji: '⬆️', etiqueta: 'alqmax.l_techo',    valor: function (r) { return _eur(r.techo) + '/mes'; } },
+              { emoji: '👥', etiqueta: 'alqmax.l_pagadores', valor: function (r) { return String(r.npag); } },
+              { emoji: '🛡️', etiqueta: 'alqmax.l_avalista', valor: function (r) { return { si: 'sí', no: 'no', nose: 'no lo sé' }[r.avalista] || '—'; } }
+            ],
+            avisos: function (r) {
+              var out = [];
+              out.push(r.perfil === 'verde' ? { t: 'verde', texto: 'alqmax.sem_verde' } : { t: 'ambar', texto: 'alqmax.sem_ambar' });
+              out.push({ t: 'ambar', texto: 'alqmax.aviso_asnef' });
+              out.push({ t: 'info', txt: docAlqmax(r) });
+              return out;
+            },
+            disc: 'alqmax.disc'
+          } },
+
+        // Cierre A — garantía de alquiler (texto validado).
+        { id: 'cierreA', tipo: 'chips', texto: 'alqmax.garantia_txt', guardar: 'garantia',
+          opciones: [
+            { texto: 'alqmax.garantia_si', valor: true },
+            { texto: 'alqmax.garantia_no', valor: false }
+          ] },
+
+        // Cierre B — ¿buscamos contigo? Sí → salta a `buscar` sembrado.
+        { id: 'cierreB', tipo: 'chips', texto: 'alqmax.buscar_txt', guardar: 'quiere_buscar',
+          opciones: [
+            { texto: 'alqmax.buscar_si', valor: true, irAFlujo: 'buscar',
+              sembrar: function (a) { return { _desde: 'alqmax', op: 'alquilar', presupuesto_sug: (a.__r && a.__r.techo) || 0, solvencia: bloqueAlqmax(a, a.garantia ? 'garantía+búsqueda' : 'búsqueda'), garantia: a.garantia === true }; } },
+            { texto: 'alqmax.buscar_no', valor: false }
+          ] },
+
+        // B=No: si garantía=false, preguntar si quiere contacto; si garantía=true, directo.
+        { id: 'cond_fin', tipo: 'condicion', segun: 'garantia', casos: { 'false': 'quiz_contacto' } },
+        { id: 'ped', tipo: 'pedirContacto' },
+        { id: 'email', tipo: 'chips', texto: 'lead.email_preg', guardar: 'email',
+          opciones: [
+            { texto: 'lead.email_dar', valor: '__mail', pedir: { entrada: 'texto', validador: 'email', placeholder: 'lead.email_ph' } },
+            { texto: 'lead.email_sin', valor: '' }
+          ] },
+        { id: 'entrega', tipo: 'entregarLead',
+          resumen:  { texto: 'alqmax.lead_resumen', valores: function (a) { return { bloque: bloqueAlqmax(a, a.garantia ? 'garantía' : 'contacto') }; } },
+          contexto: { texto: 'alqmax.lead_contexto' } },
+        // Solo se alcanza si garantía=false (salto de cond_fin).
+        { id: 'quiz_contacto', tipo: 'chips', texto: 'alqmax.contacto_preg', guardar: 'quiere_contacto',
+          opciones: [
+            { texto: 'alqmax.contacto_si', valor: true, saltarA: 'ped' },
+            { texto: 'alqmax.contacto_no', valor: false, irAFlujo: 'despedir' }
+          ] }
       ]
     },
 
