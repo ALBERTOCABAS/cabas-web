@@ -43,7 +43,9 @@
       m_inversion: { es: '📊 Rentabilidad de inversión' },
       m_alqmax:    { es: '🏠 Hasta qué alquiler llego' },
       m_agenda:    { es: '📞 Agendar una llamada' },
-      m_contacto:  { es: '✍️ Que me contacte Cabas' }
+      m_contacto:  { es: '✍️ Que me contacte Cabas' },
+      m_hablar:    { es: '📞 Hablar con Cabas' },
+      hablar_intro:{ es: '¿Cómo prefieres <b>hablar con Cabas</b>?' }
     },
 
     // ---------- "Hablar con Cabas" directo (desde el menú) ----------
@@ -378,17 +380,18 @@
       antaut_1:     { es: 'Menos de 1 año' },
       antaut_2:     { es: '1 – 2 años' },
       antaut_3:     { es: 'Más de 2 años' },
-      avalista_preg:{ es: 'Si el propietario lo pidiera, ¿tendríais un <b>avalista</b> (familiar con nómina o propiedad)?' },
+      avalista_preg:{ es: 'Si el propietario lo pidiera, ¿{tendrias} un <b>avalista</b> (familiar con nómina o propiedad)?' },
       avalista_si:  { es: 'Sí' },
       avalista_no:  { es: 'No' },
       avalista_nose:{ es: 'No lo sé' },
       card_titulo:  { es: '🏠 Hasta qué alquiler podéis llegar' },
-      l_horquilla:  { es: 'Vuestro alquiler razonable' },
+      l_horquilla:  { es: 'Alquiler razonable' },
       l_ingresos:   { es: 'Ingresos conjuntos (pagas prorrateadas)' },
       l_techo:      { es: 'Techo máximo (40%)' },
       l_pagadores:  { es: 'Nº de pagadores' },
       l_avalista:   { es: 'Avalista' },
       sem_verde:    { es: 'Vuestro perfil encaja bien con los criterios habituales de las compañías de garantía de alquiler.' },
+      sem_verde_1:  { es: 'Tu perfil encaja bien con los criterios habituales de las compañías de garantía de alquiler.' },
       sem_ambar:    { es: 'Con perfiles más recientes (contrato temporal, poca antigüedad o autónomo de menos de 1 año), las compañías suelen pedir avalista o más recorrido; con avalista, resuelto.' },
       aviso_asnef:  { es: 'Las compañías consultan ficheros de morosidad (ASNEF, RAI, FIM); figurar en uno suele suponer la denegación.' },
       disc:         { es: 'Estimación orientativa según los criterios habituales de las compañías de garantía de alquiler (renta ≤ 30-40% de ingresos netos). No vinculante: la aprobación depende del estudio de cada compañía.' },

@@ -128,8 +128,9 @@
     var hayPens = (r.personas || []).some(function (p) { return p.sit === 'pensionista'; });
     var seg = '○ 3 últimas nóminas';
     if (hayAuto || hayPens) seg += ' (o renta/modelos trimestrales si autónomos' + (hayPens ? '; certificado de pensión si pensionistas' : '') + ')';
-    var L = ['✓ Vuestros ingresos — ya me los habéis dicho', seg, '○ DNI de titulares'];
-    if (r.avalista === 'si' || r.avalista === 'nose') L.push('○ Datos del avalista si lo usáis');
+    var uno = (r.npag || 1) <= 1;
+    var L = [(uno ? '✓ Tus ingresos — ya me los has dicho' : '✓ Vuestros ingresos — ya me los habéis dicho'), seg, (uno ? '○ Tu DNI' : '○ DNI de los titulares')];
+    if (r.avalista === 'si' || r.avalista === 'nose') L.push('○ Datos del avalista si lo ' + (uno ? 'usas' : 'usáis'));
     return 'Documentación: ' + L.join(' / ');
   }
 
@@ -153,9 +154,8 @@
             { texto: 'menu.m_grupo_hip', valor: 'grupo_hip', irAFlujo: 'financiacion' },
             { texto: 'menu.m_inversion', valor: 'inversion', irAFlujo: 'inversion' },
             { texto: 'menu.m_alqmax',    valor: 'alqmax',    irAFlujo: 'alqmax' },
-            { texto: 'menu.m_agenda',    valor: 'agenda',    irAFlujo: 'agenda' },
-            { texto: 'menu.m_contacto',  valor: 'contacto',  irAFlujo: 'contacto_directo' }
-          ] }   // ⚠️ 10 filas = límite de la lista nativa de WhatsApp; la próxima obliga a reagrupar.
+            { texto: 'menu.m_hablar',    valor: 'hablar',    irAFlujo: 'hablar' }
+          ] }   // 9 filas + la de Idioma que añade el worker = 10 = límite lista WhatsApp.
       ]
     },
 
@@ -169,6 +169,20 @@
             { texto: 'menu.m_hipoteca',  valor: 'hipoteca',  irAFlujo: 'hipoteca' },
             { texto: 'menu.m_capacidad', valor: 'capacidad', irAFlujo: 'capacidad' },
             { texto: 'menu.grupo_volver', valor: 'volver',   saltarA: '@menu' }
+          ] }
+      ]
+    },
+
+    // Submenú "Hablar con Cabas": agrupa Agendar llamada + Que me contacte, para
+    // que el menú principal quepa en la lista nativa de WhatsApp (máx. 10 filas).
+    hablar: {
+      id: 'hablar',
+      pasos: [
+        { id: 'op', tipo: 'chips', texto: 'menu.hablar_intro', guardar: 'sub',
+          opciones: [
+            { texto: 'menu.m_agenda',   valor: 'agenda',   irAFlujo: 'agenda' },
+            { texto: 'menu.m_contacto', valor: 'contacto', irAFlujo: 'contacto_directo' },
+            { texto: 'menu.grupo_volver', valor: 'volver', saltarA: '@menu' }
           ] }
       ]
     },
@@ -381,6 +395,7 @@
           item: function (it) { return { ing: it.ing, pagas: it.pagas, sit: it.sit, contrato: it.contrato, antig: it.antig, tipoaut: it.tipoaut, antigaut: it.antigaut }; } },
 
         { id: 'avalista', tipo: 'chips', texto: 'alqmax.avalista_preg', guardar: 'avalista',
+          valores: function (a) { return { tendrias: (a.npag > 1 ? 'tendríais' : 'tendrías') }; },
           opciones: [
             { texto: 'alqmax.avalista_si', valor: 'si' },
             { texto: 'alqmax.avalista_no', valor: 'no' },
@@ -393,14 +408,14 @@
             titulo: 'alqmax.card_titulo',
             total: { emoji: '🎯', etiqueta: 'alqmax.l_horquilla', valor: function (r) { return 'entre ' + _eur(r.hMin).replace(/\s*€/, '') + ' y ' + _eur(r.hMax) + '/mes'; } },
             lineas: [
-              { emoji: '💶', etiqueta: 'alqmax.l_ingresos', valor: function (r) { return _eur(r.ingresos) + '/mes'; } },
+              { emoji: '💶', etiqueta: function (r) { return (r.npag > 1 ? 'Ingresos conjuntos' : 'Tus ingresos') + ' (pagas prorrateadas)'; }, valor: function (r) { return _eur(r.ingresos) + '/mes'; } },
               { emoji: '⬆️', etiqueta: 'alqmax.l_techo',    valor: function (r) { return _eur(r.techo) + '/mes'; } },
-              { emoji: '👥', etiqueta: 'alqmax.l_pagadores', valor: function (r) { return String(r.npag); } },
+              { emoji: '👥', etiqueta: 'alqmax.l_pagadores', valor: function (r) { return String(r.npag); }, si: function (a, r) { return (r.npag || 1) > 1; } },
               { emoji: '🛡️', etiqueta: 'alqmax.l_avalista', valor: function (r) { return { si: 'sí', no: 'no', nose: 'no lo sé' }[r.avalista] || '—'; } }
             ],
             avisos: function (r) {
               var out = [];
-              out.push(r.perfil === 'verde' ? { t: 'verde', texto: 'alqmax.sem_verde' } : { t: 'ambar', texto: 'alqmax.sem_ambar' });
+              out.push(r.perfil === 'verde' ? { t: 'verde', texto: (r.npag > 1 ? 'alqmax.sem_verde' : 'alqmax.sem_verde_1') } : { t: 'ambar', texto: 'alqmax.sem_ambar' });
               out.push({ t: 'ambar', texto: 'alqmax.aviso_asnef' });
               out.push({ t: 'info', txt: docAlqmax(r) });
               return out;
