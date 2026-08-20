@@ -759,7 +759,7 @@
   // ============================================================
   // SUBFLUJOS COMPARTIDOS
   //   lista        opciones desde un DATO (comunidades).
-  //   guardarLead  ACCIÓN del runner: Telegram → D1 + aviso; web → Web3Forms.
+  //   guardarLead  ACCIÓN del runner: Telegram/WA → D1 + aviso; web → Worker /lead-web → D1 + aviso.
   //   handoff      mensaje + botones (WhatsApp/llamar) + nota opcional.
   //   Saltos: '@fin' termina el subflujo · '@menu' vuelve al menú.
   // ============================================================
@@ -822,7 +822,7 @@
     entregarLead: {
       id: 'entregarLead',
       pasos: [
-        { id: 'guardar',  tipo: 'guardarLead' },   // acción (D1 + aviso; web: Web3Forms)
+        { id: 'guardar',  tipo: 'guardarLead' },   // acción (D1 + aviso; web: Worker /lead-web)
         { id: 'confirma', tipo: 'handoff', texto: 'lead.confirmacion',
           valores: function (a) { return { nombre: primerNombre(a.nombre) }; },
           botones: ['whatsapp', 'llamar'], nota: 'lead.privacidad_nota', notaEnlace: 'lead.privacidad_link' },
