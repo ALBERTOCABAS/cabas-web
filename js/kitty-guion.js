@@ -123,16 +123,6 @@
     L.push('Avalista: ' + av, 'Horquilla ' + _eur(r.hMin).replace(/\s*€/, '') + '–' + _eur(r.hMax), 'Techo ' + _eur(r.techo), 'Perfil ' + (r.perfil === 'verde' ? '🟢' : '🟡'));
     return L.join(' · ');
   }
-  function docAlqmax(r) {
-    var hayAuto = (r.personas || []).some(function (p) { return p.sit === 'autonomo'; });
-    var hayPens = (r.personas || []).some(function (p) { return p.sit === 'pensionista'; });
-    var seg = '○ 3 últimas nóminas';
-    if (hayAuto || hayPens) seg += ' (o renta/modelos trimestrales si autónomos' + (hayPens ? '; certificado de pensión si pensionistas' : '') + ')';
-    var uno = (r.npag || 1) <= 1;
-    var L = [(uno ? '✓ Tus ingresos — ya me los has dicho' : '✓ Vuestros ingresos — ya me los habéis dicho'), seg, (uno ? '○ Tu DNI' : '○ DNI de los titulares')];
-    if (r.avalista === 'si' || r.avalista === 'nose') L.push('○ Datos del avalista si lo ' + (uno ? 'usas' : 'usáis'));
-    return 'Documentación: ' + L.join(' / ');
-  }
 
   var GUION = {
 
@@ -406,18 +396,18 @@
           calcular: function (a) { return calcAlqmax(a); },
           tarjeta: {
             titulo: 'alqmax.card_titulo',
-            total: { emoji: '🎯', etiqueta: 'alqmax.l_horquilla', valor: function (r) { return 'entre ' + _eur(r.hMin).replace(/\s*€/, '') + ' y ' + _eur(r.hMax) + '/mes'; } },
+            total: { emoji: '🎯', etiqueta: 'alqmax.l_horquilla', valor: { texto: 'alqmax.v_horquilla', valores: function (r) { return { min: _eur(r.hMin).replace(/\s*€/, ''), max: _eur(r.hMax) }; } } },
             lineas: [
-              { emoji: '💶', etiqueta: function (r) { return (r.npag > 1 ? 'Ingresos conjuntos' : 'Tus ingresos') + ' (pagas prorrateadas)'; }, valor: function (r) { return _eur(r.ingresos) + '/mes'; } },
-              { emoji: '⬆️', etiqueta: 'alqmax.l_techo',    valor: function (r) { return _eur(r.techo) + '/mes'; } },
+              { emoji: '💶', etiqueta: { segun: 'npag', casos: { '1': 'alqmax.l_ing_uno', '2': 'alqmax.l_ing_var', '3': 'alqmax.l_ing_var', '4': 'alqmax.l_ing_var' } }, valor: { texto: 'comun.v_mes', valores: function (r) { return { v: _eur(r.ingresos) }; } } },
+              { emoji: '⬆️', etiqueta: 'alqmax.l_techo', valor: { texto: 'comun.v_mes', valores: function (r) { return { v: _eur(r.techo) }; } } },
               { emoji: '👥', etiqueta: 'alqmax.l_pagadores', valor: function (r) { return String(r.npag); }, si: function (a, r) { return (r.npag || 1) > 1; } },
-              { emoji: '🛡️', etiqueta: 'alqmax.l_avalista', valor: function (r) { return { si: 'sí', no: 'no', nose: 'no lo sé' }[r.avalista] || '—'; } }
+              { emoji: '🛡️', etiqueta: 'alqmax.l_avalista', valor: function (r) { return { texto: ({ si: 'comun.si', no: 'comun.no', nose: 'alqmax.av_nose' })[r.avalista] || 'comun.no' }; } }
             ],
             avisos: function (r) {
               var out = [];
               out.push(r.perfil === 'verde' ? { t: 'verde', texto: (r.npag > 1 ? 'alqmax.sem_verde' : 'alqmax.sem_verde_1') } : { t: 'ambar', texto: 'alqmax.sem_ambar' });
               out.push({ t: 'ambar', texto: 'alqmax.aviso_asnef' });
-              out.push({ t: 'info', txt: docAlqmax(r) });
+              out.push({ t: 'info', texto: (r.npag > 1 ? 'alqmax.doc_var' : 'alqmax.doc_uno') });
               return out;
             },
             disc: 'alqmax.disc'
