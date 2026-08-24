@@ -1,6 +1,6 @@
 {
-  "generado": "lunes 17 de agosto de 2026",
-  "pin": "centro",
+  "generado": "lunes 24 de agosto de 2026",
+  "pin": "salida",
   "inmuebles": [
     {
       "ref": "RP2392026154489",
@@ -435,38 +435,6 @@
       "url": "https://www.redpiso.es/inmueble/plaza-de-garaje-en-alquiler-en-calle-del-general-ampudia-vallehermoso-chamberi-madrid-RP1812026155461"
     },
     {
-      "ref": "RP1812026155246",
-      "oficina": "Vallehermoso",
-      "slug_oficina": "inmobiliaria-chamberi-vallehermoso",
-      "operacion": "Alquiler",
-      "tipo": "Piso",
-      "precio": 2500,
-      "m2": 105,
-      "habitaciones": 3,
-      "banos": 2,
-      "reservado": false,
-      "zona": "Vallehermoso",
-      "ascensor": null,
-      "titulo": "Premium¡Luminosa vivienda exterior en Chamberí, lista para entrar a vivir!",
-      "url": "https://www.redpiso.es/inmueble/piso-en-alquiler-en-avenida-de-la-reina-victoria-vallehermoso-chamberi-madrid-RP1812026155246"
-    },
-    {
-      "ref": "RP1812026153525",
-      "oficina": "Vallehermoso",
-      "slug_oficina": "inmobiliaria-chamberi-vallehermoso",
-      "operacion": "Alquiler",
-      "tipo": "Garaje",
-      "precio": 110,
-      "m2": 10,
-      "habitaciones": null,
-      "banos": null,
-      "reservado": false,
-      "zona": "Ciudad Universitaria",
-      "ascensor": null,
-      "titulo": "Oportunidad plaza de garaje",
-      "url": "https://www.redpiso.es/inmueble/plaza-de-garaje-en-alquiler-en-calle-de-almansa-ciudad-universitaria-moncloa-aravaca-madrid-RP1812026153525"
-    },
-    {
       "ref": "RP1812026155064",
       "oficina": "Vallehermoso",
       "slug_oficina": "inmobiliaria-chamberi-vallehermoso",
@@ -577,6 +545,22 @@
       "ascensor": null,
       "titulo": "EXCELENTE OPORTUNIDAD",
       "url": "https://www.redpiso.es/inmueble/plaza-de-garaje-en-venta-en-calle-del-general-ampudia-vallehermoso-chamberi-madrid-RP1812026151697"
+    },
+    {
+      "ref": "RP752026156142",
+      "oficina": "Chamberí (Bravo Murillo)",
+      "slug_oficina": "inmobiliaria-chamberi",
+      "operacion": "Alquiler",
+      "tipo": "Estudio",
+      "precio": 1000,
+      "m2": 37,
+      "habitaciones": 1,
+      "banos": 37,
+      "reservado": false,
+      "zona": "Arapiles",
+      "ascensor": true,
+      "titulo": "Redpiso alquila estupenda vivienda, 2ª planta exterior muy luminosa en pleno centro de Madrid, calle Cea Bermúdez. Estudio de 37 m2",
+      "url": "https://www.redpiso.es/inmueble/estudio-en-alquiler-en-calle-de-cea-bermudez-arapiles-chamberi-madrid-RP752026156142"
     },
     {
       "ref": "RP752026155793",
@@ -1124,8 +1108,60 @@
     }
   ],
   "digest": {
-    "altas": [],
+    "altas": [
+      {
+        "ref": "RP752026156142",
+        "oficina": "Chamberí (Bravo Murillo)",
+        "slug_oficina": "inmobiliaria-chamberi",
+        "operacion": "Alquiler",
+        "tipo": "Estudio",
+        "precio": 1000,
+        "m2": 37,
+        "habitaciones": 1,
+        "banos": 37,
+        "reservado": false,
+        "zona": "Arapiles",
+        "ascensor": true,
+        "titulo": "Redpiso alquila estupenda vivienda, 2ª planta exterior muy luminosa en pleno centro de Madrid, calle Cea Bermúdez. Estudio de 37 m2",
+        "url": "https://www.redpiso.es/inmueble/estudio-en-alquiler-en-calle-de-cea-bermudez-arapiles-chamberi-madrid-RP752026156142"
+      }
+    ],
     "bajadas": [],
-    "ya_no_disponibles": []
+    "ya_no_disponibles": [
+      {
+        "ref": "RP1812026155246",
+        "oficina": "Vallehermoso",
+        "slug_oficina": "inmobiliaria-chamberi-vallehermoso",
+        "operacion": "Alquiler",
+        "tipo": "Piso",
+        "precio": 2500,
+        "m2": 105,
+        "habitaciones": 3,
+        "banos": 2,
+        "reservado": false,
+        "zona": "Vallehermoso",
+        "ascensor": null,
+        "titulo": "Premium¡Luminosa vivienda exterior en Chamberí, lista para entrar a vivir!",
+        "url": "https://www.redpiso.es/inmueble/piso-en-alquiler-en-avenida-de-la-reina-victoria-vallehermoso-chamberi-madrid-RP1812026155246",
+        "motivo": "reservado"
+      },
+      {
+        "ref": "RP1812026153525",
+        "oficina": "Vallehermoso",
+        "slug_oficina": "inmobiliaria-chamberi-vallehermoso",
+        "operacion": "Alquiler",
+        "tipo": "Garaje",
+        "precio": 110,
+        "m2": 10,
+        "habitaciones": null,
+        "banos": null,
+        "reservado": false,
+        "zona": "Ciudad Universitaria",
+        "ascensor": null,
+        "titulo": "Oportunidad plaza de garaje",
+        "url": "https://www.redpiso.es/inmueble/plaza-de-garaje-en-alquiler-en-calle-de-almansa-ciudad-universitaria-moncloa-aravaca-madrid-RP1812026153525",
+        "motivo": "vendido"
+      }
+    ]
   }
 }
