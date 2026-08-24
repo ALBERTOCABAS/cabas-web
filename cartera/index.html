@@ -549,11 +549,13 @@ function pintarDigest(){
   // YA NO DISPONIBLE: legible (texto oscuro, precio tachado) + motivo en badge
   const off = d=>{ const m=(d.motivo||'retirado').toLowerCase();
     const cls = m==='vendido'?'vendido':(m==='reservado'?'reservado':'retirado');
+    const _alq = (d.operacion||'').toLowerCase()==='alquiler';
+    const _lab = m==='vendido' ? (_alq?'alquilado':'vendido') : (d.motivo||'retirado');
     return `<div class="nov-item baja-off"><span class="dot" style="background:#9a8f79"></span>`+
       `<span class="np-precio">${eur(d.precio)}${mes(d)}</span>`+
       `<span class="np-meta">${specsLinea(d)}</span>`+
       `<span class="tt-off">${d.titulo||d.tipo} <span class="np-ofi">· ${d.oficina}</span></span>`+
-      `<span class="motivo ${cls}">${d.motivo||'retirado'}</span></div>`; };
+      `<span class="motivo ${cls}">${_lab}</span></div>`; };
   const html =
     secc('Nuevas altas', DIGEST.altas, alta)+
     secc('Bajadas de precio', DIGEST.bajadas, baja)+
