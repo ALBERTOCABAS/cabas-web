@@ -1,6 +1,6 @@
 {
-  "generado": "lunes 24 de agosto de 2026",
-  "pin": "salida",
+  "generado": "lunes 31 de agosto de 2026",
+  "pin": "llaves",
   "inmuebles": [
     {
       "ref": "RP2392026154489",
@@ -163,22 +163,6 @@
       "url": "https://www.redpiso.es/inmueble/plaza-de-garaje-en-venta-en-calle-torpedero-tucuman-nueva-espana-chamartin-madrid-madrid-RP2392022107158"
     },
     {
-      "ref": "RP1922026155465",
-      "oficina": "Almagro",
-      "slug_oficina": "inmobiliaria-chamberi-almagro",
-      "operacion": "Alquiler",
-      "tipo": "Piso",
-      "precio": 1200,
-      "m2": 30,
-      "habitaciones": 1,
-      "banos": 1,
-      "reservado": false,
-      "zona": "Almagro",
-      "ascensor": null,
-      "titulo": "Calle de Alonso Cano, Madrid",
-      "url": "https://www.redpiso.es/inmueble/piso-en-alquiler-en-calle-de-alonso-cano-almagro-chamberi-madrid-RP1922026155465"
-    },
-    {
       "ref": "RP1922026154714",
       "oficina": "Almagro",
       "slug_oficina": "inmobiliaria-chamberi-almagro",
@@ -200,7 +184,7 @@
       "slug_oficina": "inmobiliaria-chamberi-almagro",
       "operacion": "Alquiler",
       "tipo": "Piso",
-      "precio": 2500,
+      "precio": 2300,
       "m2": 108,
       "habitaciones": 2,
       "banos": 2,
@@ -264,7 +248,7 @@
       "slug_oficina": "inmobiliaria-chamberi-almagro",
       "operacion": "Venta",
       "tipo": "Piso",
-      "precio": 1040000,
+      "precio": 998000,
       "m2": 111,
       "habitaciones": 3,
       "banos": 3,
@@ -744,8 +728,8 @@
       "slug_oficina": "inmobiliaria-rios-rosas-chamberi",
       "operacion": "Venta",
       "tipo": "Piso",
-      "precio": 299000,
-      "m2": 40,
+      "precio": 289000,
+      "m2": 41,
       "habitaciones": 2,
       "banos": 1,
       "reservado": false,
@@ -767,7 +751,7 @@
       "reservado": false,
       "zona": "Ríos Rosas",
       "ascensor": true,
-      "titulo": "Crea el hogar que siempre has imaginado en pleno Chamberí.",
+      "titulo": "PremiumCrea el hogar que siempre has imaginado en pleno Chamberí.",
       "url": "https://www.redpiso.es/inmueble/piso-en-venta-en-calle-de-rios-rosas-rios-rosas-chamberi-madrid-RP1132026154807"
     },
     {
@@ -794,7 +778,7 @@
       "tipo": "Piso",
       "precio": 1250000,
       "m2": 166,
-      "habitaciones": 3,
+      "habitaciones": 4,
       "banos": 3,
       "reservado": false,
       "zona": "Ríos Rosas",
@@ -815,7 +799,7 @@
       "reservado": false,
       "zona": "Ríos Rosas",
       "ascensor": true,
-      "titulo": "Espacio, luz y posibilidades infinitas en Chamberí.",
+      "titulo": "PremiumEspacio, luz y posibilidades infinitas en Chamberí.",
       "url": "https://www.redpiso.es/inmueble/piso-en-venta-en-calle-de-maudes-rios-rosas-chamberi-madrid-RP1132026153527"
     },
     {
@@ -952,14 +936,14 @@
       "slug_oficina": "inmobiliaria-san-bernardo-malasana-chamberi",
       "operacion": "Venta",
       "tipo": "Piso",
-      "precio": 1190000,
+      "precio": 1149000,
       "m2": 145,
       "habitaciones": 6,
       "banos": 2,
       "reservado": false,
       "zona": "Malasaña",
       "ascensor": true,
-      "titulo": "- IMPRESIONANTE PISO A LA VENTA",
+      "titulo": "Premium- IMPRESIONANTE PISO A LA VENTA",
       "url": "https://www.redpiso.es/inmueble/piso-en-venta-en-calle-del-conde-duque-universidad-centro-madrid-RP1852026155597"
     },
     {
@@ -984,7 +968,7 @@
       "slug_oficina": "inmobiliaria-san-bernardo-malasana-chamberi",
       "operacion": "Venta",
       "tipo": "Garaje",
-      "precio": 41700,
+      "precio": 39000,
       "m2": 12,
       "habitaciones": null,
       "banos": null,
@@ -1007,7 +991,7 @@
       "reservado": false,
       "zona": "Malasaña",
       "ascensor": true,
-      "titulo": "- Gran piso a la venta",
+      "titulo": "Premium- Gran piso a la venta",
       "url": "https://www.redpiso.es/inmueble/piso-en-venta-en-calle-de-san-andres-universidad-centro-madrid-RP1852026154742"
     },
     {
@@ -1023,7 +1007,7 @@
       "reservado": false,
       "zona": "Arapiles",
       "ascensor": true,
-      "titulo": "- Increíble piso a la venta en el corazón de Chamberí",
+      "titulo": "Premium- Increíble piso a la venta en el corazón de Chamberí",
       "url": "https://www.redpiso.es/inmueble/piso-en-venta-en-calle-de-san-bernardo-arapiles-chamberi-madrid-RP1852026154623"
     },
     {
@@ -1087,7 +1071,7 @@
       "reservado": false,
       "zona": "Trafalgar",
       "ascensor": true,
-      "titulo": "- Maravillosa vivienda a la venta",
+      "titulo": "Premium- Maravillosa vivienda a la venta",
       "url": "https://www.redpiso.es/inmueble/piso-en-venta-en-calle-de-covarrubias-trafalgar-chamberi-madrid-RP1852026151993"
     },
     {
@@ -1108,58 +1092,110 @@
     }
   ],
   "digest": {
-    "altas": [
+    "altas": [],
+    "bajadas": [
       {
-        "ref": "RP752026156142",
-        "oficina": "Chamberí (Bravo Murillo)",
-        "slug_oficina": "inmobiliaria-chamberi",
-        "operacion": "Alquiler",
-        "tipo": "Estudio",
-        "precio": 1000,
-        "m2": 37,
-        "habitaciones": 1,
-        "banos": 37,
-        "reservado": false,
-        "zona": "Arapiles",
-        "ascensor": true,
-        "titulo": "Redpiso alquila estupenda vivienda, 2ª planta exterior muy luminosa en pleno centro de Madrid, calle Cea Bermúdez. Estudio de 37 m2",
-        "url": "https://www.redpiso.es/inmueble/estudio-en-alquiler-en-calle-de-cea-bermudez-arapiles-chamberi-madrid-RP752026156142"
-      }
-    ],
-    "bajadas": [],
-    "ya_no_disponibles": [
-      {
-        "ref": "RP1812026155246",
-        "oficina": "Vallehermoso",
-        "slug_oficina": "inmobiliaria-chamberi-vallehermoso",
-        "operacion": "Alquiler",
+        "ref": "RP1922026153632",
+        "oficina": "Almagro",
+        "slug_oficina": "inmobiliaria-chamberi-almagro",
+        "operacion": "Venta",
         "tipo": "Piso",
-        "precio": 2500,
-        "m2": 105,
+        "precio": 998000,
+        "m2": 111,
         "habitaciones": 3,
-        "banos": 2,
+        "banos": 3,
         "reservado": false,
-        "zona": "Vallehermoso",
-        "ascensor": null,
-        "titulo": "Premium¡Luminosa vivienda exterior en Chamberí, lista para entrar a vivir!",
-        "url": "https://www.redpiso.es/inmueble/piso-en-alquiler-en-avenida-de-la-reina-victoria-vallehermoso-chamberi-madrid-RP1812026155246",
-        "motivo": "reservado"
+        "zona": "Almagro",
+        "ascensor": true,
+        "titulo": "PremiumCalle del General Arrando, Madrid",
+        "url": "https://www.redpiso.es/inmueble/piso-en-venta-en-calle-del-general-arrando-almagro-chamberi-madrid-RP1922026153632",
+        "antes": 1040000
       },
       {
-        "ref": "RP1812026153525",
-        "oficina": "Vallehermoso",
-        "slug_oficina": "inmobiliaria-chamberi-vallehermoso",
-        "operacion": "Alquiler",
+        "ref": "RP1852026155597",
+        "oficina": "San Bernardo · Malasaña",
+        "slug_oficina": "inmobiliaria-san-bernardo-malasana-chamberi",
+        "operacion": "Venta",
+        "tipo": "Piso",
+        "precio": 1149000,
+        "m2": 145,
+        "habitaciones": 6,
+        "banos": 2,
+        "reservado": false,
+        "zona": "Malasaña",
+        "ascensor": true,
+        "titulo": "Premium- IMPRESIONANTE PISO A LA VENTA",
+        "url": "https://www.redpiso.es/inmueble/piso-en-venta-en-calle-del-conde-duque-universidad-centro-madrid-RP1852026155597",
+        "antes": 1190000
+      },
+      {
+        "ref": "RP1132026155695",
+        "oficina": "Ríos Rosas",
+        "slug_oficina": "inmobiliaria-rios-rosas-chamberi",
+        "operacion": "Venta",
+        "tipo": "Piso",
+        "precio": 289000,
+        "m2": 41,
+        "habitaciones": 2,
+        "banos": 1,
+        "reservado": false,
+        "zona": "Ríos Rosas",
+        "ascensor": false,
+        "titulo": "VIVE O INVIERTE EN CHAMBERÍ: CREA LA VIVIENDA QUE SIEMPRE HAS IMAGINADO",
+        "url": "https://www.redpiso.es/inmueble/piso-en-venta-en-calle-de-alonso-cano-rios-rosas-chamberi-madrid-RP1132026155695",
+        "antes": 299000
+      },
+      {
+        "ref": "RP1852026155046",
+        "oficina": "San Bernardo · Malasaña",
+        "slug_oficina": "inmobiliaria-san-bernardo-malasana-chamberi",
+        "operacion": "Venta",
         "tipo": "Garaje",
-        "precio": 110,
-        "m2": 10,
+        "precio": 39000,
+        "m2": 12,
         "habitaciones": null,
         "banos": null,
         "reservado": false,
-        "zona": "Ciudad Universitaria",
+        "zona": "Trafalgar",
         "ascensor": null,
-        "titulo": "Oportunidad plaza de garaje",
-        "url": "https://www.redpiso.es/inmueble/plaza-de-garaje-en-alquiler-en-calle-de-almansa-ciudad-universitaria-moncloa-aravaca-madrid-RP1812026153525",
+        "titulo": "PLAZAS DE GARAJE ROBOTIZADAS -Vídeo",
+        "url": "https://www.redpiso.es/inmueble/plaza-de-garaje-en-venta-en-calle-de-manuel-gonzalez-longoria-trafalgar-chamberi-madrid-RP1852026155046",
+        "antes": 41700
+      },
+      {
+        "ref": "RP1922026154454",
+        "oficina": "Almagro",
+        "slug_oficina": "inmobiliaria-chamberi-almagro",
+        "operacion": "Alquiler",
+        "tipo": "Piso",
+        "precio": 2300,
+        "m2": 108,
+        "habitaciones": 2,
+        "banos": 2,
+        "reservado": false,
+        "zona": "Almagro",
+        "ascensor": true,
+        "titulo": "Calle de Zurbano, Madrid",
+        "url": "https://www.redpiso.es/inmueble/piso-en-alquiler-en-calle-de-zurbano-almagro-chamberi-madrid-RP1922026154454",
+        "antes": 2500
+      }
+    ],
+    "ya_no_disponibles": [
+      {
+        "ref": "RP1922026155465",
+        "oficina": "Almagro",
+        "slug_oficina": "inmobiliaria-chamberi-almagro",
+        "operacion": "Alquiler",
+        "tipo": "Piso",
+        "precio": 1200,
+        "m2": 30,
+        "habitaciones": 1,
+        "banos": 1,
+        "reservado": false,
+        "zona": "Almagro",
+        "ascensor": null,
+        "titulo": "Calle de Alonso Cano, Madrid",
+        "url": "https://www.redpiso.es/inmueble/piso-en-alquiler-en-calle-de-alonso-cano-almagro-chamberi-madrid-RP1922026155465",
         "motivo": "vendido"
       }
     ]
