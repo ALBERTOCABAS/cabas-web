@@ -10,7 +10,7 @@
   'use strict';
   var SITEKEY = '0x4AAAAAAEmFmAgbSUhAvb9_';   // clave de sitio pública de Cloudflare Turnstile
 
-  var widgetId = null, cargando = false, pending = null;
+  var widgetId = null, cargando = false, pending = null, enCurso = null, yaEjecutado = false;
 
   function resolverPending(t) {
     if (pending) { var r = pending; pending = null; r(t || ''); }
@@ -55,22 +55,25 @@
   window.CabasTurnstile = {
     activo: function () { return !!SITEKEY; },
     getToken: function () {
-      return new Promise(function (resolve) {
-        if (!SITEKEY) { resolve(''); return; }
-        // Nunca bloquear el envío legítimo: si Turnstile tarda, se envía sin token
-        // (y si el Worker exige token, reintentará; el usuario siempre tiene WhatsApp/email).
-        var guard = setTimeout(function () { resolverPending(''); }, 7000);
-        var done = function (t) { clearTimeout(guard); resolve(t); };
-        // Encadena: si hay una petición previa sin resolver, la cerramos con ''.
-        resolverPending('');
-        pending = done;
+      if (!SITEKEY) return Promise.resolve('');
+      if (enCurso) return enCurso;   // single-flight: reutiliza la verificación en vuelo
+      enCurso = new Promise(function (resolve) {
+        var settled = false;
+        // Guard amplio (Turnstile invisible suele tardar <3 s; damos margen de sobra).
+        // Si falla/tarda, resolvemos '' y el formulario ofrece WhatsApp/email como salida.
+        var guard = setTimeout(function () { finish(''); }, 12000);
+        function finish(t) { if (!settled) { settled = true; enCurso = null; clearTimeout(guard); resolve(t || ''); } }
+        pending = finish;   // lo llaman los callbacks de render()
         asegurarWidget(function (ok) {
-          if (!ok) { resolverPending(''); return; }
-          try { window.turnstile.reset(widgetId); } catch (e) {}
-          try { window.turnstile.execute(widgetId); }
-          catch (e) { resolverPending(''); }
+          if (!ok) { finish(''); return; }
+          try {
+            if (yaEjecutado) window.turnstile.reset(widgetId);   // limpia el token previo (no en el 1º)
+            window.turnstile.execute(widgetId);
+            yaEjecutado = true;
+          } catch (e) { finish(''); }
         });
       });
+      return enCurso;
     }
   };
 })();
