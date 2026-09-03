@@ -43,11 +43,18 @@
         resumen: val(form, 'resumen'),
         pagina: location.href,
         flujo: form.getAttribute('data-flujo') || 'web',
-        fecha: new Date().toISOString().slice(0, 10)
+        fecha: new Date().toISOString().slice(0, 10),
+        k_extra: val(form, 'k_extra')   // honeypot: vacío en humanos
       };
       if (btn) { btn.disabled = true; btn.textContent = 'Enviando…'; }
 
-      enviar(payload, function () {
+      var lanzar = function () { enviar(payload, exito, fallo); };
+      // Turnstile (si está activo) añade el token antes de enviar; si no, envía directo.
+      if (window.CabasTurnstile && window.CabasTurnstile.activo()) {
+        window.CabasTurnstile.getToken().then(function (tok) { payload['cf-turnstile-response'] = tok; lanzar(); });
+      } else { lanzar(); }
+
+      function exito() {
         // Éxito: sustituir el formulario por un aviso de confirmación.
         var ok = document.createElement('div');
         ok.className = 'form-lead-ok';
@@ -57,7 +64,9 @@
           (payload.nombre ? payload.nombre.replace(/[<>&]/g, '') : '') +
           '.</p><p style="margin:.4rem 0 0">Te contactaré personalmente lo antes posible.</p>';
         form.parentNode.replaceChild(ok, form);
-      }, function () {
+      }
+
+      function fallo() {
         // Fallo tras 3 intentos: dejar el formulario y ofrecer vías directas.
         if (btn) { btn.disabled = false; btn.textContent = textoBtn; }
         var err = form.querySelector('.form-lead-err');
@@ -71,7 +80,7 @@
             '<a href="https://wa.me/34604854690" target="_blank" rel="noopener">WhatsApp</a>.';
           form.appendChild(err);
         }
-      });
+      }
     });
   }
 

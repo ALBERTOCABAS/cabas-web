@@ -177,6 +177,7 @@
           <h3 style="font-size:1.15rem;margin-bottom:.4rem">¿Quieres el desglose completo y afinado a tu caso?</h3>
           <p style="color:var(--gris);font-size:.88rem;margin-bottom:1.2rem">Te lo preparo personalmente y te lo envío — junto con una valoración real de tu vivienda si la quieres.</p>
           <form class="form-lead-js" data-flujo="vender" data-contexto="Calculadora del neto de venta">
+          <div aria-hidden="true" style="position:absolute;left:-9999px;top:-9999px;width:1px;height:1px;overflow:hidden"><label>No rellenar<input type="text" name="k_extra" tabindex="-1" autocomplete="off"></label></div>
             <input type="hidden" name="resumen" id="v-lead-resumen" value="">
             <div class="fila-2">
               <div class="campo"><label for="v-lead-nombre">Nombre</label><input type="text" id="v-lead-nombre" name="nombre" required></div>
@@ -332,6 +333,7 @@ document.getElementById('selector-idioma').addEventListener('change', function()
   <script src="js/kitty-guion.js"></script>
   <script src="js/kitty-runner.js"></script>
   <script src="js/form-lead.js" defer></script>
+  <script src="js/turnstile-cabas.js" defer></script>
   <script src="js/cabas-chatbot.js" defer></script>
 </body>
 </html>

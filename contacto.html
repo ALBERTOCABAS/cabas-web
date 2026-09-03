@@ -90,6 +90,7 @@
         <div class="form-lead">
         <h3 style="margin-bottom:1.2rem">O cuéntamelo por escrito</h3>
         <form class="form-lead-js" data-flujo="contacto" data-contexto="Formulario de contacto">
+          <div aria-hidden="true" style="position:absolute;left:-9999px;top:-9999px;width:1px;height:1px;overflow:hidden"><label>No rellenar<input type="text" name="k_extra" tabindex="-1" autocomplete="off"></label></div>
           <div class="fila-2">
             <div class="campo"><label for="c-nombre">Nombre</label><input type="text" id="c-nombre" name="nombre" required></div>
             <div class="campo"><label for="c-tel">Teléfono</label><input type="tel" id="c-tel" name="telefono"></div>
@@ -200,6 +201,7 @@ document.getElementById('selector-idioma').addEventListener('change', function()
   <script src="js/kitty-guion.js"></script>
   <script src="js/kitty-runner.js"></script>
   <script src="js/form-lead.js" defer></script>
+  <script src="js/turnstile-cabas.js" defer></script>
   <script src="js/cabas-chatbot.js" defer></script>
 </body>
 </html>
