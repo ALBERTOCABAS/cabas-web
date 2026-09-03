@@ -8,7 +8,7 @@
    en cuanto se ponga el secreto TURNSTILE_SECRET. Ambos extremos se activan solos. */
 (function () {
   'use strict';
-  var SITEKEY = '';   // ← pega aquí la clave de sitio (pública) de Cloudflare Turnstile
+  var SITEKEY = '0x4AAAAAAEmFmAgbSUhAvb9_';   // clave de sitio pública de Cloudflare Turnstile
 
   var widgetId = null, cargando = false, pending = null;
 
