@@ -89,9 +89,7 @@
         </div>
         <div class="form-lead">
         <h3 style="margin-bottom:1.2rem">O cuéntamelo por escrito</h3>
-        <form action="https://api.web3forms.com/submit" method="POST">
-          <input type="hidden" name="access_key" value="00c2dba0-ec58-4fa8-b849-3a5839f3fd86">
-          <input type="hidden" name="subject" value="Contacto — cabas.es">
+        <form class="form-lead-js" data-flujo="contacto" data-contexto="Formulario de contacto">
           <div class="fila-2">
             <div class="campo"><label for="c-nombre">Nombre</label><input type="text" id="c-nombre" name="nombre" required></div>
             <div class="campo"><label for="c-tel">Teléfono</label><input type="tel" id="c-tel" name="telefono"></div>
@@ -201,6 +199,7 @@ document.getElementById('selector-idioma').addEventListener('change', function()
   <script src="js/kitty-textos.js"></script>
   <script src="js/kitty-guion.js"></script>
   <script src="js/kitty-runner.js"></script>
+  <script src="js/form-lead.js" defer></script>
   <script src="js/cabas-chatbot.js" defer></script>
 </body>
 </html>

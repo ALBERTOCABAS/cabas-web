@@ -194,9 +194,7 @@
       <div class="form-lead" style="margin-top:2rem">
         <h3 style="margin-bottom:.4rem">¿Quieres que analice esta operación contigo?</h3>
         <p style="color:var(--gris);font-size:.92rem;margin-bottom:1.2rem">Te doy mi opinión profesional sobre la inversión, el barrio y el precio — y busco la vivienda si te encaja.</p>
-        <form action="https://api.web3forms.com/submit" method="POST">
-          <input type="hidden" name="access_key" value="00c2dba0-ec58-4fa8-b849-3a5839f3fd86">
-          <input type="hidden" name="subject" value="Consulta de INVERSIÓN — cabas.es">
+        <form class="form-lead-js" data-flujo="inversion" data-contexto="Consulta de inversión">
           <input type="hidden" name="resumen" id="inv-lead-resumen" value="">
           <div class="fila-2">
             <div class="campo"><label for="inv-lead-nombre">Nombre</label><input type="text" id="inv-lead-nombre" name="nombre" required></div>
@@ -339,6 +337,7 @@ document.getElementById('selector-idioma').addEventListener('change', function()
 <script src="js/calc-inversion.js"></script>
 
   <!-- Asistente Kitty (usa el mismo motor que las calculadoras) -->
+  <script src="js/form-lead.js" defer></script>
   <script src="js/cabas-chatbot.js" defer></script>
 </body>
 </html>
