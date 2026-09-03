@@ -59,10 +59,10 @@
         var ok = document.createElement('div');
         ok.className = 'form-lead-ok';
         ok.setAttribute('role', 'status');
-        ok.style.cssText = 'padding:1.4rem;border-radius:12px;background:rgba(198,160,74,.12);border:1px solid rgba(198,160,74,.4);text-align:center';
-        ok.innerHTML = '<p style="margin:0;font-weight:600">✅ ¡Recibido! Gracias, ' +
+        ok.style.cssText = 'padding:1.4rem;border-radius:12px;background:rgba(198,160,74,.14);border:1px solid rgba(198,160,74,.45);text-align:center;color:var(--hueso)';
+        ok.innerHTML = '<p style="margin:0;font-weight:600;color:var(--oro-claro)">✅ ¡Recibido! Gracias, ' +
           (payload.nombre ? payload.nombre.replace(/[<>&]/g, '') : '') +
-          '.</p><p style="margin:.4rem 0 0">Te contactaré personalmente lo antes posible.</p>';
+          '.</p><p style="margin:.4rem 0 0;color:var(--hueso)">Te contactaré personalmente lo antes posible.</p>';
         form.parentNode.replaceChild(ok, form);
       }
 
