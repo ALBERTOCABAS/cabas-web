@@ -164,18 +164,20 @@ const PLUSVALIA_CCAA = {
 };
 
 // ---------- Plusvalía municipal (IIVTNU) — coeficientes por años ----------
-// Coeficientes MÁXIMOS estatales del RDL 8/2023, aplicables en toda España
-// salvo que el ayuntamiento apruebe otros inferiores (p. ej. Barcelona aplica
-// 0,16 a los 4 años, por debajo del 0,17 estatal). Se aplican al valor
-// catastral del suelo en el MÉTODO OBJETIVO. Índice = años completos de
-// tenencia; el 0 es "menos de 1 año" (sí tributa desde la reforma de 2021).
-// VIGENTES EN 2026: el RDL 16/2025 que los subía fue rechazado en el Congreso
-// (28-01-2026), así que se mantienen los máximos de 2024 (RDL 8/2023).
-// REVISAR ANUALMENTE (los actualiza la Ley de Presupuestos cada ejercicio).
+// Coeficientes MÁXIMOS estatales del RDL 8/2023 (art. 24), vigentes desde el
+// 1-1-2024, aplicables en toda España salvo que el ayuntamiento apruebe otros
+// inferiores. Se aplican al valor catastral del suelo en el MÉTODO OBJETIVO.
+// Índice = años completos de tenencia; el 0 es "menos de 1 año" (sí tributa
+// desde la reforma de 2021).
+// VIGENTES EN 2026: el RDL 16/2025 (BOE 24-12-2025) subía estos coeficientes
+// desde el 1-1-2026, pero el Congreso lo derogó el 27-01-2026 (resolución
+// publicada en el BOE el 28-01-2026: BOE-A-2025-26458), así que NO llegó a
+// entrar en vigor y se mantienen los máximos de 2024 (RDL 8/2023, BOE-A-2023-26452).
+// REVISAR ANUALMENTE (los actualiza la Ley de Presupuestos o un RDL cada ejercicio).
 const COEF_IIVTNU = {
-  0: 0.14, 1: 0.15, 2: 0.15, 3: 0.15, 4: 0.17, 5: 0.18, 6: 0.20,
-  7: 0.22, 8: 0.23, 9: 0.21, 10: 0.16, 11: 0.13, 12: 0.11, 13: 0.10,
-  14: 0.10, 15: 0.10, 16: 0.10, 17: 0.13, 18: 0.17, 19: 0.23, 20: 0.40
+  0: 0.15, 1: 0.15, 2: 0.14, 3: 0.14, 4: 0.16, 5: 0.18, 6: 0.19,
+  7: 0.20, 8: 0.19, 9: 0.15, 10: 0.12, 11: 0.10, 12: 0.09, 13: 0.09,
+  14: 0.09, 15: 0.09, 16: 0.10, 17: 0.13, 18: 0.17, 19: 0.23, 20: 0.40
 };
 
 // ---------- IRPF — tramos de la base del ahorro (ganancia patrimonial) ----
