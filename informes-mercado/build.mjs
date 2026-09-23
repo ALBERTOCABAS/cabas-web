@@ -215,7 +215,9 @@ const THEAD = `<thead><tr><th scope="col">Ámbito</th>`
 const tablaEnvuelta = (cap, cuerpo, id) =>
   `<div class="im-card"${id ? ` id="${id}"` : ''}><table class="im"><caption class="im-cap">${esc(cap)}</caption>${THEAD}<tbody>${cuerpo}</tbody></table></div>`;
 // Botón de descarga POR TABLA: clona ESA tarjeta a la hoja del PDF.
-const botonPDF = (cardId, titulo, sub) => `<p class="im-pdf"><button type="button" class="im-pdf-btn" data-card="${cardId}" data-titulo="${esc(titulo)}" data-sub="${esc(sub)}">⬇ Descargar en PDF</button></p>`;
+const botonPDF = (cardId, titulo, sub) => `<p class="im-pdf"><button type="button" class="im-pdf-btn" data-card="${cardId}" data-titulo="${esc(titulo)}" data-sub="${esc(sub)}" data-file="${esc('Cabas — ' + titulo)}">⬇ Descargar en PDF</button></p>`;
+// Variante de botón con etiqueta propia (para el bloque de Madrid, con 3 descargas).
+const botonPDFv = (cardId, label, titulo, sub, file) => `<button type="button" class="im-pdf-btn" data-card="${cardId}" data-titulo="${esc(titulo)}" data-sub="${esc(sub)}" data-file="${esc(file)}">⬇ ${esc(label)}</button>`;
 const bloque = (id, cap, cuerpo, titulo, sub) => tablaEnvuelta(cap, cuerpo, id) + botonPDF(id, titulo, sub);
 
 // Bloque destacado "En contexto" (NO es una tabla; estilo propio). Distingue
@@ -286,25 +288,29 @@ let htmlZonas = `<h3 class="im-zona">Chamberí y Malasaña</h3>`
 htmlZonas += `<h3 class="im-zona">Chamartín</h3>`
   + bloque('card-chamartin', 'Chamartín', cuerpoDistrito(filasZona('Chamartin')), 'Chamartín', 'Distrito de Chamartín · barrio a barrio');
 
-// --- MADRID: municipio + 21 distritos + 33 municipios de la corona ---
-// UN solo bloque (card) alargado: primero la tabla de capital+distritos y, debajo,
-// la tabla de pueblos con su propio subtítulo (caption). Un único botón de PDF
-// clona toda la tarjeta, así que el PDF cubre distritos + pueblos de una vez.
+// --- MADRID: municipio + 21 distritos + 33 municipios más poblados ---
+// UN solo bloque (card) alargado: tabla de capital+distritos y, debajo, la tabla
+// de los municipios más poblados con su propia leyenda. El bloque ofrece TRES
+// descargas: solo distritos, solo municipios, o informe completo (las dos tablas).
 const ultMadrid = delUltimoMes('madrid');
 let mPadre = ultMadrid.find(r => r.tipo === 'municipio');
 if (mPadre && bonito(mPadre.ambito) === 'Madrid') mPadre = { ...mPadre, ambito: 'Madrid capital' };  // etiqueta consistente
 const mDistritos = ultMadrid.filter(r => r.tipo === 'distrito');
 const numPrecio = v => parseInt(String(v).replace(/[^\d]/g, ''), 10) || 0;
 const mPueblos = ultMadrid.filter(r => r.tipo === 'pueblo')
-  .sort((a, b) => numPrecio(b.precio_m2) - numPrecio(a.precio_m2));   // corona: por €/m² descendente
+  .sort((a, b) => numPrecio(b.precio_m2) - numPrecio(a.precio_m2));   // por €/m² descendente
 
 const cuerpoMadrid = (mPadre ? filaTabla(mPadre, true) : '') + mDistritos.map(r => filaTabla(r, false)).join('');
-const tablaMadrid = `<table class="im"><caption class="im-cap">Madrid capital y distritos</caption>${THEAD}<tbody>${cuerpoMadrid}</tbody></table>`;
+const tablaMadrid = `<table class="im" id="tabla-madrid-distritos"><caption class="im-cap">Madrid capital y distritos</caption>${THEAD}<tbody>${cuerpoMadrid}</tbody></table>`;
 const tablaPueblos = mPueblos.length
-  ? `<table class="im" style="margin-top:14px"><caption class="im-cap">Municipios de la corona</caption>${THEAD}<tbody>${mPueblos.map(r => filaTabla(r, false)).join('')}</tbody></table>`
+  ? `<table class="im" id="tabla-madrid-pueblos" style="margin-top:14px"><caption class="im-cap">Municipios más poblados</caption>${THEAD}<tbody>${mPueblos.map(r => filaTabla(r, false)).join('')}</tbody></table>`
   : '';
-const htmlMadrid = `<div class="im-card" id="card-madrid">${tablaMadrid}${tablaPueblos}</div>`
-  + botonPDF('card-madrid', 'Madrid: distritos y pueblos', 'Capital, 21 distritos y 33 municipios de la corona');
+const botonesMadrid = `<p class="im-pdf im-pdf-multi"><span class="im-pdf-lbl">Descargar en PDF:</span>`
+  + botonPDFv('tabla-madrid-distritos', 'Capital y distritos', 'Madrid — capital y distritos', 'Capital y sus 21 distritos', 'Cabas — Madrid capital y distritos')
+  + (mPueblos.length ? botonPDFv('tabla-madrid-pueblos', 'Municipios más poblados', 'Madrid — municipios más poblados', 'Los municipios más poblados de la Comunidad de Madrid', 'Cabas — Madrid municipios mas poblados') : '')
+  + (mPueblos.length ? botonPDFv('card-madrid', 'Informe completo', 'Madrid — capital, distritos y municipios', 'Capital, distritos y municipios más poblados', 'Cabas — Madrid capital distritos y municipios') : '')
+  + `</p>`;
+const htmlMadrid = `<div class="im-card" id="card-madrid">${tablaMadrid}${tablaPueblos}</div>` + botonesMadrid;
 
 // --- ESPAÑA: nacional + comunidades (sin provincia) ---
 const ultEspana = delUltimoMes('espana').filter(r => r.tipo !== 'provincia');
@@ -392,7 +398,7 @@ const FOOTER = `<footer class="footer">
 // HTML de la página
 // ============================================================
 const TITULO = 'Informes de Mercado — precios de vivienda en Madrid y España | Alberto Cabas';
-const DESC = `Evolución de los precios de vivienda en venta (€/m²) por distritos y barrios de Chamberí y Chamartín, los 21 distritos de Madrid capital, los municipios de la corona metropolitana y las comunidades autónomas. Actualizado a ${esc(mesUltimo.label)}. Datos de oferta publicada.`;
+const DESC = `Evolución de los precios de vivienda en venta (€/m²) por distritos y barrios de Chamberí y Chamartín, los 21 distritos de Madrid capital, los municipios más poblados de la Comunidad de Madrid y las comunidades autónomas. Actualizado a ${esc(mesUltimo.label)}. Datos de oferta publicada.`;
 const URL = `${BASE_URL}/informes-mercado/`;
 
 const ORG = {
@@ -556,25 +562,42 @@ const HTML = `<!DOCTYPE html>
   .pg-informes .im-pdf{ margin:16px 0 2px; }
   .pg-informes .im-pdf-btn{ display:inline-flex; align-items:center; gap:7px; background:transparent; border:1px solid var(--oro); color:var(--oro-claro); font:inherit; font-weight:600; font-size:.86rem; padding:9px 16px; border-radius:12px; cursor:pointer; }
   .pg-informes .im-pdf-btn:hover{ background:var(--oro); color:var(--negro); }
-  /* Tablas clonadas dentro de la hoja del PDF → aspecto informe (blanco, cabecera negra) */
+  /* Madrid: fila con tres descargas (distritos / municipios / completo) */
+  .pg-informes .im-pdf-multi{ display:flex; flex-wrap:wrap; gap:8px; align-items:center; }
+  .pg-informes .im-pdf-lbl{ color:var(--gris); font-size:.82rem; margin-right:2px; }
+  /* ---- Hoja del PDF: informe premium en BLANCO con el dorado de la marca ---- */
+  .pg-informes .hoja .i-header{ background:#fff; color:#1a1712; border-bottom:2px solid var(--oro); align-items:center; }
+  .pg-informes .hoja .i-logo-box{ border:none; border-radius:0; padding:0; width:auto; height:auto; }
+  .pg-informes .hoja .i-logo-box img{ width:92px; height:auto; }
+  .pg-informes .hoja .i-eyebrow{ color:#b28e44; }
+  .pg-informes .hoja .i-titulo{ color:#b28e44; }
+  .pg-informes .hoja .i-subtitulo, .pg-informes .hoja .i-vivienda{ color:#5c5446; }
+  .pg-informes .hoja .i-fecha{ color:#5c5446; }
+  .pg-informes .hoja .i-fecha strong{ color:#b28e44; }
+  .pg-informes .hoja .i-footer{ background:#fff; color:#1a1712; border-top:1px solid var(--oro); }
+  .pg-informes .hoja .i-footer strong{ color:#b28e44; }
+  .pg-informes .hoja .i-footer .contacto{ color:#5c5446; }
   .pg-informes .hoja .im-card{ background:#fff; box-shadow:none; border:none; border-radius:0; overflow:visible; margin:0 0 1.1rem; }
   .pg-informes .hoja table.im{ min-width:0; font-size:.78rem; }
-  .pg-informes .hoja table.im .im-cap{ color:#8a6b27; padding:2px 0 5px; }
-  .pg-informes .hoja table.im thead th{ position:static; background:#000; color:#F2EFE7; }
+  .pg-informes .hoja table.im .im-cap{ color:#b28e44; font-family:var(--serif); font-size:1.02rem; font-weight:600; padding:2px 0 6px; }
+  .pg-informes .hoja table.im thead th{ position:static; background:#efe4c8; color:#7a5b18; border-bottom:1.5px solid var(--oro); }
+  .pg-informes .hoja table.im thead th:first-child{ background:#efe4c8; }
   .pg-informes .hoja table.im th:first-child, .pg-informes .hoja table.im td:first-child{ position:static; background:transparent; }
-  .pg-informes .hoja table.im thead th:first-child{ background:#000; }
-  .pg-informes .hoja table.im tr.padre th, .pg-informes .hoja table.im tr.padre td{ background:#FAF8F2; }
+  /* cebreado suave para guiar la lectura de filas largas; fila "padre" destacada */
+  .pg-informes .hoja table.im tbody tr:nth-child(even){ background:#f7f4ee; }
+  .pg-informes .hoja table.im tbody tr.padre{ background:#f3ead4; }
   @media print{
-    .pg-informes .hoja table.im thead th{ -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+    .pg-informes .hoja *{ -webkit-print-color-adjust:exact; print-color-adjust:exact; }
     .pg-informes .hoja tr{ page-break-inside:avoid; }
-    /* Compactar para que Madrid (22 filas) y España (20) quepan en UNA hoja A4 */
+    .pg-informes .hoja thead{ display:table-header-group; }   /* repite la cabecera en cada página */
+    /* Compactar para aprovechar la hoja A4; las tablas largas siguen a varias páginas, cortando SIEMPRE entre filas. */
     .pg-informes .hoja .i-header{ padding:1rem 1.2rem; }
-    .pg-informes .hoja .i-logo-box{ width:74px; height:74px; padding:.4rem; }
+    .pg-informes .hoja .i-logo-box img{ width:76px; }
     .pg-informes .hoja .i-titulo{ font-size:1.5rem; margin:.15rem 0 .3rem; }
     .pg-informes .hoja .i-body{ padding:1.1rem 1.2rem; }
     .pg-informes .hoja table.im{ font-size:.66rem; }
     .pg-informes .hoja table.im th, .pg-informes .hoja table.im td{ padding:3px 6px; }
-    .pg-informes .hoja table.im .im-cap{ font-size:.74rem; padding:1px 0 3px; }
+    .pg-informes .hoja table.im .im-cap{ font-size:.8rem; padding:1px 0 3px; }
     .pg-informes .hoja .i-hipotesis, .pg-informes .hoja .i-disclaimer{ font-size:.64rem; margin-top:.5rem; }
     .pg-informes .hoja .i-footer{ padding:.7rem 1.2rem; font-size:.7rem; }
   }
@@ -585,7 +608,7 @@ const HTML = `<!DOCTYPE html>
 ${NAV}
 <main class="im-wrap">
   <h1 class="im-titulo">Informes de Mercado</h1>
-  <p class="im-intro">Evolución de los precios de vivienda <b>en venta</b> (€/m²): el detalle por barrios de las zonas donde están mis oficinas —Chamberí, Chamartín y Malasaña-Universidad—, los 21 distritos de Madrid capital, los municipios de la corona metropolitana y todas las comunidades autónomas.</p>
+  <p class="im-intro">Evolución de los precios de vivienda <b>en venta</b> (€/m²): el detalle por barrios de las zonas donde están mis oficinas —Chamberí, Chamartín y Malasaña-Universidad—, los 21 distritos de Madrid capital, los municipios más poblados de la Comunidad de Madrid y todas las comunidades autónomas.</p>
   <p class="im-aviso"><b>Fuente:</b> precios de <b>oferta publicada</b> en idealista, no de operación cerrada. El <b>€/m² Est. Venta</b> descuenta el <b>6,2 %</b> de margen medio de negociación entre precio publicado y precio final de venta (media nacional; Cátedra Grupo Tecnocasa–UPF, vía idealista, feb. 2026).</p>
   <p class="im-actualizado">Última actualización: <b>${esc(mesUltimo.label)}</b>.</p>
 
@@ -597,7 +620,7 @@ ${NAV}
     <input type="radio" name="imtab" id="t-espana" class="im-radio">
     <div class="modo-toggle" aria-label="Elegir sección de datos">
       <label class="modo-btn" for="t-zonas">Zonas de mis oficinas<small>Chamberí, Chamartín y Malasaña</small></label>
-      <label class="modo-btn" for="t-madrid">Madrid: distritos y pueblos<small>Capital, distritos y corona</small></label>
+      <label class="modo-btn" for="t-madrid">Madrid: distritos y pueblos<small>Capital, distritos y pueblos</small></label>
       <label class="modo-btn" for="t-espana">España por comunidades<small>Nacional y autonomías</small></label>
     </div>
 
@@ -609,7 +632,7 @@ ${NAV}
     </section>
 
     <section class="im-panel im-seccion" id="p-madrid">
-      <h2>Madrid <span style="font-weight:400;color:var(--gris);font-size:1rem">— capital, sus 21 distritos y los municipios de la corona</span></h2>
+      <h2>Madrid <span style="font-weight:400;color:var(--gris);font-size:1rem">— capital, sus 21 distritos y los municipios más poblados</span></h2>
       ${htmlMadrid}
       ${grafico('madrid', 'distrito')}
     </section>
@@ -631,7 +654,7 @@ ${FOOTER}
 <div class="hoja-imprimible-wrap">
   <div class="hoja">
     <div class="i-header">
-      <div class="i-logo-box"><img src="/assets/logo-c.png" alt="Cabas Realtor"></div>
+      <div class="i-logo-box"><img src="/assets/logo-sello-informe.png" alt="Cabas Realtor"></div>
       <div class="i-header-main">
         <p class="i-eyebrow">Informe de mercado</p>
         <h2 class="i-titulo" id="im-hoja-titulo">—</h2>
@@ -674,6 +697,7 @@ document.getElementById('selector-idioma').addEventListener('change', function()
 // sistema de impresión que las calculadoras (imprimirInforme, de main.js).
 (function () {
   var MES = ${JSON.stringify(mesUltimo.label)};
+  var tituloPrev = null;
   function pdf(btn) {
     var card = document.getElementById(btn.getAttribute('data-card')); if (!card) return;
     document.getElementById('im-hoja-titulo').textContent = btn.getAttribute('data-titulo') || 'Informe de mercado';
@@ -682,8 +706,12 @@ document.getElementById('selector-idioma').addEventListener('change', function()
     document.getElementById('im-hoja-fecha').textContent = new Date().toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' });
     var dest = document.getElementById('im-hoja-tablas'); dest.innerHTML = '';
     dest.appendChild(card.cloneNode(true));
+    // El navegador usa document.title como nombre por defecto del PDF → lo fijamos por variante.
+    var file = btn.getAttribute('data-file');
+    if (file) { tituloPrev = document.title; document.title = file; }
     if (typeof imprimirInforme === 'function') imprimirInforme(); else window.print();
   }
+  window.addEventListener('afterprint', function () { if (tituloPrev != null) { document.title = tituloPrev; tituloPrev = null; } });
   document.querySelectorAll('.im-pdf-btn').forEach(function (b) {
     b.addEventListener('click', function () { pdf(b); });
   });
