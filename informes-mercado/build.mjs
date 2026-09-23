@@ -48,7 +48,7 @@ const MESES = ['enero','febrero','marzo','abril','mayo','junio','julio',
                'agosto','septiembre','octubre','noviembre','diciembre'];
 const sinAcentos = s => s.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 function mesInfo(mesStr) {                       // "julio 2026" -> {key, label, iso}
-  const partes = String(mesStr).trim().toLowerCase().split(/\s+/);
+  const partes = String(mesStr).trim().toLowerCase().split(/[\s_]+/);
   const idx = MESES.indexOf(sinAcentos(partes[0]));
   const anio = parseInt(partes[1], 10) || 0;
   return { key: anio * 12 + (idx < 0 ? 0 : idx), idx, anio,
@@ -57,12 +57,29 @@ function mesInfo(mesStr) {                       // "julio 2026" -> {key, label,
 }
 
 // ---------- CSV ----------
+// Parser tolerante a campos ENTRECOMILLADOS con comas dentro (p. ej. "-1,2%").
+// El generador de Madrid ampliado usa decimales con coma y por eso entrecomilla;
+// los CSV antiguos (sin comillas) siguen funcionando igual.
+function parseLineaCSV(l) {
+  const out = []; let cur = '', q = false;
+  for (let i = 0; i < l.length; i++) {
+    const c = l[i];
+    if (q) {
+      if (c === '"') { if (l[i + 1] === '"') { cur += '"'; i++; } else q = false; }
+      else cur += c;
+    } else if (c === '"') { q = true; }
+    else if (c === ',') { out.push(cur); cur = ''; }
+    else cur += c;
+  }
+  out.push(cur);
+  return out.map(s => s.trim());
+}
 function parseCSV(texto) {
   const lineas = texto.replace(/\r/g, '').split('\n').filter(l => l.trim().length);
   if (!lineas.length) return [];
-  const cab = lineas[0].split(',').map(s => s.trim());
+  const cab = parseLineaCSV(lineas[0]);
   return lineas.slice(1).map(l => {
-    const celdas = l.split(',');
+    const celdas = parseLineaCSV(l);
     const o = {};
     cab.forEach((h, i) => { o[h] = (celdas[i] || '').trim(); });
     return o;
@@ -179,7 +196,7 @@ function varCell(str) {
 function distCell(r) {
   const s = String(r.dist_max || '').trim();
   const ref = r.max_historico ? `Máx: ${eurM2(r.max_historico)}${r.fecha_max ? ' (' + esc(r.fecha_max) + ')' : ''}` : '';
-  const txt = (!s || s === '0.0%') ? 'En máximo' : esc(s);
+  const txt = (!s || parseFloat(s.replace(',', '.')) === 0) ? 'En máximo' : esc(s);
   return `<td class="dist" title="${ref}">${txt}</td>`;
 }
 function filaTabla(r, esPadre, sep) {
@@ -232,7 +249,8 @@ function serieDe(fam, filtro) {
   const out = {};
   for (const r of filas[fam]) {
     if (filtro && !filtro(r)) continue;
-    const amb = bonito(r.ambito);
+    let amb = bonito(r.ambito);
+    if (r.tipo === 'municipio' && amb === 'Madrid') amb = 'Madrid capital';   // etiqueta consistente entre meses (formato viejo/nuevo)
     const precio = parseInt(String(r.precio_m2).replace(/[^\d]/g, ''), 10);
     if (isNaN(precio)) continue;
     (out[amb] = out[amb] || []).push({ k: mesInfo(r.mes).key, mes: r.mes, precio });
@@ -268,13 +286,25 @@ let htmlZonas = `<h3 class="im-zona">Chamberí y Malasaña</h3>`
 htmlZonas += `<h3 class="im-zona">Chamartín</h3>`
   + bloque('card-chamartin', 'Chamartín', cuerpoDistrito(filasZona('Chamartin')), 'Chamartín', 'Distrito de Chamartín · barrio a barrio');
 
-// --- MADRID: municipio + 21 distritos ---
+// --- MADRID: municipio + 21 distritos + 33 municipios de la corona ---
+// UN solo bloque (card) alargado: primero la tabla de capital+distritos y, debajo,
+// la tabla de pueblos con su propio subtítulo (caption). Un único botón de PDF
+// clona toda la tarjeta, así que el PDF cubre distritos + pueblos de una vez.
 const ultMadrid = delUltimoMes('madrid');
-const mPadre = ultMadrid.find(r => r.tipo === 'municipio');
-const mHijos = ultMadrid.filter(r => r.tipo !== 'municipio');
-const htmlMadrid = bloque('card-madrid', 'Madrid capital y distritos',
-  (mPadre ? filaTabla(mPadre, true) : '') + mHijos.map(r => filaTabla(r, false)).join(''),
-  'Madrid por distritos', 'Madrid capital y sus 21 distritos');
+let mPadre = ultMadrid.find(r => r.tipo === 'municipio');
+if (mPadre && bonito(mPadre.ambito) === 'Madrid') mPadre = { ...mPadre, ambito: 'Madrid capital' };  // etiqueta consistente
+const mDistritos = ultMadrid.filter(r => r.tipo === 'distrito');
+const numPrecio = v => parseInt(String(v).replace(/[^\d]/g, ''), 10) || 0;
+const mPueblos = ultMadrid.filter(r => r.tipo === 'pueblo')
+  .sort((a, b) => numPrecio(b.precio_m2) - numPrecio(a.precio_m2));   // corona: por €/m² descendente
+
+const cuerpoMadrid = (mPadre ? filaTabla(mPadre, true) : '') + mDistritos.map(r => filaTabla(r, false)).join('');
+const tablaMadrid = `<table class="im"><caption class="im-cap">Madrid capital y distritos</caption>${THEAD}<tbody>${cuerpoMadrid}</tbody></table>`;
+const tablaPueblos = mPueblos.length
+  ? `<table class="im" style="margin-top:14px"><caption class="im-cap">Municipios de la corona</caption>${THEAD}<tbody>${mPueblos.map(r => filaTabla(r, false)).join('')}</tbody></table>`
+  : '';
+const htmlMadrid = `<div class="im-card" id="card-madrid">${tablaMadrid}${tablaPueblos}</div>`
+  + botonPDF('card-madrid', 'Madrid: distritos y pueblos', 'Capital, 21 distritos y 33 municipios de la corona');
 
 // --- ESPAÑA: nacional + comunidades (sin provincia) ---
 const ultEspana = delUltimoMes('espana').filter(r => r.tipo !== 'provincia');
@@ -362,7 +392,7 @@ const FOOTER = `<footer class="footer">
 // HTML de la página
 // ============================================================
 const TITULO = 'Informes de Mercado — precios de vivienda en Madrid y España | Alberto Cabas';
-const DESC = `Evolución de los precios de vivienda en venta (€/m²) por distritos y barrios de Chamberí y Chamartín, los 21 distritos de Madrid y las comunidades autónomas. Actualizado a ${esc(mesUltimo.label)}. Datos de oferta publicada.`;
+const DESC = `Evolución de los precios de vivienda en venta (€/m²) por distritos y barrios de Chamberí y Chamartín, los 21 distritos de Madrid capital, los municipios de la corona metropolitana y las comunidades autónomas. Actualizado a ${esc(mesUltimo.label)}. Datos de oferta publicada.`;
 const URL = `${BASE_URL}/informes-mercado/`;
 
 const ORG = {
@@ -555,7 +585,7 @@ const HTML = `<!DOCTYPE html>
 ${NAV}
 <main class="im-wrap">
   <h1 class="im-titulo">Informes de Mercado</h1>
-  <p class="im-intro">Evolución de los precios de vivienda <b>en venta</b> (€/m²): el detalle por barrios de las zonas donde están mis oficinas —Chamberí, Chamartín y Malasaña-Universidad—, los 21 distritos de Madrid capital y todas las comunidades autónomas.</p>
+  <p class="im-intro">Evolución de los precios de vivienda <b>en venta</b> (€/m²): el detalle por barrios de las zonas donde están mis oficinas —Chamberí, Chamartín y Malasaña-Universidad—, los 21 distritos de Madrid capital, los municipios de la corona metropolitana y todas las comunidades autónomas.</p>
   <p class="im-aviso"><b>Fuente:</b> precios de <b>oferta publicada</b> en idealista, no de operación cerrada. El <b>€/m² Est. Venta</b> descuenta el <b>6,2 %</b> de margen medio de negociación entre precio publicado y precio final de venta (media nacional; Cátedra Grupo Tecnocasa–UPF, vía idealista, feb. 2026).</p>
   <p class="im-actualizado">Última actualización: <b>${esc(mesUltimo.label)}</b>.</p>
 
@@ -567,7 +597,7 @@ ${NAV}
     <input type="radio" name="imtab" id="t-espana" class="im-radio">
     <div class="modo-toggle" aria-label="Elegir sección de datos">
       <label class="modo-btn" for="t-zonas">Zonas de mis oficinas<small>Chamberí, Chamartín y Malasaña</small></label>
-      <label class="modo-btn" for="t-madrid">Madrid por distritos<small>Capital y sus 21 distritos</small></label>
+      <label class="modo-btn" for="t-madrid">Madrid: distritos y pueblos<small>Capital, distritos y corona</small></label>
       <label class="modo-btn" for="t-espana">España por comunidades<small>Nacional y autonomías</small></label>
     </div>
 
@@ -579,7 +609,7 @@ ${NAV}
     </section>
 
     <section class="im-panel im-seccion" id="p-madrid">
-      <h2>Madrid <span style="font-weight:400;color:var(--gris);font-size:1rem">— capital y sus 21 distritos</span></h2>
+      <h2>Madrid <span style="font-weight:400;color:var(--gris);font-size:1rem">— capital, sus 21 distritos y los municipios de la corona</span></h2>
       ${htmlMadrid}
       ${grafico('madrid', 'distrito')}
     </section>

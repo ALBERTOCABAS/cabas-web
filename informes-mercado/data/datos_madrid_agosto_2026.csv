@@ -1,23 +1,56 @@
 mes,ambito,tipo,precio_m2,var_mensual,var_trimestral,var_anual,max_historico,fecha_max,dist_max
-agosto 2026,Madrid capital,municipio,6471,-1.2%,-2.1%,+2.2%,6619,abril 2026,-2.2%
-agosto 2026,Arganzuela,distrito,6346,+0.2%,-1.0%,+8.0%,6410,mayo 2026,-1.0%
-agosto 2026,Barajas,distrito,5171,+1.6%,+4.4%,+16.8%,5171,agosto 2026,0.0%
-agosto 2026,Barrio de Salamanca,distrito,10841,-0.5%,-2.4%,-1.9%,11328,marzo 2026,-4.3%
-agosto 2026,Carabanchel,distrito,3842,+0.7%,+1.1%,+10.8%,3842,agosto 2026,0.0%
-agosto 2026,Centro,distrito,7745,0.0%,-0.6%,+3.3%,7794,mayo 2026,-0.6%
-agosto 2026,Chamartín,distrito,8222,-0.5%,-1.5%,+6.1%,8343,mayo 2026,-1.5%
-agosto 2026,Chamberí,distrito,9209,-0.4%,-1.1%,+4.0%,9359,marzo 2026,-1.6%
-agosto 2026,Ciudad Lineal,distrito,5201,-0.6%,-2.4%,+8.0%,5327,mayo 2026,-2.4%
-agosto 2026,Fuencarral,distrito,5610,-0.6%,+0.4%,+7.8%,5645,julio 2026,-0.6%
-agosto 2026,Hortaleza,distrito,5483,-0.8%,-1.6%,+7.3%,5586,junio 2026,-1.8%
-agosto 2026,Latina,distrito,4044,+0.9%,+0.8%,+8.1%,4044,agosto 2026,0.0%
-agosto 2026,Moncloa,distrito,6332,0.0%,-0.5%,+3.4%,6401,abril 2026,-1.1%
-agosto 2026,Moratalaz,distrito,4563,+1.2%,+1.8%,+14.8%,4563,agosto 2026,0.0%
-agosto 2026,Puente de Vallecas,distrito,3480,+2.4%,+3.6%,+17.9%,3518,septiembre 2007,-1.1%
-agosto 2026,Retiro,distrito,8444,-0.3%,+0.6%,-0.5%,8579,septiembre 2025,-1.6%
-agosto 2026,San Blas,distrito,4117,-0.1%,-0.4%,+7.0%,4137,junio 2026,-0.5%
-agosto 2026,Tetuán,distrito,6190,-0.6%,-0.7%,+7.6%,6245,junio 2026,-0.9%
-agosto 2026,Usera,distrito,3626,+1.1%,+1.6%,+18.3%,3626,agosto 2026,0.0%
-agosto 2026,Vicálvaro,distrito,3980,-0.1%,-1.3%,+8.0%,4050,junio 2026,-1.7%
-agosto 2026,Villa de Vallecas,distrito,3845,-0.6%,-0.2%,+12.5%,3869,julio 2026,-0.6%
-agosto 2026,Villaverde,distrito,3302,+1.1%,+5.2%,+25.0%,3302,agosto 2026,0.0%
+agosto_2026,Madrid,municipio,6471,"-1,2%","-2,1%","+2,2%",6619,abril 2026,"-2,2%"
+agosto_2026,Arganzuela,distrito,6346,"+0,2%","-1,0%","+8,0%",6410,mayo 2026,"-1,0%"
+agosto_2026,Barajas,distrito,5171,"+1,6%","+4,4%","+16,8%",5171,agosto 2026,"0,0%"
+agosto_2026,Barrio de Salamanca,distrito,10841,"-0,5%","-2,4%","-1,9%",11328,marzo 2026,"-4,3%"
+agosto_2026,Carabanchel,distrito,3842,"+0,7%","+1,1%","+10,8%",3842,agosto 2026,"0,0%"
+agosto_2026,Centro,distrito,7745,"0,0%","-0,6%","+3,3%",7794,mayo 2026,"-0,6%"
+agosto_2026,Chamartín,distrito,8222,"-0,5%","-1,5%","+6,1%",8343,mayo 2026,"-1,5%"
+agosto_2026,Chamberí,distrito,9209,"-0,4%","-1,1%","+4,0%",9359,marzo 2026,"-1,6%"
+agosto_2026,Ciudad Lineal,distrito,5201,"-0,6%","-2,4%","+8,0%",5327,mayo 2026,"-2,4%"
+agosto_2026,Fuencarral,distrito,5610,"-0,6%","+0,4%","+7,8%",5645,julio 2026,"-0,6%"
+agosto_2026,Hortaleza,distrito,5483,"-0,8%","-1,6%","+7,3%",5586,junio 2026,"-1,8%"
+agosto_2026,Latina,distrito,4044,"+0,9%","+0,8%","+8,1%",4044,agosto 2026,"0,0%"
+agosto_2026,Moncloa,distrito,6332,"0,0%","-0,5%","+3,4%",6401,abril 2026,"-1,1%"
+agosto_2026,Moratalaz,distrito,4563,"+1,2%","+1,8%","+14,8%",4563,agosto 2026,"0,0%"
+agosto_2026,Puente de Vallecas,distrito,3480,"+2,4%","+3,6%","+17,9%",3518,septiembre 2007,"-1,1%"
+agosto_2026,Retiro,distrito,8444,"-0,3%","+0,6%","-0,5%",8579,septiembre 2025,"-1,6%"
+agosto_2026,San Blas,distrito,4117,"-0,1%","-0,4%","+7,0%",4137,junio 2026,"-0,5%"
+agosto_2026,Tetuán,distrito,6190,"-0,6%","-0,7%","+7,6%",6245,junio 2026,"-0,9%"
+agosto_2026,Usera,distrito,3626,"+1,1%","+1,6%","+18,3%",3626,agosto 2026,"0,0%"
+agosto_2026,Vicálvaro,distrito,3980,"-0,1%","-1,3%","+8,0%",4050,junio 2026,"-1,7%"
+agosto_2026,Villa de Vallecas,distrito,3845,"-0,6%","-0,2%","+12,5%",3869,julio 2026,"-0,6%"
+agosto_2026,Villaverde,distrito,3302,"+1,1%","+5,2%","+25,0%",3302,agosto 2026,"0,0%"
+agosto_2026,Móstoles,pueblo,3025,"+0,3%","+3,0%","+12,7%",3025,agosto 2026,"0,0%"
+agosto_2026,Alcalá de Henares,pueblo,2969,"+1,1%","+2,9%","+15,7%",2973,diciembre 2007,"-0,1%"
+agosto_2026,Leganés,pueblo,3226,"+0,1%","+1,1%","+8,0%",3226,agosto 2026,"0,0%"
+agosto_2026,Getafe,pueblo,3302,"-0,2%","+1,5%","+12,1%",3307,julio 2026,"-0,2%"
+agosto_2026,Fuenlabrada,pueblo,2866,"-0,2%","-0,3%","+10,7%",2894,junio 2026,"-1,0%"
+agosto_2026,Alcorcón,pueblo,3518,"+1,6%","+3,5%","+13,2%",3518,agosto 2026,"0,0%"
+agosto_2026,Torrejón de Ardoz,pueblo,3127,"+0,9%","+4,4%","+15,4%",3127,agosto 2026,"0,0%"
+agosto_2026,Parla,pueblo,2413,"+0,1%","+2,4%","+12,7%",2473,abril 2008,"-2,5%"
+agosto_2026,Alcobendas,pueblo,4097,"-0,6%","+1,2%","+4,0%",4146,junio 2026,"-1,2%"
+agosto_2026,Rivas-Vaciamadrid,pueblo,3230,"-0,6%","+0,9%","+5,2%",3250,julio 2026,"-0,6%"
+agosto_2026,Las Rozas de Madrid,pueblo,4059,"-0,8%","-0,7%","+10,7%",4139,abril 2026,"-1,9%"
+agosto_2026,San Sebastián de los Reyes,pueblo,4206,"-0,7%","-0,3%","+13,3%",4249,junio 2026,"-1,0%"
+agosto_2026,Pozuelo de Alarcón,pueblo,5015,"-0,8%","-1,2%","+2,6%",5078,mayo 2026,"-1,2%"
+agosto_2026,Valdemoro,pueblo,2518,"+0,6%","-0,9%","+4,3%",2553,junio 2026,"-1,4%"
+agosto_2026,Coslada,pueblo,3322,"-0,7%","+1,3%","+16,8%",3344,julio 2026,"-0,7%"
+agosto_2026,Majadahonda,pueblo,4862,"-1,9%","+0,7%","+18,8%",4957,julio 2026,"-1,9%"
+agosto_2026,Collado Villalba,pueblo,2899,"-0,7%","-1,4%","+7,9%",2941,mayo 2026,"-1,4%"
+agosto_2026,Boadilla del Monte,pueblo,4461,"+3,3%","+4,9%","+20,3%",4461,agosto 2026,"0,0%"
+agosto_2026,Aranjuez,pueblo,2393,"+3,0%","+1,9%","+20,0%",2395,junio 2008,"-0,1%"
+agosto_2026,Arganda del Rey,pueblo,2707,"+0,5%","+4,9%","+15,7%",2707,agosto 2026,"0,0%"
+agosto_2026,Colmenar Viejo,pueblo,3162,"-1,8%","-1,1%","+15,3%",3266,junio 2026,"-3,2%"
+agosto_2026,Pinto,pueblo,2871,"-0,2%","+1,6%","+11,4%",2876,julio 2026,"-0,2%"
+agosto_2026,Tres Cantos,pueblo,4081,"+0,7%","-1,3%","+5,8%",4142,junio 2026,"-1,5%"
+agosto_2026,San Fernando de Henares,pueblo,2962,"-1,2%","-1,5%","+11,4%",3019,marzo 2026,"-1,9%"
+agosto_2026,Arroyomolinos,pueblo,2705,"+1,4%","-0,3%","+19,5%",2713,mayo 2026,"-0,3%"
+agosto_2026,Galapagar,pueblo,2771,"+2,4%","+3,5%","+16,3%",2777,marzo 2026,"-0,2%"
+agosto_2026,Navalcarnero,pueblo,2417,"-0,5%","-1,1%","+8,4%",2457,abril 2026,"-1,6%"
+agosto_2026,Villaviciosa de Odón,pueblo,3563,"-0,2%","+6,5%","+22,7%",3570,julio 2026,"-0,2%"
+agosto_2026,Paracuellos de Jarama,pueblo,2909,"0,0%","+0,2%","+13,8%",2940,junio 2026,"-1,0%"
+agosto_2026,Ciempozuelos,pueblo,2256,"+3,7%","+10,3%","+22,1%",2364,agosto 2008,"-4,6%"
+agosto_2026,Mejorada del Campo,pueblo,2553,"-0,2%","+1,3%","+20,4%",2557,julio 2026,"-0,2%"
+agosto_2026,Villanueva de la Cañada,pueblo,2896,"-3,4%","-2,8%","+7,8%",3049,junio 2026,"-5,0%"
+agosto_2026,Torrelodones,pueblo,2936,"+0,1%","+0,7%","+3,5%",2992,junio 2026,"-1,9%"
