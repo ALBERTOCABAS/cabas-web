@@ -175,6 +175,9 @@ const ACENTO = {
 const bonito = s => ACENTO[s] || s;
 const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 const miles = n => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+// Punto decimal → coma española SOLO en los porcentajes (no toca los miles del €/m²,
+// porque coma() se aplica únicamente a las celdas de %, no a precio_m2).
+const coma = s => String(s == null ? '' : s).replace(/(\d)\.(\d)/g, '$1,$2');
 const eurM2 = v => { const n = parseInt(String(v).replace(/[^\d]/g, ''), 10); return isNaN(n) ? '—' : miles(n) + ' €'; };
 // Margen medio de negociación entre precio publicado y precio final de venta:
 // 6,2% (media nacional, Cátedra Grupo Tecnocasa–UPF, vía idealista, feb. 2026).
@@ -190,13 +193,13 @@ function varCell(str) {
   let cls = 'neu', flecha = '';
   if (/^-/.test(s) && num !== 0) { cls = 'neg'; flecha = '▼ '; }
   else if (/^\+/.test(s) && num !== 0) { cls = 'pos'; flecha = '▲ '; }
-  return `<td class="${cls}">${flecha}${esc(s)}</td>`;
+  return `<td class="${cls}">${flecha}${esc(coma(s))}</td>`;
 }
 // distancia al máximo (informativa, tono neutro; con el máximo en el title)
 function distCell(r) {
   const s = String(r.dist_max || '').trim();
   const ref = r.max_historico ? `Máx: ${eurM2(r.max_historico)}${r.fecha_max ? ' (' + esc(r.fecha_max) + ')' : ''}` : '';
-  const txt = (!s || parseFloat(s.replace(',', '.')) === 0) ? 'En máximo' : esc(s);
+  const txt = (!s || parseFloat(s.replace(',', '.')) === 0) ? 'En máximo' : esc(coma(s));
   return `<td class="dist" title="${ref}">${txt}</td>`;
 }
 function filaTabla(r, esPadre, sep) {
@@ -211,27 +214,31 @@ function filaTabla(r, esPadre, sep) {
 const THEAD = `<thead><tr><th scope="col">Ámbito</th>`
             + `<th scope="col">€/m² Est. Venta</th><th scope="col">€/m² Publicado</th>`
             + `<th scope="col">Mensual</th><th scope="col">Trim.</th><th scope="col">Anual</th>`
-            + `<th scope="col">Dist. máx.</th></tr></thead>`;
+            + `<th scope="col">Precio máximo</th></tr></thead>`;
 const tablaEnvuelta = (cap, cuerpo, id) =>
   `<div class="im-card"${id ? ` id="${id}"` : ''}><table class="im"><caption class="im-cap">${esc(cap)}</caption>${THEAD}<tbody>${cuerpo}</tbody></table></div>`;
 // Botón de descarga POR TABLA: clona ESA tarjeta a la hoja del PDF.
-const botonPDF = (cardId, titulo, sub) => `<p class="im-pdf"><button type="button" class="im-pdf-btn" data-card="${cardId}" data-titulo="${esc(titulo)}" data-sub="${esc(sub)}" data-file="${esc('Cabas — ' + titulo)}">⬇ Descargar en PDF</button></p>`;
+const botonPDF = (cardId, titulo, sub, file) => `<p class="im-pdf"><button type="button" class="im-pdf-btn" data-card="${cardId}" data-titulo="${esc(titulo)}" data-sub="${esc(sub)}" data-file="${esc(file || 'Cabas')}">⬇ Descargar en PDF</button></p>`;
 // Variante de botón con etiqueta propia (para el bloque de Madrid, con 3 descargas).
 const botonPDFv = (cardId, label, titulo, sub, file) => `<button type="button" class="im-pdf-btn" data-card="${cardId}" data-titulo="${esc(titulo)}" data-sub="${esc(sub)}" data-file="${esc(file)}">⬇ ${esc(label)}</button>`;
-const bloque = (id, cap, cuerpo, titulo, sub) => tablaEnvuelta(cap, cuerpo, id) + botonPDF(id, titulo, sub);
+const bloque = (id, cap, cuerpo, titulo, sub, file) => tablaEnvuelta(cap, cuerpo, id) + botonPDF(id, titulo, sub, file);
 
 // Bloque destacado "En contexto" (NO es una tabla; estilo propio). Distingue
 // visualmente precio de OFERTA (idealista) de OPERACIÓN CERRADA (INE).
 function bloqueContraste(c) {
   if (!c || !c.titular || !c.puntos.length) return '';
-  const tag = t => t === 'cerrada'
-    ? '<span class="im-c-tag cerrada">Operación cerrada</span>'
-    : '<span class="im-c-tag oferta">Precio de oferta</span>';
-  const puntos = c.puntos.map(p => `<div class="im-c-punto ${p.tipo === 'cerrada' ? 'cerrada' : 'oferta'}">`
-    + tag(p.tipo)
-    + `<div class="im-c-dato">${esc(p.valor)}</div>`
+  // Etiqueta por indicador: oferta (idealista), compraventas firmadas (INE
+  // Transmisiones) o precio de operación cerrada (INE IPV) — las dos del INE
+  // miden cosas distintas y no deben rotularse igual.
+  const etiquetaTipo = p => p.tipo !== 'cerrada'
+    ? { cls: 'oferta', txt: 'Precio de oferta' }
+    : (/transmisi|compraventa/i.test(p.fuente) ? { cls: 'cerrada', txt: 'Compraventas firmadas' }
+                                               : { cls: 'cerrada', txt: 'Precio de operación cerrada' });
+  const puntos = c.puntos.map(p => { const t = etiquetaTipo(p); return `<div class="im-c-punto ${t.cls}">`
+    + `<span class="im-c-tag ${t.cls}">${t.txt}</span>`
+    + `<div class="im-c-dato">${esc(coma(p.valor))}</div>`
     + `<div class="im-c-etq">${esc(p.etiqueta)}</div>`
-    + `<div class="im-c-fte">${esc(p.fuente)}</div></div>`).join('');
+    + `<div class="im-c-fte">${esc(p.fuente)}</div></div>`; }).join('');
   return `<aside class="im-contraste" aria-label="El mercado en contexto">`
     + `<span class="im-c-eyebrow">En contexto · ${esc(c.mes || mesUltimo.label)}</span>`
     + `<h2 class="im-c-titular">${esc(c.titular)}</h2>`
@@ -284,9 +291,9 @@ const cuerpoDistrito = fs => { const p = fs.find(r => r.tipo === 'distrito') || 
 const cuerpoCham = cuerpoDistrito(filasZona('Chamberi'))
   + filasZona('Malasana-Universidad').map(r => filaTabla(r, false, true)).join('');
 let htmlZonas = `<h3 class="im-zona">Chamberí y Malasaña</h3>`
-  + bloque('card-cham', 'Chamberí y Malasaña-Universidad', cuerpoCham, 'Chamberí y Malasaña', 'Chamberí y Malasaña-Universidad · barrio a barrio');
+  + bloque('card-cham', 'Chamberí y Malasaña-Universidad', cuerpoCham, 'Chamberí y Malasaña', 'Chamberí y Malasaña-Universidad · barrio a barrio', 'Cabas_Chamberi_Malasana');
 htmlZonas += `<h3 class="im-zona">Chamartín</h3>`
-  + bloque('card-chamartin', 'Chamartín', cuerpoDistrito(filasZona('Chamartin')), 'Chamartín', 'Distrito de Chamartín · barrio a barrio');
+  + bloque('card-chamartin', 'Chamartín', cuerpoDistrito(filasZona('Chamartin')), 'Chamartín', 'Distrito de Chamartín · barrio a barrio', 'Cabas_Chamartin');
 
 // --- MADRID: municipio + 21 distritos + 33 municipios más poblados ---
 // UN solo bloque (card) alargado: tabla de capital+distritos y, debajo, la tabla
@@ -306,9 +313,9 @@ const tablaPueblos = mPueblos.length
   ? `<table class="im" id="tabla-madrid-pueblos" style="margin-top:14px"><caption class="im-cap">Municipios más poblados</caption>${THEAD}<tbody>${mPueblos.map(r => filaTabla(r, false)).join('')}</tbody></table>`
   : '';
 const botonesMadrid = `<p class="im-pdf im-pdf-multi"><span class="im-pdf-lbl">Descargar en PDF:</span>`
-  + botonPDFv('tabla-madrid-distritos', 'Capital y distritos', 'Madrid — capital y distritos', 'Capital y sus 21 distritos', 'Cabas — Madrid capital y distritos')
-  + (mPueblos.length ? botonPDFv('tabla-madrid-pueblos', 'Municipios más poblados', 'Madrid — municipios más poblados', 'Los municipios más poblados de la Comunidad de Madrid', 'Cabas — Madrid municipios mas poblados') : '')
-  + (mPueblos.length ? botonPDFv('card-madrid', 'Informe completo', 'Madrid — capital, distritos y municipios', 'Capital, distritos y municipios más poblados', 'Cabas — Madrid capital distritos y municipios') : '')
+  + botonPDFv('tabla-madrid-distritos', 'Capital y distritos', 'Madrid — capital y distritos', 'Capital y sus 21 distritos', 'Cabas_Madrid_capital_distritos')
+  + (mPueblos.length ? botonPDFv('tabla-madrid-pueblos', 'Municipios más poblados', 'Madrid — municipios más poblados', 'Los municipios más poblados de la Comunidad de Madrid', 'Cabas_Madrid_municipios_mas_poblados') : '')
+  + (mPueblos.length ? botonPDFv('card-madrid', 'Informe completo', 'Madrid — capital, distritos y municipios', 'Capital, distritos y municipios más poblados', 'Cabas_Madrid_capital_distritos_municipios') : '')
   + `</p>`;
 const htmlMadrid = `<div class="im-card" id="card-madrid">${tablaMadrid}${tablaPueblos}</div>` + botonesMadrid;
 
@@ -318,7 +325,7 @@ const ePadre = ultEspana.find(r => r.tipo === 'nacional');
 const eHijos = ultEspana.filter(r => r.tipo !== 'nacional');
 const htmlEspana = bloque('card-espana', 'España y comunidades autónomas',
   (ePadre ? filaTabla(ePadre, true) : '') + eHijos.map(r => filaTabla(r, false)).join(''),
-  'España por comunidades', 'Nacional y comunidades autónomas');
+  'España por comunidades', 'Nacional y comunidades autónomas', 'Cabas_Espana_comunidades');
 
 // ============================================================
 // Nav y footer (rutas ABSOLUTAS desde la raíz → válidas en subcarpeta)
@@ -645,7 +652,7 @@ ${NAV}
   </div>
 
   <p class="im-fuente">
-    <b>Precios de oferta publicada en idealista, no de operación cerrada.</b> Reflejan lo que se pide, no lo que se firma. La columna <b>€/m² Est. Venta</b> es una estimación: el precio publicado menos el <b>6,2 %</b> de margen medio de negociación a nivel nacional entre precio de oferta y precio final de venta (Cátedra Grupo Tecnocasa–UPF, vía idealista, 18-02-2026). Ese margen es una media que varía según la zona, el inmueble y el momento, por lo que el precio real de cierre puede diferir. €/m² de vivienda en venta. Última actualización: ${esc(mesUltimo.label)}.
+    <b>Precios de oferta publicada en idealista, no de operación cerrada.</b> Reflejan lo que se pide, no lo que se firma. La columna <b>€/m² Est. Venta</b> es una estimación: el precio publicado menos el <b>6,2 %</b> de margen medio de negociación a nivel nacional entre precio de oferta y precio final de venta (Cátedra Grupo Tecnocasa–UPF, vía idealista, 18-02-2026). Ese margen es una media que varía según la zona, el inmueble y el momento, por lo que el precio real de cierre puede diferir. La columna <b>Precio máximo</b> indica la distancia del precio actual a su máximo histórico en la serie; «En máximo» significa que el precio actual es el más alto registrado. €/m² de vivienda en venta. Última actualización: ${esc(mesUltimo.label)}.
     Elaborado por Alberto Cabas Ortiz (Cabas Realtor). Uso informativo; no es una tasación ni asesoramiento de inversión.
   </p>
 </main>
@@ -665,7 +672,7 @@ ${FOOTER}
     </div>
     <div class="i-body">
       <div id="im-hoja-tablas"></div>
-      <p class="i-hipotesis"><strong>Precios de oferta publicada en idealista, no de operación cerrada.</strong> El «€/m² Est. Venta» descuenta el 6,2 % de margen medio de negociación entre precio publicado y precio final de venta (media nacional; Cátedra Grupo Tecnocasa–UPF, vía idealista, feb. 2026), que varía según la zona, el inmueble y el momento.</p>
+      <p class="i-hipotesis"><strong>Precios de oferta publicada en idealista, no de operación cerrada.</strong> El «€/m² Est. Venta» descuenta el 6,2 % de margen medio de negociación entre precio publicado y precio final de venta (media nacional; Cátedra Grupo Tecnocasa–UPF, vía idealista, feb. 2026), que varía según la zona, el inmueble y el momento. «Precio máximo»: distancia del precio actual a su máximo histórico en la serie; «En máximo», el más alto registrado.</p>
       <p class="i-disclaimer">Elaborado por Alberto Cabas Ortiz (Cabas Realtor). Uso informativo; no es una tasación ni asesoramiento de inversión.</p>
     </div>
     <div class="i-footer">
