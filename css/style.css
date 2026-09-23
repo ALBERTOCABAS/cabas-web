@@ -96,9 +96,9 @@ h3{font-size:1.35rem}
 }
 .nav-logo{display:flex;align-items:center;gap:.7rem}
 .nav-logo img{height:40px;width:auto}
-.nav-logo span{
-  font-family:var(--serif);font-size:1.25rem;letter-spacing:.14em;color:var(--oro);
-}
+/* Wordmark "CABAS REALTOR" (lockup de 2 líneas): algo más bajo que el emblema
+   para equilibrar ópticamente y que la cabecera no crezca. */
+.nav-logo .nav-wordmark{height:34px}
 .nav-links{display:flex;gap:1.1rem;list-style:none;align-items:center}
 .nav-links a{
   color:var(--hueso);font-size:.86rem;font-weight:500;letter-spacing:.04em;
