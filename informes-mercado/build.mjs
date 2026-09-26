@@ -26,9 +26,12 @@ const REPO      = path.resolve(__dirname, '..');                      // …/cab
 const DATA_DIR  = path.join(__dirname, 'data');
 const OUT_HTML  = path.join(__dirname, 'index.html');
 const OUT_SITEMAP = path.join(REPO, 'sitemap.xml');
+const OUT_NOTICIAS = path.join(REPO, 'noticias', 'index.html');   // página /noticias/
 
 // Origen en Drive (solo lectura). Si algún día cambia la ruta, se edita aquí.
 const DRIVE = '/Users/albertocabas/Library/CloudStorage/GoogleDrive-cabasrealtor@gmail.com/Mi unidad/Informes de mercado (WhatsApp-Telegram)';
+// Titulares semanales (los deja cada lunes la tarea programada, en OTRA carpeta de Drive).
+const DRIVE_TITULARES = '/Users/albertocabas/Library/CloudStorage/GoogleDrive-cabasrealtor@gmail.com/Mi unidad/CABASTVCBOT — fuentes/salidas/Informes de mercado/Titulares semanales';
 
 const BASE_URL = 'https://www.cabas.es';
 
@@ -38,6 +41,9 @@ const RE = {
   espana: /^datos_espana_[a-zñáéíóú]+_\d{4}\.csv$/i,
   zonas:  /^datos_(?!madrid_|espana_)[a-zñáéíóú]+_\d{4}\.csv$/i,
   contraste: /^contraste_[a-zñáéíóú]+_\d{4}\.json$/i,   // bloque "En contexto"
+  // Titulares de la semana: SOLO el fichero limpio "…_AAAA_SS.json";
+  // los renombrados "…_anterior_HHMM.json" y los .txt quedan fuera.
+  titulares: /^Titulares_inmobiliarios_semana_\d{4}_\d{2}\.json$/i,
 };
 const esDato     = f => RE.madrid.test(f) || RE.espana.test(f) || RE.zonas.test(f);
 const esCopiable = f => esDato(f) || RE.contraste.test(f);   // lo que el build baja de Drive
@@ -100,6 +106,13 @@ try {
 } catch (e) {
   driveOk = false;   // Drive no montado / sin permiso: seguimos con lo ya commiteado
 }
+// Titulares semanales: misma lógica (copiar lo nuevo), pero desde su carpeta de Drive.
+try {
+  for (const f of fs.readdirSync(DRIVE_TITULARES).filter(x => RE.titulares.test(x))) {
+    const dest = path.join(DATA_DIR, f);
+    if (!fs.existsSync(dest)) { fs.copyFileSync(path.join(DRIVE_TITULARES, f), dest); copiados.push(f); }
+  }
+} catch (e) { /* carpeta de titulares no montada: seguimos con lo commiteado */ }
 
 // ============================================================
 // 2) Leer TODOS los CSV commiteados (fuente de la verdad)
@@ -330,7 +343,20 @@ const htmlEspana = bloque('card-espana', 'España y comunidades autónomas',
 // ============================================================
 // Nav y footer (rutas ABSOLUTAS desde la raíz → válidas en subcarpeta)
 // ============================================================
-const NAV = `<nav class="nav" aria-label="Navegación principal">
+const NAV_LINKS = [
+  ['/index.html', 'Inicio', 'inicio'],
+  ['/herencias.html', 'Herencias', 'herencias'],
+  ['/vender.html', 'Vender', 'vender'],
+  ['/comprar.html', 'Comprar', 'comprar'],
+  ['/inversion.html', 'Inversión', 'inversion'],
+  ['/valoracion.html', 'Valoración', 'valoracion'],
+  ['/informes-mercado/', 'Informes', 'informes'],
+  ['/noticias/', 'Noticias', 'noticias'],
+  ['/quien-soy.html', 'Quién soy', 'quien-soy'],
+  ['/oficinas.html', 'Oficinas', 'oficinas'],
+];
+const IDIOMA_LI = `<li class="idioma"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm7.9 9h-3a15.6 15.6 0 0 0-1.2-5.3A8 8 0 0 1 19.9 11zM12 4c.9 1.2 1.7 3.3 1.9 7h-3.8c.2-3.7 1-5.8 1.9-7zM4.1 13h3c.1 1.9.5 3.7 1.2 5.3A8 8 0 0 1 4.1 13zm3-2h-3a8 8 0 0 1 4.2-5.3A15.6 15.6 0 0 0 7.1 11zm4.9 9c-.9-1.2-1.7-3.3-1.9-7h3.8c-.2 3.7-1 5.8-1.9 7zm3.7-1.7c.7-1.6 1.1-3.4 1.2-5.3h3a8 8 0 0 1-4.2 5.3z"/></svg><select id="selector-idioma" aria-label="Idioma / Language"><option value="">ES</option><option value="ca">CA</option><option value="en">EN</option><option value="fr">FR</option><option value="de">DE</option><option value="it">IT</option><option value="pt">PT</option><option value="zh-CN">中文</option><option value="ar">AR</option></select></li>`;
+const renderNav = (activo) => `<nav class="nav" aria-label="Navegación principal">
   <div class="nav-inner">
     <a class="nav-logo" href="/index.html">
       <img src="/assets/logo-c.png" alt="" class="nav-emblema">
@@ -338,16 +364,8 @@ const NAV = `<nav class="nav" aria-label="Navegación principal">
     </a>
     <button class="nav-toggle" aria-expanded="false" aria-label="Abrir menú">☰</button>
     <ul class="nav-links">
-      <li><a href="/index.html">Inicio</a></li>
-      <li><a href="/herencias.html">Herencias</a></li>
-      <li><a href="/vender.html">Vender</a></li>
-      <li><a href="/comprar.html">Comprar</a></li>
-      <li><a href="/inversion.html">Inversión</a></li>
-      <li><a href="/valoracion.html">Valoración</a></li>
-      <li><a href="/informes-mercado/" aria-current="page">Informes</a></li>
-      <li><a href="/quien-soy.html">Quién soy</a></li>
-      <li><a href="/oficinas.html">Oficinas</a></li>
-      <li class="idioma"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm7.9 9h-3a15.6 15.6 0 0 0-1.2-5.3A8 8 0 0 1 19.9 11zM12 4c.9 1.2 1.7 3.3 1.9 7h-3.8c.2-3.7 1-5.8 1.9-7zM4.1 13h3c.1 1.9.5 3.7 1.2 5.3A8 8 0 0 1 4.1 13zm3-2h-3a8 8 0 0 1 4.2-5.3A15.6 15.6 0 0 0 7.1 11zm4.9 9c-.9-1.2-1.7-3.3-1.9-7h3.8c-.2 3.7-1 5.8-1.9 7zm3.7-1.7c.7-1.6 1.1-3.4 1.2-5.3h3a8 8 0 0 1-4.2 5.3z"/></svg><select id="selector-idioma" aria-label="Idioma / Language"><option value="">ES</option><option value="ca">CA</option><option value="en">EN</option><option value="fr">FR</option><option value="de">DE</option><option value="it">IT</option><option value="pt">PT</option><option value="zh-CN">中文</option><option value="ar">AR</option></select></li>
+      ${NAV_LINKS.map(([h, t, k]) => `<li><a href="${h}"${k === activo ? ' aria-current="page"' : ''}>${t}</a></li>`).join('\n      ')}
+      ${IDIOMA_LI}
       <li><a class="nav-cta" href="/contacto.html">Contacto</a></li>
     </ul>
   </div>
@@ -612,12 +630,13 @@ const HTML = `<!DOCTYPE html>
 </style>
 </head>
 <body class="pg-informes">
-${NAV}
+${renderNav('informes')}
 <main class="im-wrap">
   <h1 class="im-titulo">Informes de Mercado</h1>
   <p class="im-intro">Evolución de los precios de vivienda <b>en venta</b> (€/m²): el detalle por barrios de las zonas donde están mis oficinas —Chamberí, Chamartín y Malasaña-Universidad—, los 21 distritos de Madrid capital, los municipios más poblados de la Comunidad de Madrid y todas las comunidades autónomas.</p>
   <p class="im-aviso"><b>Fuente:</b> precios de <b>oferta publicada</b> en idealista, no de operación cerrada. El <b>€/m² Est. Venta</b> descuenta el <b>6,2 %</b> de margen medio de negociación entre precio publicado y precio final de venta (media nacional; Cátedra Grupo Tecnocasa–UPF, vía idealista, feb. 2026).</p>
   <p class="im-actualizado">Última actualización: <b>${esc(mesUltimo.label)}</b>.</p>
+  <p class="im-cross" style="margin-top:6px"><a href="/noticias/">Titulares inmobiliarios de la semana →</a></p>
 
   ${bloqueContraste(CONTRASTE)}
 
@@ -725,11 +744,148 @@ document.getElementById('selector-idioma').addEventListener('change', function()
 })();
 </script>
 ${SVG_JS}
+<script src="/js/turnstile-cabas.js" defer></script>
 <script src="/js/cabas-chatbot.js" defer></script>
 </body>
 </html>`;
 
 fs.writeFileSync(OUT_HTML, HTML, 'utf8');
+
+// ============================================================
+// 3b) Página de NOTICIAS (/noticias/) — titulares semanales del JSON
+// ============================================================
+const MES_ABBR = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
+const fLarga = iso => { const [y, m, d] = String(iso || '').split('-').map(Number); return { d, m, y }; };
+function rangoSemana(desde, hasta) {
+  const a = fLarga(desde), b = fLarga(hasta);
+  if (!a.y || !b.y) return '';
+  if (a.y === b.y && a.m === b.m) return `Semana del ${a.d} al ${b.d} de ${MESES[a.m - 1]} de ${a.y}`;
+  if (a.y === b.y) return `Semana del ${a.d} de ${MESES[a.m - 1]} al ${b.d} de ${MESES[b.m - 1]} de ${a.y}`;
+  return `Semana del ${a.d} de ${MESES[a.m - 1]} de ${a.y} al ${b.d} de ${MESES[b.m - 1]} de ${b.y}`;
+}
+const fechaCorta = iso => { const f = fLarga(iso); return f.y ? `${f.d} ${MES_ABBR[f.m - 1]} ${f.y}` : esc(String(iso || '')); };
+
+// Titulares commiteados en ./data/ (fuente de la verdad); ignora *_anterior_HHMM y .txt.
+const semanas = fs.readdirSync(DATA_DIR).filter(f => RE.titulares.test(f))
+  .map(f => { try { return JSON.parse(fs.readFileSync(path.join(DATA_DIR, f), 'utf8')); } catch (e) { return null; } })
+  .filter(s => s && s.semana && Array.isArray(s.noticias) && s.noticias.length)
+  .sort((a, b) => String(b.semana).localeCompare(String(a.semana)));   // más reciente arriba
+
+function noticiasLista(sem) {
+  const items = [...sem.noticias].sort((a, b) => (a.orden || 0) - (b.orden || 0)).map(n =>
+    `<li class="nt-item">`
+    + `<h4 class="nt-titular">${esc(n.titular || '')}</h4>`
+    + (n.resumen ? `<p class="nt-resumen">${esc(n.resumen)}</p>` : '')
+    + `<p class="nt-meta">${esc(n.medio || '')}${(n.medio && n.fecha) ? ' · ' : ''}${n.fecha ? fechaCorta(n.fecha) : ''}`
+    + (n.enlace ? ` · <a href="${esc(n.enlace)}" target="_blank" rel="noopener nofollow">Leer en el medio original ↗</a>` : '')
+    + `</p></li>`
+  ).join('');
+  return `<ol class="nt-lista">${items}</ol>`;
+}
+
+const ultimaSem = semanas[0] || null;
+const rangoUlt = ultimaSem ? rangoSemana(ultimaSem.desde, ultimaSem.hasta) : '';
+const anteriores = semanas.slice(1);
+const noticiasISO = (ultimaSem && ultimaSem.hasta) ? ultimaSem.hasta : new Date().toISOString().slice(0, 10);
+
+const cuerpoNoticias = ultimaSem
+  ? `<h2 class="nt-semana">${esc(rangoUlt)}</h2>${noticiasLista(ultimaSem)}`
+    + (anteriores.length
+        ? `<details class="nt-anteriores"><summary>Semanas anteriores</summary>`
+          + anteriores.map(s => `<section class="nt-sem-ant"><h3 class="nt-semana nt-semana-ant">${esc(rangoSemana(s.desde, s.hasta))}</h3>${noticiasLista(s)}</section>`).join('')
+          + `</details>`
+        : '')
+  : `<p class="nt-intro">Muy pronto encontrarás aquí los titulares inmobiliarios de la semana.</p>`;
+
+const TITULO_N = ultimaSem
+  ? `Titulares inmobiliarios de la semana — ${rangoUlt} | Cabas Realtor`
+  : `Titulares inmobiliarios de la semana | Cabas Realtor`;
+const DESC_N = ultimaSem
+  ? `Titulares inmobiliarios de la ${rangoUlt.charAt(0).toLowerCase() + rangoUlt.slice(1)}: alquiler, precios, hipotecas y vivienda en Madrid y España, con enlace a la noticia original. Selección de CABAS Realtor a partir de fuentes públicas.`
+  : `Titulares inmobiliarios de la semana en Madrid y España: alquiler, precios, hipotecas y vivienda, con enlace a la noticia original.`;
+const URL_N = `${BASE_URL}/noticias/`;
+
+const HTML_N = `<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>${esc(TITULO_N)}</title>
+<meta name="description" content="${esc(DESC_N)}">
+<link rel="canonical" href="${URL_N}">
+<meta name="robots" content="index,follow">
+<link rel="icon" type="image/png" href="/assets/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/style.css">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Alberto Cabas · Cabas Realtor">
+<meta property="og:title" content="${esc(TITULO_N)}">
+<meta property="og:description" content="${esc(DESC_N)}">
+<meta property="og:url" content="${URL_N}">
+<meta property="og:image" content="${BASE_URL}/assets/og-cabas.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="${esc(TITULO_N)}">
+<meta name="twitter:description" content="${esc(DESC_N)}">
+<meta name="twitter:image" content="${BASE_URL}/assets/og-cabas.jpg">
+<style>
+  .pg-noticias .nt-wrap{ max-width:820px; margin:0 auto; padding:26px 18px 70px; }
+  .pg-noticias .nt-titulo{ font-family:var(--serif); color:var(--oro); font-size:clamp(2rem,5vw,3rem); line-height:1.08; }
+  .pg-noticias .nt-intro{ color:var(--gris); margin-top:10px; }
+  .pg-noticias .nt-cross{ margin-top:8px; font-size:.9rem; }
+  .pg-noticias .nt-cross a{ color:var(--oro-claro); }
+  .pg-noticias .nt-semana{ font-family:var(--serif); color:var(--hueso); font-size:1.5rem; margin:34px 0 4px; border-bottom:1px solid var(--linea); padding-bottom:8px; }
+  .pg-noticias .nt-semana-ant{ font-size:1.25rem; color:var(--oro-claro); margin-top:26px; }
+  .pg-noticias .nt-lista{ list-style:none; counter-reset:nt; padding:0; margin:14px 0 0; }
+  .pg-noticias .nt-item{ counter-increment:nt; position:relative; padding:16px 0 16px 46px; border-bottom:1px solid rgba(178,142,68,.16); }
+  .pg-noticias .nt-item::before{ content:counter(nt); position:absolute; left:0; top:16px; width:30px; height:30px; border:1px solid var(--oro); border-radius:50%; color:var(--oro); font-family:var(--serif); font-size:1rem; display:flex; align-items:center; justify-content:center; }
+  .pg-noticias .nt-titular{ font-family:var(--serif); color:var(--hueso); font-size:1.22rem; line-height:1.28; margin:0; font-weight:600; }
+  .pg-noticias .nt-resumen{ color:var(--gris); font-size:.95rem; line-height:1.55; margin:.45rem 0 0; }
+  .pg-noticias .nt-meta{ color:#8a7f6b; font-size:.8rem; margin:.55rem 0 0; }
+  .pg-noticias .nt-meta a{ color:var(--oro-claro); }
+  .pg-noticias .nt-anteriores{ margin-top:36px; border-top:1px solid var(--linea); }
+  .pg-noticias .nt-anteriores > summary{ cursor:pointer; list-style:none; font-family:var(--serif); color:var(--oro-claro); font-size:1.35rem; padding:16px 0 4px; }
+  .pg-noticias .nt-anteriores > summary::-webkit-details-marker{ display:none; }
+  .pg-noticias .nt-anteriores > summary::before{ content:'▸ '; color:var(--oro); }
+  .pg-noticias .nt-anteriores[open] > summary::before{ content:'▾ '; }
+  .pg-noticias .nt-fuente{ margin-top:44px; padding-top:16px; border-top:1px solid var(--linea); color:var(--gris); font-size:.82rem; line-height:1.6; }
+</style>
+</head>
+<body class="pg-noticias">
+${renderNav('noticias')}
+<main class="nt-wrap">
+  <h1 class="nt-titulo">Titulares inmobiliarios de la semana</h1>
+  <p class="nt-intro">Una selección de las noticias inmobiliarias de la semana en Madrid y España. Cada titular enlaza a la publicación original.</p>
+  <p class="nt-cross"><a href="/informes-mercado/">Ver los informes de mercado (precios €/m²) →</a></p>
+  ${cuerpoNoticias}
+  <p class="nt-fuente">Elaborado por CABAS Realtor a partir de fuentes públicas; los enlaces llevan a la noticia original.</p>
+</main>
+${FOOTER}
+<a class="whatsapp" href="https://wa.me/34604854690?text=Hola" target="_blank" rel="noopener" aria-label="Escribir por WhatsApp"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2c-1.6 0-3.1-.4-4.4-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2z"/></svg></a>
+<div id="google_translate_element" style="display:none"></div>
+<script>
+function googleTranslateElementInit(){new google.translate.TranslateElement({pageLanguage:'es',includedLanguages:'ca,en,fr,de,it,pt,zh-CN,ar',autoDisplay:false},'google_translate_element');}
+document.getElementById('selector-idioma').addEventListener('change', function(){
+  var lang=this.value;
+  if(!lang){ var _h=location.hostname,_r=_h.replace(/^www\\./,'');['',_h,'.'+_h,_r,'.'+_r].forEach(function(d){document.cookie='googtrans=;path=/;expires=Thu, 01 Jan 1970 00:00:00 GMT'+(d?';domain='+d:'');});location.reload();return; }
+  document.cookie='googtrans=/es/'+lang+';path=/';
+  document.cookie='googtrans=/es/'+lang+';path=/;domain=.'+location.hostname.replace(/^www\\./,'');
+  var combo=document.querySelector('select.goog-te-combo'); if(combo){combo.value=lang;combo.dispatchEvent(new Event('change'));}else{location.reload();}
+});
+</script>
+<script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit" defer></script>
+<script src="/js/main.js"></script>
+<script src="/js/textura.js"></script>
+<script src="/js/turnstile-cabas.js" defer></script>
+<script src="/js/cabas-chatbot.js" defer></script>
+</body>
+</html>`;
+
+fs.mkdirSync(path.dirname(OUT_NOTICIAS), { recursive: true });
+fs.writeFileSync(OUT_NOTICIAS, HTML_N, 'utf8');
 
 // ============================================================
 // 4) sitemap.xml (regenerado con la fecha del mes más reciente)
@@ -738,11 +894,13 @@ const hoyISO = new Date().toISOString().slice(0, 10);
 const PAGINAS = [
   ['/', '1.0'], ['/herencias.html', '0.8'], ['/vender.html', '0.8'], ['/comprar.html', '0.8'],
   ['/inversion.html', '0.7'], ['/valoracion.html', '0.7'], ['/informes-mercado/', '0.9'],
+  ['/noticias/', '0.8'],
   ['/quien-soy.html', '0.6'], ['/oficinas.html', '0.6'], ['/contacto.html', '0.5'],
 ];
+const lastmodDe = u => u === '/informes-mercado/' ? mesUltimo.iso : u === '/noticias/' ? noticiasISO : hoyISO;
 const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${PAGINAS.map(([u, p]) => `  <url><loc>${BASE_URL}${u}</loc><lastmod>${u === '/informes-mercado/' ? mesUltimo.iso : hoyISO}</lastmod><priority>${p}</priority></url>`).join('\n')}
+${PAGINAS.map(([u, p]) => `  <url><loc>${BASE_URL}${u}</loc><lastmod>${lastmodDe(u)}</lastmod><priority>${p}</priority></url>`).join('\n')}
 </urlset>
 `;
 fs.writeFileSync(OUT_SITEMAP, sitemap, 'utf8');
@@ -757,5 +915,6 @@ console.log(`CSV en data/: ${locales.length}  ·  meses en serie: ${N_MESES} (${
 console.log(`Filas · zonas:${filas.zonas.length}  madrid:${filas.madrid.length}  espana:${filas.espana.length}`);
 console.log(`Gráficos: ${N_MESES >= 3 ? 'SÍ (>=3 meses)' : 'aún no (aparecen con 3 meses)'}`);
 console.log(`Bloque "En contexto": ${CONTRASTE && CONTRASTE.puntos.length ? contrasteOrigen + ' · ' + CONTRASTE.puntos.length + ' indicadores' : 'sin datos (no aparece)'}`);
-console.log(`Generado: informes-mercado/index.html  +  sitemap.xml   ·  última actualización: ${mesUltimo.label}`);
+console.log(`Noticias: ${semanas.length} semana(s) · última: ${ultimaSem ? ultimaSem.semana + ' (' + rangoUlt + ')' : '—'} → noticias/index.html`);
+console.log(`Generado: informes-mercado/index.html  +  noticias/index.html  +  sitemap.xml   ·  última actualización: ${mesUltimo.label}`);
 console.log('─────────────────────────────────────────────────');
