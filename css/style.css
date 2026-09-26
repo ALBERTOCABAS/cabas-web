@@ -94,15 +94,23 @@ h3{font-size:1.35rem}
   max-width:var(--max);margin:0 auto;padding:.8rem 1.4rem;
   display:flex;align-items:center;justify-content:space-between;gap:1rem;
 }
-.nav-logo{display:flex;align-items:center;gap:.7rem}
+.nav-logo{display:flex;align-items:center;gap:.7rem;flex:0 0 auto}
 .nav-logo img{height:40px;width:auto}
 /* Wordmark "CABAS REALTOR" (lockup de 2 líneas): algo más bajo que el emblema
    para equilibrar ópticamente y que la cabecera no crezca. */
 .nav-logo .nav-wordmark{height:34px}
-.nav-links{display:flex;gap:1.1rem;list-style:none;align-items:center}
+.nav-links{display:flex;gap:1rem;list-style:none;align-items:center;flex-wrap:nowrap}
 .nav-links a{
   color:var(--hueso);font-size:.86rem;font-weight:500;letter-spacing:.04em;
-  padding:.3rem 0;border-bottom:1px solid transparent;
+  padding:.3rem 0;border-bottom:1px solid transparent;white-space:nowrap;
+}
+/* Anchos medios (menú horizontal, contenedor ~1120px): compacta el menú para que
+   los 10 enlaces + idioma + CTA quepan SIEMPRE en una fila sin partirse. */
+@media(min-width:1181px) and (max-width:1520px){
+  .nav-inner{padding-left:1rem;padding-right:1rem;gap:.7rem}
+  .nav-links{gap:.62rem}
+  .nav-links a{font-size:.8rem;letter-spacing:.02em}
+  .nav-cta{padding:.45rem .8rem !important}
 }
 .nav-links a:hover,.nav-links a[aria-current="page"]{color:var(--oro);border-bottom-color:var(--oro)}
 .nav-cta{

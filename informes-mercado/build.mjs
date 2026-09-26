@@ -772,10 +772,10 @@ const semanas = fs.readdirSync(DATA_DIR).filter(f => RE.titulares.test(f))
   .sort((a, b) => String(b.semana).localeCompare(String(a.semana)));   // más reciente arriba
 
 function noticiasLista(sem) {
-  const items = [...sem.noticias].sort((a, b) => (a.orden || 0) - (b.orden || 0)).map(n =>
-    `<li class="nt-item">`
-    + `<h4 class="nt-titular">${esc(n.titular || '')}</h4>`
-    + (n.resumen ? `<p class="nt-resumen">${esc(n.resumen)}</p>` : '')
+  const items = [...sem.noticias].sort((a, b) => (a.orden || 0) - (b.orden || 0)).map((n, i) =>
+    `<li class="nt-card">`
+    + `<div class="nt-card-top"><span class="nt-num">${i + 1}</span><h4 class="nt-titular">${esc(n.titular || '')}</h4></div>`
+    + `<p class="nt-resumen">${esc(n.resumen || '')}</p>`
     + `<p class="nt-meta">${esc(n.medio || '')}${(n.medio && n.fecha) ? ' · ' : ''}${n.fecha ? fechaCorta(n.fecha) : ''}`
     + (n.enlace ? ` · <a href="${esc(n.enlace)}" target="_blank" rel="noopener nofollow">Leer en el medio original ↗</a>` : '')
     + `</p></li>`
@@ -839,13 +839,18 @@ const HTML_N = `<!DOCTYPE html>
   .pg-noticias .nt-cross a{ color:var(--oro-claro); }
   .pg-noticias .nt-semana{ font-family:var(--serif); color:var(--hueso); font-size:1.5rem; margin:34px 0 4px; border-bottom:1px solid var(--linea); padding-bottom:8px; }
   .pg-noticias .nt-semana-ant{ font-size:1.25rem; color:var(--oro-claro); margin-top:26px; }
-  .pg-noticias .nt-lista{ list-style:none; counter-reset:nt; padding:0; margin:14px 0 0; }
-  .pg-noticias .nt-item{ counter-increment:nt; position:relative; padding:16px 0 16px 46px; border-bottom:1px solid rgba(178,142,68,.16); }
-  .pg-noticias .nt-item::before{ content:counter(nt); position:absolute; left:0; top:16px; width:30px; height:30px; border:1px solid var(--oro); border-radius:50%; color:var(--oro); font-family:var(--serif); font-size:1rem; display:flex; align-items:center; justify-content:center; }
-  .pg-noticias .nt-titular{ font-family:var(--serif); color:var(--hueso); font-size:1.22rem; line-height:1.28; margin:0; font-weight:600; }
-  .pg-noticias .nt-resumen{ color:var(--gris); font-size:.95rem; line-height:1.55; margin:.45rem 0 0; }
-  .pg-noticias .nt-meta{ color:#8a7f6b; font-size:.8rem; margin:.55rem 0 0; }
+  /* Tarjetas de noticia: mismo estilo que las tarjetas de la portada (.card):
+     fondo var(--panel), borde 1px var(--linea), sin radio ni sombra, hover en oro. */
+  .pg-noticias .nt-lista{ list-style:none; padding:0; margin:16px 0 0; display:grid; grid-template-columns:1fr 1fr; gap:2rem; }
+  .pg-noticias .nt-card{ background:var(--panel); border:1px solid var(--linea); padding:1.6rem 1.5rem; display:flex; flex-direction:column; gap:.7rem; transition:border-color .25s ease, transform .25s ease; }
+  .pg-noticias .nt-card:hover{ border-color:var(--oro); transform:translateY(-3px); }
+  .pg-noticias .nt-card-top{ display:flex; align-items:flex-start; gap:12px; }
+  .pg-noticias .nt-num{ flex:0 0 auto; width:30px; height:30px; border:1px solid var(--oro); border-radius:50%; color:var(--oro); font-family:var(--serif); font-size:1rem; display:flex; align-items:center; justify-content:center; }
+  .pg-noticias .nt-titular{ font-family:var(--serif); color:var(--hueso); font-size:1.18rem; line-height:1.28; margin:0; font-weight:600; }
+  .pg-noticias .nt-resumen{ color:var(--gris); font-size:.93rem; line-height:1.55; margin:0; flex-grow:1; }
+  .pg-noticias .nt-meta{ color:#8a7f6b; font-size:.8rem; margin:0; padding-top:.2rem; }
   .pg-noticias .nt-meta a{ color:var(--oro-claro); }
+  @media(max-width:820px){ .pg-noticias .nt-lista{ grid-template-columns:1fr; } }
   .pg-noticias .nt-anteriores{ margin-top:36px; border-top:1px solid var(--linea); }
   .pg-noticias .nt-anteriores > summary{ cursor:pointer; list-style:none; font-family:var(--serif); color:var(--oro-claro); font-size:1.35rem; padding:16px 0 4px; }
   .pg-noticias .nt-anteriores > summary::-webkit-details-marker{ display:none; }
