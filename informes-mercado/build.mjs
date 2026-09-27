@@ -771,15 +771,26 @@ const semanas = fs.readdirSync(DATA_DIR).filter(f => RE.titulares.test(f))
   .filter(s => s && s.semana && Array.isArray(s.noticias) && s.noticias.length)
   .sort((a, b) => String(b.semana).localeCompare(String(a.semana)));   // más reciente arriba
 
+// Iconos de categoría: línea fina, dorados (heredan color), dibujados a mano aquí
+// (nada de sets con licencia ni imágenes externas). 5 categorías; otra/none → sin icono.
+const _SVG = 'viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"';
+const ICONOS_NOTICIA = {
+  alquiler:  `<svg ${_SVG}><circle cx="7.5" cy="7.5" r="3.5"/><line x1="10" y1="10" x2="20" y2="20"/><line x1="16" y1="16" x2="18.5" y2="13.5"/><line x1="19" y1="19" x2="21" y2="17"/></svg>`,
+  hipotecas: `<svg ${_SVG}><line x1="19" y1="5" x2="5" y2="19"/><circle cx="7.5" cy="7.5" r="2.25"/><circle cx="16.5" cy="16.5" r="2.25"/></svg>`,
+  normativa: `<svg ${_SVG}><line x1="12" y1="3" x2="12" y2="21"/><line x1="6" y1="21" x2="18" y2="21"/><line x1="5" y1="6" x2="19" y2="6"/><path d="M5 6l-3 6a3 3 0 0 0 6 0z"/><path d="M19 6l-3 6a3 3 0 0 0 6 0z"/></svg>`,
+  datos:     `<svg ${_SVG}><line x1="4" y1="20" x2="20" y2="20"/><line x1="7.5" y1="20" x2="7.5" y2="13"/><line x1="12" y1="20" x2="12" y2="9"/><line x1="16.5" y1="20" x2="16.5" y2="5"/></svg>`,
+  madrid:    `<svg ${_SVG}><line x1="3" y1="21" x2="21" y2="21"/><path d="M6 21V5h7v16"/><path d="M13 21V9h5v12"/><line x1="8.5" y1="8" x2="10.5" y2="8"/><line x1="8.5" y1="11.5" x2="10.5" y2="11.5"/><line x1="8.5" y1="15" x2="10.5" y2="15"/><line x1="15" y1="13" x2="16.5" y2="13"/><line x1="15" y1="16" x2="16.5" y2="16"/></svg>`,
+};
 function noticiasLista(sem) {
-  const items = [...sem.noticias].sort((a, b) => (a.orden || 0) - (b.orden || 0)).map((n, i) =>
-    `<li class="nt-card">`
-    + `<div class="nt-card-top"><span class="nt-num">${i + 1}</span><h4 class="nt-titular">${esc(n.titular || '')}</h4></div>`
+  const items = [...sem.noticias].sort((a, b) => (a.orden || 0) - (b.orden || 0)).map((n, i) => {
+    const ico = ICONOS_NOTICIA[String(n.categoria || '').trim().toLowerCase()] || '';
+    return `<li class="nt-card">`
+    + `<div class="nt-card-top"><span class="nt-num">${i + 1}</span>${ico ? `<span class="nt-ico">${ico}</span>` : ''}<h4 class="nt-titular">${esc(n.titular || '')}</h4></div>`
     + `<p class="nt-resumen">${esc(n.resumen || '')}</p>`
     + `<p class="nt-meta">${esc(n.medio || '')}${(n.medio && n.fecha) ? ' · ' : ''}${n.fecha ? fechaCorta(n.fecha) : ''}`
     + (n.enlace ? ` · <a href="${esc(n.enlace)}" target="_blank" rel="noopener nofollow">Leer en el medio original ↗</a>` : '')
-    + `</p></li>`
-  ).join('');
+    + `</p></li>`;
+  }).join('');
   return `<ol class="nt-lista">${items}</ol>`;
 }
 
@@ -843,7 +854,7 @@ const HTML_N = `<!DOCTYPE html>
      = .section:not(.section-clara) .card dentro de .grid-3: fondo claro #fffdf8,
      texto oscuro, borde dorado tenue, sin radio ni sombra, inclinación alterna
      por posición (3n) y, al pasar el ratón, se endereza y sube. */
-  .pg-noticias .nt-lista{ list-style:none; padding:0; margin:18px 0 0; display:grid; grid-template-columns:repeat(3,1fr); gap:2rem; }
+  .pg-noticias .nt-lista{ list-style:none; padding:0; margin:18px 0 0; display:grid; grid-template-columns:repeat(2,1fr); gap:2rem; }
   .pg-noticias .nt-card{ background:#fffdf8; border:1px solid rgba(150,116,46,.30); padding:2.2rem 1.8rem; display:flex; flex-direction:column; gap:.9rem; position:relative; transition:border-color .25s ease, transform .4s ease; }
   .pg-noticias .nt-card:nth-child(3n+1){ transform:rotate(-1.5deg) translateY(6px); }
   .pg-noticias .nt-card:nth-child(3n+2){ transform:rotate(1deg) translateY(-6px); }
@@ -851,6 +862,8 @@ const HTML_N = `<!DOCTYPE html>
   .pg-noticias .nt-card:hover{ border-color:var(--oro); transform:rotate(0) translateY(-4px); }
   .pg-noticias .nt-card-top{ display:flex; align-items:flex-start; gap:12px; }
   .pg-noticias .nt-num{ flex:0 0 auto; width:32px; height:32px; border:1px solid #8a6b27; border-radius:50%; color:#8a6b27; font-family:var(--serif); font-size:1rem; display:flex; align-items:center; justify-content:center; }
+  .pg-noticias .nt-ico{ flex:0 0 auto; color:#8a6b27; display:inline-flex; align-items:center; }
+  .pg-noticias .nt-ico svg{ width:28px; height:28px; display:block; }
   .pg-noticias .nt-titular{ font-family:var(--serif); color:#161310; font-size:1.2rem; line-height:1.28; margin:0; font-weight:600; }
   .pg-noticias .nt-resumen{ color:#5c5446; font-size:.95rem; line-height:1.55; margin:0; flex-grow:1; }
   .pg-noticias .nt-meta{ color:#5c5446; font-size:.8rem; margin:0; padding-top:.2rem; }
