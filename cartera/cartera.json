@@ -1,6 +1,6 @@
 {
-  "generado": "lunes 21 de septiembre de 2026",
-  "pin": "parque",
+  "generado": "lunes 28 de septiembre de 2026",
+  "pin": "jardin",
   "inmuebles": [
     {
       "ref": "RP2392026156408",
@@ -15,7 +15,7 @@
       "reservado": false,
       "zona": "Nueva España",
       "ascensor": true,
-      "titulo": "SE ALQUILA PISO EN COSTA RICA, CHAMARTÍN, MADRID",
+      "titulo": "SE ALQUCLA PISO EN COSTA RICA, CHAMARTÍN, MADRID",
       "url": "https://www.redpiso.es/inmueble/piso-en-alquiler-en-calle-de-costa-rica-nueva-espana-chamartin-madrid-RP2392026156408"
     },
     {
@@ -63,7 +63,7 @@
       "reservado": false,
       "zona": "Hispanoamérica",
       "ascensor": true,
-      "titulo": "SE ALQUILA PRECIOSO PISO EN LA CALLE COSTA RICA, CHAMARTÍN, MADRID",
+      "titulo": "SE ALQUCLA PRECIOSO PISO EN LA CALLE COSTA RICA, CHAMARTÍN, MADRID",
       "url": "https://www.redpiso.es/inmueble/piso-en-alquiler-en-calle-de-costa-rica-hispanoamerica-chamartin-madrid-RP2392026153112"
     },
     {
@@ -95,7 +95,7 @@
       "reservado": false,
       "zona": "Hispanoamérica",
       "ascensor": null,
-      "titulo": "SE ALQUILA OFICINA EN AVDA. ALBERTO ALCOCER, CHAMARTÍN, MADRID",
+      "titulo": "SE ALQUCLA OFICINA EN AVDA. ALBERTO ALCOCER, CHAMARTÍN, MADRID",
       "url": "https://www.redpiso.es/inmueble/oficina-en-alquiler-en-avenida-alberto-alcocer-hispanoamerica-chamartin-madrid-madrid-RP2392025138793"
     },
     {
@@ -175,7 +175,7 @@
       "reservado": false,
       "zona": "Nueva España",
       "ascensor": null,
-      "titulo": "Premium SE VENDE CHALET EN CALLE FRANCISCO SUAREZ, CHAMARTÍN, MADRID",
+      "titulo": "PremiumSE VENDE CHALET EN CALLE FRANCISCO SUAREZ, CHAMARTÍN, MADRID",
       "url": "https://www.redpiso.es/inmueble/chalet-en-venta-en-calle-francisco-suarez-nueva-espana-chamartin-madrid-madrid-RP2392025136440"
     },
     {
@@ -239,7 +239,7 @@
       "reservado": false,
       "zona": "Almagro",
       "ascensor": true,
-      "titulo": "Calle de Zurbano, Madrid",
+      "titulo": "PremiumCalle de Zurbano, Madrid",
       "url": "https://www.redpiso.es/inmueble/atico-en-venta-en-calle-de-zurbano-almagro-chamberi-madrid-RP1922026155186"
     },
     {
@@ -255,7 +255,7 @@
       "reservado": false,
       "zona": "Almagro",
       "ascensor": true,
-      "titulo": "Premium Calle del General Arrando, Madrid",
+      "titulo": "PremiumCalle del General Arrando, Madrid",
       "url": "https://www.redpiso.es/inmueble/piso-en-venta-en-calle-del-general-arrando-almagro-chamberi-madrid-RP1922026153632"
     },
     {
@@ -312,7 +312,7 @@
       "slug_oficina": "inmobiliaria-chamberi-almagro",
       "operacion": "Venta",
       "tipo": "Ático",
-      "precio": 1290000,
+      "precio": 1190000,
       "m2": 138,
       "habitaciones": 2,
       "banos": 2,
@@ -335,8 +335,24 @@
       "reservado": false,
       "zona": "Almagro",
       "ascensor": true,
-      "titulo": "Piso completamente reformado",
+      "titulo": "Piso completamente reformado!!",
       "url": "https://www.redpiso.es/inmueble/piso-en-venta-en-almagro-chamberi-madrid-madrid-RP1922025143068"
+    },
+    {
+      "ref": "RP1922025138105",
+      "oficina": "Almagro",
+      "slug_oficina": "inmobiliaria-chamberi-almagro",
+      "operacion": "Venta",
+      "tipo": "Piso",
+      "precio": 578000,
+      "m2": 72,
+      "habitaciones": 2,
+      "banos": 1,
+      "reservado": false,
+      "zona": "Almagro",
+      "ascensor": true,
+      "titulo": "Redpiso Chamberí - Almagro!! Vende piso exterior a calle de Santa Engracia!!",
+      "url": "https://www.redpiso.es/inmueble/piso-en-venta-en-calle-santa-engracia-almagro-chamberi-madrid-madrid-RP1922025138105"
     },
     {
       "ref": "RP1922024130720",
@@ -367,7 +383,7 @@
       "reservado": false,
       "zona": "Almagro",
       "ascensor": null,
-      "titulo": "VENTA PLAZA DE GARAJE",
+      "titulo": "¡¡¡VENTA PLAZA DE GARAJE!!!",
       "url": "https://www.redpiso.es/inmueble/plaza-de-garaje-en-venta-en-calle-almagro-almagro-chamberi-madrid-madrid-RP192202296922"
     },
     {
@@ -383,24 +399,40 @@
       "reservado": false,
       "zona": "Almagro",
       "ascensor": null,
-      "titulo": "Oficina en calle Zurbarán",
+      "titulo": "Oficina en calle Zurbarán!",
       "url": "https://www.redpiso.es/inmueble/oficina-en-venta-en-calle-zurbaran-almagro-chamberi-madrid-madrid-RP192202067178"
     },
     {
-      "ref": "RP1812026156346",
+      "ref": "RP1812026156986",
+      "oficina": "Vallehermoso",
+      "slug_oficina": "inmobiliaria-chamberi-vallehermoso",
+      "operacion": "Alquiler",
+      "tipo": "Oficina",
+      "precio": 1800,
+      "m2": 83,
+      "habitaciones": null,
+      "banos": null,
+      "reservado": false,
+      "zona": "Vallehermoso",
+      "ascensor": null,
+      "titulo": "¡¡Excelente oportunidad para tu negocio!!",
+      "url": "https://www.redpiso.es/inmueble/oficina-en-alquiler-en-paseo-de-san-francisco-de-sales-vallehermoso-chamberi-madrid-RP1812026156986"
+    },
+    {
+      "ref": "RP1812026156940",
       "oficina": "Vallehermoso",
       "slug_oficina": "inmobiliaria-chamberi-vallehermoso",
       "operacion": "Alquiler",
       "tipo": "Piso",
-      "precio": 1500,
-      "m2": 50,
-      "habitaciones": 1,
+      "precio": 1800,
+      "m2": 83,
+      "habitaciones": 2,
       "banos": 1,
       "reservado": false,
       "zona": "Vallehermoso",
       "ascensor": true,
-      "titulo": "Oportunidad 1 1 GRAN OPORTUNIDAD",
-      "url": "https://www.redpiso.es/inmueble/piso-en-alquiler-en-calle-de-cea-bermudez-vallehermoso-chamberi-madrid-RP1812026156346"
+      "titulo": "¡¡¡Excelente piso en alquiler!!!",
+      "url": "https://www.redpiso.es/inmueble/piso-en-alquiler-en-paseo-de-san-francisco-de-sales-vallehermoso-chamberi-madrid-RP1812026156940"
     },
     {
       "ref": "RP1812026155461",
@@ -431,7 +463,7 @@
       "reservado": false,
       "zona": "Ciudad Universitaria",
       "ascensor": null,
-      "titulo": "EXCELENTE OPORTUNIDAD PLAZA DE GARAJE EN VENTA en Calle de Beatriz de Bobadilla, Moncloa Aravaca, Madrid.",
+      "titulo": "EXCELENTE OPORTUNIDAD- PLAZA DE GARAJE EN VENTA en Calle de Beatriz de Bobadilla, Moncloa- Aravaca, Madrid.",
       "url": "https://www.redpiso.es/inmueble/plaza-de-garaje-en-venta-en-calle-de-beatriz-de-bobadilla-ciudad-universitaria-moncloa-aravaca-madrid-RP1812026156913"
     },
     {
@@ -447,7 +479,7 @@
       "reservado": false,
       "zona": "Vallehermoso",
       "ascensor": true,
-      "titulo": "Premium Magnifica vivienda exterior en venta en exclusiva en una de las mejores zonas de CHAMBERÍ.",
+      "titulo": "Premium¡Magnifica vivienda exterior en venta en exclusiva en una de las mejores zonas de CHAMBERÍ!.",
       "url": "https://www.redpiso.es/inmueble/piso-en-venta-en-avenida-de-pablo-iglesias-vallehermoso-chamberi-madrid-RP1812026155391"
     },
     {
@@ -495,7 +527,7 @@
       "reservado": false,
       "zona": "Vallehermoso",
       "ascensor": true,
-      "titulo": "Premium El espacio y la ubicación perfecto para diseñar la casa de tus sueños en pleno Chamberí",
+      "titulo": "Premium¡¡El espacio y la ubicación perfecto para diseñar la casa de tus sueños en pleno Chamberí!!",
       "url": "https://www.redpiso.es/inmueble/piso-en-venta-en-calle-de-sotomayor-vallehermoso-chamberi-madrid-RP1812026154792"
     },
     {
@@ -511,7 +543,7 @@
       "reservado": false,
       "zona": "Vallehermoso",
       "ascensor": null,
-      "titulo": "DESCUBRE ESTA OPORTUNIDAD",
+      "titulo": "¡ DESCUBRE ESTA OPORTUNIDAD !",
       "url": "https://www.redpiso.es/inmueble/local-comercial-en-venta-en-calle-del-maestro-angel-llorca-vallehermoso-chamberi-madrid-RP1812026153775"
     },
     {
@@ -591,7 +623,7 @@
       "reservado": false,
       "zona": "Vallehermoso",
       "ascensor": null,
-      "titulo": "Excelente plaza de garaje, en Chamberí Vallehermoso",
+      "titulo": "Excelente plaza de garaje, en Chamberí - Vallehermoso!!",
       "url": "https://www.redpiso.es/inmueble/plaza-de-garaje-en-venta-en-calle-del-general-ampudia-vallehermoso-chamberi-madrid-RP1812026151212"
     },
     {
@@ -639,7 +671,7 @@
       "reservado": false,
       "zona": "Arapiles",
       "ascensor": true,
-      "titulo": "Premium ESPECTACULAR ÁTICO CON 40 M² DE TERRAZAS Y VISTAS ABIERTAS EN CHAMBERÍ",
+      "titulo": "PremiumESPECTACULAR ÁTICO CON 40 M² DE TERRAZAS Y VISTAS ABIERTAS EN CHAMBERÍ",
       "url": "https://www.redpiso.es/inmueble/piso-en-venta-en-calle-de-galileo-arapiles-chamberi-madrid-RP752026155685"
     },
     {
@@ -664,14 +696,14 @@
       "slug_oficina": "inmobiliaria-chamberi",
       "operacion": "Venta",
       "tipo": "Garaje",
-      "precio": 25000,
+      "precio": 21000,
       "m2": 31,
       "habitaciones": null,
       "banos": null,
       "reservado": false,
       "zona": "Arapiles",
       "ascensor": null,
-      "titulo": "PLAZA DE GARAJE EN VENTA EN CHAMBERÍ CEA BERMÚDEZ",
+      "titulo": "PLAZA DE GARAJE EN VENTA EN CHAMBERÍ – CEA BERMÚDEZ",
       "url": "https://www.redpiso.es/inmueble/plaza-de-garaje-en-venta-en-calle-de-cea-bermudez-arapiles-chamberi-madrid-RP752026152906"
     },
     {
@@ -680,14 +712,14 @@
       "slug_oficina": "inmobiliaria-chamberi",
       "operacion": "Venta",
       "tipo": "Garaje",
-      "precio": 39000,
+      "precio": 35000,
       "m2": 23,
       "habitaciones": null,
       "banos": null,
       "reservado": false,
       "zona": "Arapiles",
       "ascensor": null,
-      "titulo": "OPORTUNIDAD EN CHAMBERÍ Plaza de garaje en Calle Fernando Garrido",
+      "titulo": "¡OPORTUNIDAD EN CHAMBERÍ! Plaza de garaje en Calle Fernando Garrido",
       "url": "https://www.redpiso.es/inmueble/plaza-de-garaje-en-venta-en-calle-de-fernando-garrido-arapiles-chamberi-madrid-RP752026152598"
     },
     {
@@ -696,14 +728,14 @@
       "slug_oficina": "inmobiliaria-chamberi",
       "operacion": "Venta",
       "tipo": "Garaje",
-      "precio": 33000,
+      "precio": 30000,
       "m2": 24,
       "habitaciones": null,
       "banos": null,
       "reservado": false,
       "zona": "Arapiles",
       "ascensor": null,
-      "titulo": "PLAZA DE GARAJE EN CHAMBERÍ CALLE GALILEO",
+      "titulo": "PLAZA DE GARAJE EN CHAMBERÍ – CALLE GALILEO",
       "url": "https://www.redpiso.es/inmueble/plaza-de-garaje-en-venta-en-calle-de-galileo-arapiles-chamberi-madrid-RP752026152597"
     },
     {
@@ -739,20 +771,20 @@
       "url": "https://www.redpiso.es/inmueble/piso-en-alquiler-en-calle-de-santa-engracia-rios-rosas-chamberi-madrid-RP1132026156272"
     },
     {
-      "ref": "RP1132026155695",
+      "ref": "RP1132026156999",
       "oficina": "Ríos Rosas",
       "slug_oficina": "inmobiliaria-rios-rosas-chamberi",
       "operacion": "Venta",
       "tipo": "Piso",
-      "precio": 289000,
-      "m2": 41,
+      "precio": 578000,
+      "m2": 72,
       "habitaciones": 2,
       "banos": 1,
       "reservado": false,
       "zona": "Ríos Rosas",
-      "ascensor": false,
-      "titulo": "VIVE O INVIERTE EN CHAMBERÍ CREA LA VIVIENDA QUE SIEMPRE HAS IMAGINADO",
-      "url": "https://www.redpiso.es/inmueble/piso-en-venta-en-calle-de-alonso-cano-rios-rosas-chamberi-madrid-RP1132026155695"
+      "ascensor": true,
+      "titulo": "Vive Chamberí a tu manera: terraza, luz y todo el potencial para crear tu hogar.",
+      "url": "https://www.redpiso.es/inmueble/piso-en-venta-en-calle-de-santa-engracia-rios-rosas-chamberi-madrid-RP1132026156999"
     },
     {
       "ref": "RP1132026154807",
@@ -767,7 +799,7 @@
       "reservado": false,
       "zona": "Ríos Rosas",
       "ascensor": true,
-      "titulo": "Premium Crea el hogar que siempre has imaginado en pleno Chamberí.",
+      "titulo": "PremiumCrea el hogar que siempre has imaginado en pleno Chamberí.",
       "url": "https://www.redpiso.es/inmueble/piso-en-venta-en-calle-de-rios-rosas-rios-rosas-chamberi-madrid-RP1132026154807"
     },
     {
@@ -783,7 +815,7 @@
       "reservado": false,
       "zona": "Ríos Rosas",
       "ascensor": true,
-      "titulo": "Premium Tu nuevo hogar en Ríos Rosas, donde la tranquilidad se encuentra con la ciudad.",
+      "titulo": "PremiumTu nuevo hogar en Ríos Rosas, donde la tranquilidad se encuentra con la ciudad.",
       "url": "https://www.redpiso.es/inmueble/piso-en-venta-en-calle-de-rios-rosas-rios-rosas-chamberi-madrid-RP1132026154594"
     },
     {
@@ -799,24 +831,8 @@
       "reservado": false,
       "zona": "Ríos Rosas",
       "ascensor": true,
-      "titulo": "Premium Vivienda exclusiva con trastero y plaza de garaje en una de las mejores zonas de Chamberí.",
+      "titulo": "PremiumVivienda exclusiva con trastero y plaza de garaje en una de las mejores zonas de Chamberí.",
       "url": "https://www.redpiso.es/inmueble/piso-en-venta-en-calle-de-rios-rosas-rios-rosas-chamberi-madrid-RP1132026154368"
-    },
-    {
-      "ref": "RP1132026153527",
-      "oficina": "Ríos Rosas",
-      "slug_oficina": "inmobiliaria-rios-rosas-chamberi",
-      "operacion": "Venta",
-      "tipo": "Piso",
-      "precio": 795000,
-      "m2": 111,
-      "habitaciones": 5,
-      "banos": 2,
-      "reservado": false,
-      "zona": "Ríos Rosas",
-      "ascensor": true,
-      "titulo": "Premium Espacio, luz y posibilidades infinitas en Chamberí.",
-      "url": "https://www.redpiso.es/inmueble/piso-en-venta-en-calle-de-maudes-rios-rosas-chamberi-madrid-RP1132026153527"
     },
     {
       "ref": "RP1132026153095",
@@ -847,7 +863,7 @@
       "reservado": false,
       "zona": "Ríos Rosas",
       "ascensor": true,
-      "titulo": "Premium Exterior, luminoso y con todas las comodidades que buscas.",
+      "titulo": "PremiumExterior, luminoso y con todas las comodidades que buscas.",
       "url": "https://www.redpiso.es/inmueble/piso-en-venta-en-calle-de-cristobal-bordiu-rios-rosas-chamberi-madrid-RP1132026152860"
     },
     {
@@ -879,7 +895,7 @@
       "reservado": false,
       "zona": "Trafalgar",
       "ascensor": null,
-      "titulo": "MARAVILLOSO ESTUDIO EN ALQUILER",
+      "titulo": "- MARAVILLOSO ESTUDIO EN ALQUCLER",
       "url": "https://www.redpiso.es/inmueble/estudio-en-alquiler-en-calle-de-olid-trafalgar-chamberi-madrid-RP1852026156512"
     },
     {
@@ -895,7 +911,7 @@
       "reservado": false,
       "zona": "Trafalgar",
       "ascensor": true,
-      "titulo": "EXCELENTE PISO EN ALQUILER",
+      "titulo": "- EXCELENTE PISO EN ALQUCLER",
       "url": "https://www.redpiso.es/inmueble/piso-en-alquiler-en-calle-de-santa-engracia-trafalgar-chamberi-madrid-RP1852026155848"
     },
     {
@@ -911,7 +927,7 @@
       "reservado": false,
       "zona": "Trafalgar",
       "ascensor": null,
-      "titulo": "PLAZAS DE GARAJE ROBOTIZADAS Vídeo",
+      "titulo": "PLAZAS DE GARAJE ROBOTIZADAS -Vídeo",
       "url": "https://www.redpiso.es/inmueble/plaza-de-garaje-en-alquiler-en-calle-de-manuel-gonzalez-longoria-trafalgar-chamberi-madrid-RP1852026155213"
     },
     {
@@ -943,7 +959,7 @@
       "reservado": false,
       "zona": "Malasaña",
       "ascensor": true,
-      "titulo": "PISO ABUHARDILLADO EN VENTA PARA REFORMAR",
+      "titulo": "- PISO ABUHARDILLADO EN VENTA PARA REFORMAR",
       "url": "https://www.redpiso.es/inmueble/piso-en-venta-en-calle-de-san-bernardo-universidad-centro-madrid-RP1852026156862"
     },
     {
@@ -959,7 +975,7 @@
       "reservado": false,
       "zona": "Trafalgar",
       "ascensor": false,
-      "titulo": "GRAN PISO A LA VENTA",
+      "titulo": "- GRAN PISO A LA VENTA",
       "url": "https://www.redpiso.es/inmueble/piso-en-venta-en-calle-de-santa-feliciana-trafalgar-chamberi-madrid-RP1852026155732"
     },
     {
@@ -975,7 +991,7 @@
       "reservado": false,
       "zona": "Malasaña",
       "ascensor": true,
-      "titulo": "Premium IMPRESIONANTE PISO A LA VENTA",
+      "titulo": "Premium- IMPRESIONANTE PISO A LA VENTA",
       "url": "https://www.redpiso.es/inmueble/piso-en-venta-en-calle-del-conde-duque-universidad-centro-madrid-RP1852026155597"
     },
     {
@@ -991,7 +1007,7 @@
       "reservado": false,
       "zona": "Trafalgar",
       "ascensor": true,
-      "titulo": "Bienvenidos a su nuevo hogar en el corazón de Madrid",
+      "titulo": "- Bienvenidos a su nuevo hogar en el corazón de Madrid",
       "url": "https://www.redpiso.es/inmueble/piso-en-venta-en-calle-de-sandoval-trafalgar-chamberi-madrid-RP1852026155392"
     },
     {
@@ -1007,7 +1023,7 @@
       "reservado": false,
       "zona": "Trafalgar",
       "ascensor": null,
-      "titulo": "PLAZAS DE GARAJE ROBOTIZADAS Vídeo",
+      "titulo": "PLAZAS DE GARAJE ROBOTIZADAS -Vídeo",
       "url": "https://www.redpiso.es/inmueble/plaza-de-garaje-en-venta-en-calle-de-manuel-gonzalez-longoria-trafalgar-chamberi-madrid-RP1852026155046"
     },
     {
@@ -1023,7 +1039,7 @@
       "reservado": false,
       "zona": "Malasaña",
       "ascensor": true,
-      "titulo": "Premium Gran piso a la venta",
+      "titulo": "Premium- Gran piso a la venta",
       "url": "https://www.redpiso.es/inmueble/piso-en-venta-en-calle-de-san-andres-universidad-centro-madrid-RP1852026154742"
     },
     {
@@ -1039,7 +1055,7 @@
       "reservado": false,
       "zona": "Malasaña",
       "ascensor": true,
-      "titulo": "Piso extraordinario a la venta",
+      "titulo": "- Piso extraordinario a la venta",
       "url": "https://www.redpiso.es/inmueble/piso-en-venta-en-calle-de-manuela-malasana-universidad-centro-madrid-RP1852026153841"
     },
     {
@@ -1055,7 +1071,7 @@
       "reservado": false,
       "zona": "Trafalgar",
       "ascensor": true,
-      "titulo": "Espectacular vivienda de diseño en Trafalgar",
+      "titulo": "- Espectacular vivienda de diseño en Trafalgar",
       "url": "https://www.redpiso.es/inmueble/atico-en-venta-en-calle-del-castillo-trafalgar-chamberi-madrid-RP1852026152177"
     },
     {
@@ -1071,7 +1087,7 @@
       "reservado": false,
       "zona": "Trafalgar",
       "ascensor": true,
-      "titulo": "Premium Maravillosa vivienda a la venta",
+      "titulo": "Premium- Maravillosa vivienda a la venta",
       "url": "https://www.redpiso.es/inmueble/piso-en-venta-en-calle-de-covarrubias-trafalgar-chamberi-madrid-RP1852026151993"
     },
     {
@@ -1087,231 +1103,198 @@
       "reservado": false,
       "zona": "Arapiles",
       "ascensor": null,
-      "titulo": "Plaza de garaje en venta en Arapiles Chamberí",
+      "titulo": "***Plaza de garaje en venta en Arapiles - Chamberí***",
       "url": "https://www.redpiso.es/inmueble/plaza-de-garaje-en-venta-en-calle-emilio-carrere-arapiles-chamberi-madrid-madrid-RP1852026145967"
     }
   ],
   "digest": {
     "altas": [
       {
-        "ref": "RP1812026155391",
-        "oficina": "Vallehermoso",
-        "slug_oficina": "inmobiliaria-chamberi-vallehermoso",
+        "ref": "RP1922025138105",
+        "oficina": "Almagro",
+        "slug_oficina": "inmobiliaria-chamberi-almagro",
         "operacion": "Venta",
         "tipo": "Piso",
-        "precio": 1100000,
-        "m2": 109,
-        "habitaciones": 4,
-        "banos": 2,
-        "reservado": false,
-        "zona": "Vallehermoso",
-        "ascensor": true,
-        "titulo": "Premium Magnifica vivienda exterior en venta en exclusiva en una de las mejores zonas de CHAMBERÍ.",
-        "url": "https://www.redpiso.es/inmueble/piso-en-venta-en-avenida-de-pablo-iglesias-vallehermoso-chamberi-madrid-RP1812026155391"
-      },
-      {
-        "ref": "RP1852026156862",
-        "oficina": "San Bernardo · Malasaña",
-        "slug_oficina": "inmobiliaria-san-bernardo-malasana-chamberi",
-        "operacion": "Venta",
-        "tipo": "Piso",
-        "precio": 350000,
-        "m2": 46,
-        "habitaciones": 1,
+        "precio": 578000,
+        "m2": 72,
+        "habitaciones": 2,
         "banos": 1,
         "reservado": false,
-        "zona": "Malasaña",
+        "zona": "Almagro",
         "ascensor": true,
-        "titulo": "PISO ABUHARDILLADO EN VENTA PARA REFORMAR",
-        "url": "https://www.redpiso.es/inmueble/piso-en-venta-en-calle-de-san-bernardo-universidad-centro-madrid-RP1852026156862"
+        "titulo": "Redpiso Chamberí - Almagro!! Vende piso exterior a calle de Santa Engracia!!",
+        "url": "https://www.redpiso.es/inmueble/piso-en-venta-en-calle-santa-engracia-almagro-chamberi-madrid-madrid-RP1922025138105"
       },
       {
-        "ref": "RP1812026151242",
+        "ref": "RP1132026156999",
+        "oficina": "Ríos Rosas",
+        "slug_oficina": "inmobiliaria-rios-rosas-chamberi",
+        "operacion": "Venta",
+        "tipo": "Piso",
+        "precio": 578000,
+        "m2": 72,
+        "habitaciones": 2,
+        "banos": 1,
+        "reservado": false,
+        "zona": "Ríos Rosas",
+        "ascensor": true,
+        "titulo": "Vive Chamberí a tu manera: terraza, luz y todo el potencial para crear tu hogar.",
+        "url": "https://www.redpiso.es/inmueble/piso-en-venta-en-calle-de-santa-engracia-rios-rosas-chamberi-madrid-RP1132026156999"
+      },
+      {
+        "ref": "RP1812026156986",
         "oficina": "Vallehermoso",
         "slug_oficina": "inmobiliaria-chamberi-vallehermoso",
-        "operacion": "Venta",
-        "tipo": "Garaje",
-        "precio": 80000,
-        "m2": 40,
+        "operacion": "Alquiler",
+        "tipo": "Oficina",
+        "precio": 1800,
+        "m2": 83,
         "habitaciones": null,
         "banos": null,
         "reservado": false,
         "zona": "Vallehermoso",
         "ascensor": null,
-        "titulo": "Calle del General Ampudia, Madrid",
-        "url": "https://www.redpiso.es/inmueble/plaza-de-garaje-en-venta-en-calle-del-general-ampudia-vallehermoso-chamberi-madrid-RP1812026151242"
+        "titulo": "¡¡Excelente oportunidad para tu negocio!!",
+        "url": "https://www.redpiso.es/inmueble/oficina-en-alquiler-en-paseo-de-san-francisco-de-sales-vallehermoso-chamberi-madrid-RP1812026156986"
       },
       {
-        "ref": "RP1812026151212",
+        "ref": "RP1812026156940",
         "oficina": "Vallehermoso",
         "slug_oficina": "inmobiliaria-chamberi-vallehermoso",
-        "operacion": "Venta",
-        "tipo": "Garaje",
-        "precio": 50000,
-        "m2": 35,
-        "habitaciones": null,
-        "banos": null,
+        "operacion": "Alquiler",
+        "tipo": "Piso",
+        "precio": 1800,
+        "m2": 83,
+        "habitaciones": 2,
+        "banos": 1,
         "reservado": false,
         "zona": "Vallehermoso",
-        "ascensor": null,
-        "titulo": "Excelente plaza de garaje, en Chamberí Vallehermoso",
-        "url": "https://www.redpiso.es/inmueble/plaza-de-garaje-en-venta-en-calle-del-general-ampudia-vallehermoso-chamberi-madrid-RP1812026151212"
-      },
-      {
-        "ref": "RP1812026156913",
-        "oficina": "Vallehermoso",
-        "slug_oficina": "inmobiliaria-chamberi-vallehermoso",
-        "operacion": "Venta",
-        "tipo": "Garaje",
-        "precio": 25000,
-        "m2": 18,
-        "habitaciones": null,
-        "banos": null,
-        "reservado": false,
-        "zona": "Ciudad Universitaria",
-        "ascensor": null,
-        "titulo": "EXCELENTE OPORTUNIDAD PLAZA DE GARAJE EN VENTA en Calle de Beatriz de Bobadilla, Moncloa Aravaca, Madrid.",
-        "url": "https://www.redpiso.es/inmueble/plaza-de-garaje-en-venta-en-calle-de-beatriz-de-bobadilla-ciudad-universitaria-moncloa-aravaca-madrid-RP1812026156913"
+        "ascensor": true,
+        "titulo": "¡¡¡Excelente piso en alquiler!!!",
+        "url": "https://www.redpiso.es/inmueble/piso-en-alquiler-en-paseo-de-san-francisco-de-sales-vallehermoso-chamberi-madrid-RP1812026156940"
       }
     ],
     "bajadas": [
       {
-        "ref": "RP1812026154792",
-        "oficina": "Vallehermoso",
-        "slug_oficina": "inmobiliaria-chamberi-vallehermoso",
+        "ref": "RP1922026149499",
+        "oficina": "Almagro",
+        "slug_oficina": "inmobiliaria-chamberi-almagro",
         "operacion": "Venta",
-        "tipo": "Piso",
-        "precio": 1195000,
-        "m2": 169,
-        "habitaciones": 4,
+        "tipo": "Ático",
+        "precio": 1190000,
+        "m2": 138,
+        "habitaciones": 2,
         "banos": 2,
         "reservado": false,
-        "zona": "Vallehermoso",
+        "zona": "Almagro",
         "ascensor": true,
-        "titulo": "Premium El espacio y la ubicación perfecto para diseñar la casa de tus sueños en pleno Chamberí",
-        "url": "https://www.redpiso.es/inmueble/piso-en-venta-en-calle-de-sotomayor-vallehermoso-chamberi-madrid-RP1812026154792",
-        "antes": 1239000
+        "titulo": "Calle de Ponce de León, Madrid",
+        "url": "https://www.redpiso.es/inmueble/atico-en-venta-en-calle-de-ponce-de-leon-almagro-chamberi-madrid-RP1922026149499",
+        "antes": 1290000
       },
       {
-        "ref": "RP1852026154742",
-        "oficina": "San Bernardo · Malasaña",
-        "slug_oficina": "inmobiliaria-san-bernardo-malasana-chamberi",
-        "operacion": "Venta",
-        "tipo": "Piso",
-        "precio": 530000,
-        "m2": 76,
-        "habitaciones": 1,
-        "banos": 1,
-        "reservado": false,
-        "zona": "Malasaña",
-        "ascensor": true,
-        "titulo": "Premium Gran piso a la venta",
-        "url": "https://www.redpiso.es/inmueble/piso-en-venta-en-calle-de-san-andres-universidad-centro-madrid-RP1852026154742",
-        "antes": 550000
-      },
-      {
-        "ref": "RP1852026155392",
-        "oficina": "San Bernardo · Malasaña",
-        "slug_oficina": "inmobiliaria-san-bernardo-malasana-chamberi",
-        "operacion": "Venta",
-        "tipo": "Piso",
-        "precio": 299000,
-        "m2": 35,
-        "habitaciones": 1,
-        "banos": 1,
-        "reservado": false,
-        "zona": "Trafalgar",
-        "ascensor": true,
-        "titulo": "Bienvenidos a su nuevo hogar en el corazón de Madrid",
-        "url": "https://www.redpiso.es/inmueble/piso-en-venta-en-calle-de-sandoval-trafalgar-chamberi-madrid-RP1852026155392",
-        "antes": 315000
-      },
-      {
-        "ref": "RP1852026153841",
-        "oficina": "San Bernardo · Malasaña",
-        "slug_oficina": "inmobiliaria-san-bernardo-malasana-chamberi",
-        "operacion": "Venta",
-        "tipo": "Piso",
-        "precio": 460000,
-        "m2": 55,
-        "habitaciones": 1,
-        "banos": 1,
-        "reservado": false,
-        "zona": "Malasaña",
-        "ascensor": true,
-        "titulo": "Piso extraordinario a la venta",
-        "url": "https://www.redpiso.es/inmueble/piso-en-venta-en-calle-de-manuela-malasana-universidad-centro-madrid-RP1852026153841",
-        "antes": 475000
-      },
-      {
-        "ref": "RP752026156552",
+        "ref": "RP752026152906",
         "oficina": "Chamberí (Bravo Murillo)",
         "slug_oficina": "inmobiliaria-chamberi",
         "operacion": "Venta",
-        "tipo": "Piso",
-        "precio": 389900,
-        "m2": 49,
-        "habitaciones": 1,
-        "banos": 1,
+        "tipo": "Garaje",
+        "precio": 21000,
+        "m2": 31,
+        "habitaciones": null,
+        "banos": null,
         "reservado": false,
         "zona": "Arapiles",
-        "ascensor": true,
-        "titulo": "Oportunidad 1 1 PISO REFORMADO Y LUMINOSO EN SEXTA PLANTA EN CHAMBERÍ",
-        "url": "https://www.redpiso.es/inmueble/piso-en-venta-en-calle-de-fernando-el-catolico-arapiles-chamberi-madrid-RP752026156552",
-        "antes": 395000
+        "ascensor": null,
+        "titulo": "PLAZA DE GARAJE EN VENTA EN CHAMBERÍ – CEA BERMÚDEZ",
+        "url": "https://www.redpiso.es/inmueble/plaza-de-garaje-en-venta-en-calle-de-cea-bermudez-arapiles-chamberi-madrid-RP752026152906",
+        "antes": 25000
+      },
+      {
+        "ref": "RP752026152598",
+        "oficina": "Chamberí (Bravo Murillo)",
+        "slug_oficina": "inmobiliaria-chamberi",
+        "operacion": "Venta",
+        "tipo": "Garaje",
+        "precio": 35000,
+        "m2": 23,
+        "habitaciones": null,
+        "banos": null,
+        "reservado": false,
+        "zona": "Arapiles",
+        "ascensor": null,
+        "titulo": "¡OPORTUNIDAD EN CHAMBERÍ! Plaza de garaje en Calle Fernando Garrido",
+        "url": "https://www.redpiso.es/inmueble/plaza-de-garaje-en-venta-en-calle-de-fernando-garrido-arapiles-chamberi-madrid-RP752026152598",
+        "antes": 39000
+      },
+      {
+        "ref": "RP752026152597",
+        "oficina": "Chamberí (Bravo Murillo)",
+        "slug_oficina": "inmobiliaria-chamberi",
+        "operacion": "Venta",
+        "tipo": "Garaje",
+        "precio": 30000,
+        "m2": 24,
+        "habitaciones": null,
+        "banos": null,
+        "reservado": false,
+        "zona": "Arapiles",
+        "ascensor": null,
+        "titulo": "PLAZA DE GARAJE EN CHAMBERÍ – CALLE GALILEO",
+        "url": "https://www.redpiso.es/inmueble/plaza-de-garaje-en-venta-en-calle-de-galileo-arapiles-chamberi-madrid-RP752026152597",
+        "antes": 33000
       }
     ],
     "ya_no_disponibles": [
       {
-        "ref": "RP752026153441",
-        "oficina": "Chamberí (Bravo Murillo)",
-        "slug_oficina": "inmobiliaria-chamberi",
-        "operacion": "Venta",
-        "tipo": "Local",
-        "precio": 450000,
-        "m2": 96,
-        "habitaciones": null,
-        "banos": null,
+        "ref": "RP1812026156346",
+        "oficina": "Vallehermoso",
+        "slug_oficina": "inmobiliaria-chamberi-vallehermoso",
+        "operacion": "Alquiler",
+        "tipo": "Piso",
+        "precio": 1500,
+        "m2": 50,
+        "habitaciones": 1,
+        "banos": 1,
         "reservado": false,
-        "zona": "Trafalgar",
-        "ascensor": null,
-        "titulo": "IDEAL CAMBIO DE USO A VIVIENDA EN PLENO CHAMBERÍ VIRIATO ESQUINA BRAVO MURILLO",
-        "url": "https://www.redpiso.es/inmueble/local-comercial-en-venta-en-calle-de-viriato-trafalgar-chamberi-madrid-RP752026153441",
+        "zona": "Vallehermoso",
+        "ascensor": true,
+        "titulo": "Oportunidad 1 1 GRAN OPORTUNIDAD",
+        "url": "https://www.redpiso.es/inmueble/piso-en-alquiler-en-calle-de-cea-bermudez-vallehermoso-chamberi-madrid-RP1812026156346",
+        "motivo": "vendido"
+      },
+      {
+        "ref": "RP1132026155695",
+        "oficina": "Ríos Rosas",
+        "slug_oficina": "inmobiliaria-rios-rosas-chamberi",
+        "operacion": "Venta",
+        "tipo": "Piso",
+        "precio": 289000,
+        "m2": 41,
+        "habitaciones": 2,
+        "banos": 1,
+        "reservado": false,
+        "zona": "Ríos Rosas",
+        "ascensor": false,
+        "titulo": "VIVE O INVIERTE EN CHAMBERÍ CREA LA VIVIENDA QUE SIEMPRE HAS IMAGINADO",
+        "url": "https://www.redpiso.es/inmueble/piso-en-venta-en-calle-de-alonso-cano-rios-rosas-chamberi-madrid-RP1132026155695",
         "motivo": "reservado"
       },
       {
-        "ref": "RP1852026154623",
-        "oficina": "San Bernardo · Malasaña",
-        "slug_oficina": "inmobiliaria-san-bernardo-malasana-chamberi",
+        "ref": "RP1132026153527",
+        "oficina": "Ríos Rosas",
+        "slug_oficina": "inmobiliaria-rios-rosas-chamberi",
         "operacion": "Venta",
         "tipo": "Piso",
-        "precio": 840000,
-        "m2": 96,
-        "habitaciones": 2,
-        "banos": 1,
+        "precio": 795000,
+        "m2": 111,
+        "habitaciones": 5,
+        "banos": 2,
         "reservado": false,
-        "zona": "Arapiles",
+        "zona": "Ríos Rosas",
         "ascensor": true,
-        "titulo": "Increible piso a la venta en el corazon de Chamberi",
-        "url": "https://www.redpiso.es/inmueble/piso-en-venta-en-calle-de-san-bernardo-arapiles-chamberi-madrid-RP1852026154623",
-        "motivo": "vendido"
-      },
-      {
-        "ref": "RP1852026154533",
-        "oficina": "San Bernardo · Malasaña",
-        "slug_oficina": "inmobiliaria-san-bernardo-malasana-chamberi",
-        "operacion": "Venta",
-        "tipo": "Piso",
-        "precio": 599000,
-        "m2": 76,
-        "habitaciones": 2,
-        "banos": 1,
-        "reservado": false,
-        "zona": "Arapiles",
-        "ascensor": true,
-        "titulo": "Magnifico piso a la venta",
-        "url": "https://www.redpiso.es/inmueble/piso-en-venta-en-calle-de-emilio-carrere-arapiles-chamberi-madrid-RP1852026154533",
-        "motivo": "vendido"
+        "titulo": "Premium Espacio, luz y posibilidades infinitas en Chamberí.",
+        "url": "https://www.redpiso.es/inmueble/piso-en-venta-en-calle-de-maudes-rios-rosas-chamberi-madrid-RP1132026153527",
+        "motivo": "reservado"
       }
     ]
   }
