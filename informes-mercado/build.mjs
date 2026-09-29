@@ -764,6 +764,30 @@ function rangoSemana(desde, hasta) {
   return `Semana del ${a.d} de ${MESES[a.m - 1]} de ${a.y} al ${b.d} de ${MESES[b.m - 1]} de ${b.y}`;
 }
 const fechaCorta = iso => { const f = fLarga(iso); return f.y ? `${f.d} ${MES_ABBR[f.m - 1]} ${f.y}` : esc(String(iso || '')); };
+const fechaDMY = iso => { const f = fLarga(iso); return f.y ? `${String(f.d).padStart(2, '0')}/${String(f.m).padStart(2, '0')}/${f.y}` : esc(String(iso || '')); };
+
+// ---- Noticia destacada (reutilizable): data/noticias/destacada.json ----
+// Se pinta encima del bloque semanal SOLO si activa===true y hoy <= fecha_fin.
+let destacadaHTML = '';
+try {
+  const dj = JSON.parse(fs.readFileSync(path.join(DATA_DIR, 'noticias', 'destacada.json'), 'utf8'));
+  const hoy = new Date().toISOString().slice(0, 10);
+  const vigente = dj && dj.activa === true && (!dj.fecha_fin || hoy <= String(dj.fecha_fin));
+  if (vigente) {
+    const rec = esc(dj.recorte || 'center 50%');
+    destacadaHTML =
+      `<section class="nt-destacada-sec" aria-label="Noticia de especial relevancia">`
+      + `<p class="eyebrow">Noticia de especial relevancia</p>`
+      + `<article class="nt-destacada">`
+      + (dj.imagen ? `<figure class="nt-dest-foto"><img src="${esc(dj.imagen)}" alt="${esc(dj.titulo || '')}" style="object-position:${rec}">${dj.fuente ? `<figcaption class="nt-dest-credito">Foto: ${esc(dj.fuente)}</figcaption>` : ''}</figure>` : '')
+      + `<div class="nt-dest-texto">`
+      + `<h2 class="nt-dest-titular">${esc(dj.titulo || '')}</h2>`
+      + (dj.resumen ? `<p class="nt-dest-resumen">${esc(dj.resumen)}</p>` : '')
+      + `<p class="nt-dest-fuente">${esc(dj.fuente || '')}${(dj.fuente && dj.fecha) ? ' · ' : ''}${dj.fecha ? fechaDMY(dj.fecha) : ''}</p>`
+      + (dj.url ? `<a class="btn btn-oro nt-dest-btn" href="${esc(dj.url)}" target="_blank" rel="noopener">Leer la noticia</a>` : '')
+      + `</div></article></section>`;
+  }
+} catch (e) { /* sin noticia destacada */ }
 
 // Titulares commiteados en ./data/ (fuente de la verdad); ignora *_anterior_HHMM y .txt.
 const semanas = fs.readdirSync(DATA_DIR).filter(f => RE.titulares.test(f))
@@ -848,6 +872,23 @@ const HTML_N = `<!DOCTYPE html>
   .pg-noticias .nt-intro{ color:var(--gris); margin-top:10px; }
   .pg-noticias .nt-cross{ margin-top:8px; font-size:.9rem; }
   .pg-noticias .nt-cross a{ color:var(--oro-claro); }
+  /* Noticia destacada: baldosa a todo el ancho (altura de 2 filas), foto + texto. */
+  .pg-noticias .nt-destacada-sec{ margin:26px 0 8px; }
+  .pg-noticias .nt-destacada-sec .eyebrow{ margin-bottom:12px; }
+  .pg-noticias .nt-destacada{ display:grid; grid-template-columns:1fr 1fr; background:#fffdf8; border:1px solid rgba(150,116,46,.30); overflow:hidden; }
+  .pg-noticias .nt-dest-foto{ margin:0; position:relative; min-height:360px; }
+  .pg-noticias .nt-dest-foto img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block; }
+  .pg-noticias .nt-dest-credito{ position:absolute; left:0; bottom:0; margin:0; background:rgba(11,10,8,.6); color:#f2efe7; font-size:.7rem; padding:3px 9px; letter-spacing:.02em; }
+  .pg-noticias .nt-dest-texto{ padding:2rem 2rem; display:flex; flex-direction:column; gap:1rem; justify-content:center; }
+  .pg-noticias .nt-dest-titular{ font-family:var(--serif); color:#161310; font-size:clamp(1.5rem,2.6vw,2.1rem); line-height:1.16; margin:0; font-weight:600; }
+  .pg-noticias .nt-dest-resumen{ font-family:var(--sans); color:#5c5446; font-size:.95rem; line-height:1.6; margin:0; text-align:justify; }
+  .pg-noticias .nt-dest-fuente{ color:#5c5446; font-size:.8rem; margin:0; }
+  .pg-noticias .nt-dest-btn{ align-self:flex-start; margin-top:.2rem; }
+  @media(max-width:820px){
+    .pg-noticias .nt-destacada{ grid-template-columns:1fr; }
+    .pg-noticias .nt-dest-foto{ min-height:220px; }
+    .pg-noticias .nt-dest-texto{ padding:1.5rem 1.3rem; }
+  }
   .pg-noticias .nt-semana{ font-family:var(--serif); color:var(--hueso); font-size:1.5rem; margin:34px 0 4px; border-bottom:1px solid var(--linea); padding-bottom:8px; }
   .pg-noticias .nt-semana-ant{ font-size:1.25rem; color:var(--oro-claro); margin-top:26px; }
   /* Tarjetas de noticia: EXACTAMENTE las 3 cajas de la portada ("Tres situaciones")
@@ -883,6 +924,7 @@ ${renderNav('noticias')}
   <h1 class="nt-titulo">Titulares inmobiliarios de la semana</h1>
   <p class="nt-intro">Una selección de las noticias inmobiliarias de la semana en Madrid y España. Cada titular enlaza a la publicación original.</p>
   <p class="nt-cross"><a href="/informes-mercado/">Ver los informes de mercado (precios €/m²) →</a></p>
+  ${destacadaHTML}
   ${cuerpoNoticias}
   <p class="nt-fuente">Elaborado por CABAS Realtor a partir de fuentes públicas; los enlaces llevan a la noticia original.</p>
 </main>
