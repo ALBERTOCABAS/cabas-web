@@ -1,0 +1,14 @@
+# Atajos por canal para medir el origen en Cloudflare Web Analytics.
+# Cada atajo lleva a la página real con un parámetro ?s=<canal>, que aparece
+# en el panel (URL de la página) para distinguir de dónde llega la visita.
+# 302 = temporal (no se cachea de forma permanente; se pueden cambiar destinos).
+
+# → Noticias
+/n/circulo   /noticias/?s=circulo   302
+/n/grupos    /noticias/?s=grupos    302
+/n/ig        /noticias/?s=ig        302
+/n/li        /noticias/?s=li        302
+
+# → Informes de mercado
+/i/circulo   /informes-mercado/?s=circulo   302
+/i/grupos    /informes-mercado/?s=grupos    302
