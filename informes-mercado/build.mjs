@@ -1024,11 +1024,18 @@ async function avisarFrescura() {
   if (!viejos.length) { console.log('Frescura: todas las fuentes al día (≤45 días).'); return; }
 
   // El aviso sale por el Worker cabas-bot (POST /aviso-web), que es quien guarda el
-  // TELEGRAM_TOKEN como secreto. Aquí NO hay token: basta el chat-id admin (público)
-  // como clave 'k', que se lee de ~/cabas-bot/wrangler.toml (primer id de la lista).
+  // TELEGRAM_TOKEN. Aquí NO hay token. El endpoint se protege con un SECRETO propio
+  // (AVISO_WEB_SECRET), que se lee del ENTORNO DE CONSTRUCCIÓN, nunca del repo:
+  // primero de process.env y, si no, de ~/.cabas-web.env (fuera del repo, chmod 600).
   const WORKER = 'https://cabas-bot.alberto-f06.workers.dev/aviso-web';
-  let k = null;
-  try { const wt = fs.readFileSync(path.resolve(REPO, '..', 'cabas-bot', 'wrangler.toml'), 'utf8'); const m = wt.match(/ALBERTO_CHAT_ID\s*=\s*"([^",]+)/); if (m) k = m[1].trim(); } catch (e) {}
+  let secret = (process.env.AVISO_WEB_SECRET || '').trim();
+  if (!secret) {
+    try {
+      const envFile = fs.readFileSync(path.join(process.env.HOME || '', '.cabas-web.env'), 'utf8');
+      const m = envFile.match(/^\s*AVISO_WEB_SECRET\s*=\s*(.+)\s*$/m);
+      if (m) secret = m[1].trim();
+    } catch (e) {}
+  }
 
   // Dedupe: un aviso por dato y día (estado local, gitignored).
   const stateFile = path.join(__dirname, '.frescura-avisos.json');
@@ -1037,8 +1044,8 @@ async function avisarFrescura() {
   const clave = f => `${f.nombre}|${f.fechaISO}|${hoyISO}`;
   const pend = viejos.filter(f => !estado[clave(f)]);
   if (!pend.length) { console.log(`Frescura: ${viejos.length} fuente(s) >45 días, ya avisadas hoy (sin repetir).`); return; }
-  if (!k) {
-    console.log(`⚠ Frescura: ${pend.length} fuente(s) >45 días pero SIN avisar (no se pudo leer el chat-id admin en ~/cabas-bot/wrangler.toml): ${pend.map(f => f.nombre + ' (' + f.dias + 'd)').join(' · ')}`);
+  if (!secret) {
+    console.log(`⚠ Frescura: ${pend.length} fuente(s) >45 días pero SIN avisar (falta AVISO_WEB_SECRET en el entorno de construcción, p. ej. ~/.cabas-web.env): ${pend.map(f => f.nombre + ' (' + f.dias + 'd)').join(' · ')}`);
     return;
   }
   for (const f of pend) {
@@ -1048,8 +1055,8 @@ async function avisarFrescura() {
       + `🌐 Aparece en: https://www.cabas.es${f.pagina}`;
     let ok = false;
     try {
-      const r = await fetch(`${WORKER}?k=${encodeURIComponent(k)}`, {
-        method: 'POST', headers: { 'content-type': 'application/json' },
+      const r = await fetch(WORKER, {
+        method: 'POST', headers: { 'content-type': 'application/json', 'X-Aviso-Secret': secret },
         body: JSON.stringify({ text: txt }),
       });
       const j = await r.json().catch(() => ({}));
