@@ -49,10 +49,10 @@ window.addEventListener('afterprint', () => document.body.classList.remove('modo
 // La web NO lleva librería de PDF: manda el HTML de la hoja (con CSS absolutos a
 // cabas.es) al Worker, que lo rinde con Browser Rendering de Cloudflare y lo
 // devuelve como archivo. Si falla o tarda más de 10 s, cae a window.print() sin
-// que el cliente note nada raro. El "secreto" viaja en el navegador (es una web
-// pública): la protección real del endpoint es el origen cabas.es + 30 PDF/hora.
+// que el cliente note nada raro. El endpoint se protege por ORIGEN (solo cabas.es) y 30 PDF/hora por IP;
+// un endpoint de navegador no puede llevar un secreto real (iría en el JS
+// público, y el repo redacta los valores secretos).
 const PDF_ENDPOINT = 'https://cabas-bot.alberto-f06.workers.dev/pdf';
-const PDF_SECRET = 'pdf_5568000b47a6be28cac05f869713ff8b984d6ecd56038680';
 function _docImprimible() {
   const wrap = document.querySelector('.hoja-imprimible-wrap');
   const hojas = wrap ? wrap.innerHTML
@@ -83,7 +83,7 @@ function descargarInforme(nombreArchivo, fallback) {
   const to = setTimeout(() => ctrl.abort(), 10000);
   fetch(PDF_ENDPOINT, {
     method: 'POST',
-    headers: { 'content-type': 'application/json', 'X-PDF-Secret': PDF_SECRET },
+    headers: { 'content-type': 'application/json'},
     body: JSON.stringify({ html: doc, filename: nombre }),
     signal: ctrl.signal
   }).then(r => { clearTimeout(to); if (!r.ok) throw new Error('status ' + r.status); return r.blob(); })
