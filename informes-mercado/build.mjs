@@ -155,6 +155,26 @@ let NOTARIADO = null, notariadoOrigen = '—';
 }
 
 // ============================================================
+// Vigilante de frescura: fecha de cada fuente que se pinta.
+//  · > 45 días → aviso a Alberto por Telegram (1 por dato y día, sin repetir).
+//  · > 60 días → marca "dato pendiente de actualizar" junto a su fecha en la página.
+// ============================================================
+const HOY = new Date();
+const diasDesde = iso => { const d = new Date(iso); return isNaN(d.getTime()) ? null : Math.floor((HOY - d) / 86400000); };
+const AVISO_DIAS = 45, MARCA_DIAS = 60;
+const marca = iso => { const n = diasDesde(iso); return (n != null && n > MARCA_DIAS) ? ' <span class="im-stale">dato pendiente de actualizar</span>' : ''; };
+const fuentesFrescura = [];   // {nombre, fechaISO, pagina}
+const regFuente = (nombre, fechaISO, pagina) => { if (fechaISO) fuentesFrescura.push({ nombre, fechaISO, pagina }); };
+// La "fecha" de un dato mensual es el último día de su mes (agosto 2026 → 2026-08-31).
+const ultimoDiaMesISO = (anio, idx) => { const d = new Date(anio, idx + 1, 0); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; };
+const mesMasRecienteISO = fam => { let best = null; for (const r of filas[fam]) { const m = mesInfo(r.mes); if (best == null || m.key > best.key) best = m; } return best ? ultimoDiaMesISO(best.anio, best.idx) : null; };
+const mesUltISO = ultimoDiaMesISO(mesUltimo.anio, mesUltimo.idx);
+regFuente('CSV de Madrid (capital, distritos y pueblos)', mesMasRecienteISO('madrid'), '/informes-mercado/');
+regFuente('CSV de España (comunidades autónomas)', mesMasRecienteISO('espana'), '/informes-mercado/');
+regFuente('CSV de zonas de oficinas (Chamberí, Chamartín, Malasaña)', mesMasRecienteISO('zonas'), '/informes-mercado/');
+if (NOTARIADO && NOTARIADO.fecha_informe) regFuente('JSON del Notariado (operación cerrada, Madrid provincia)', NOTARIADO.fecha_informe, '/informes-mercado/');
+
+// ============================================================
 // Utilidades de presentación
 // ============================================================
 const ACENTO = {
@@ -225,9 +245,9 @@ function bloqueContraste(c) {
     + `<span class="im-c-tag ${p.cls}">${esc(p.tag)}</span>`
     + `<div class="im-c-dato">${esc(p.valor)}</div>`
     + `<div class="im-c-etq">${esc(p.etiqueta)}</div>`
-    + `<div class="im-c-fte">${esc(p.fuente)}</div></div>`).join('');
+    + `<div class="im-c-fte">${esc(p.fuente)}${p.marca || ''}</div></div>`).join('');
   return `<aside class="im-contraste" aria-label="El mercado en contexto">`
-    + `<span class="im-c-eyebrow">En contexto · ${esc(c.label || mesUltimo.label)}</span>`
+    + `<span class="im-c-eyebrow">En contexto · ${esc(c.label || mesUltimo.label)}${c.marca || ''}</span>`
     + (c.titular ? `<h2 class="im-c-titular">${esc(c.titular)}</h2>` : '')
     + `<div class="im-c-grid">${puntos}</div>`
     + (c.nota ? `<p class="im-c-nota">${c.nota}</p>` : '')
@@ -313,7 +333,7 @@ const ofertaVar = (mPadre && mPadre.var_anual) ? coma(String(mPadre.var_anual).t
 if (ofertaVar) puntosCtx.push({
   cls: 'oferta', tag: 'Precio de oferta', valor: ofertaVar,
   etiqueta: 'Madrid capital · variación anual del precio pedido',
-  fuente: `idealista · ${mesUltimo.label}`,
+  fuente: `idealista · ${mesUltimo.label}`, marca: marca(mesUltISO),
 });
 let ctxLabel = mesUltimo.label;
 let ctxTitular = 'El precio de oferta en Madrid';
@@ -338,7 +358,7 @@ if (NOTARIADO) {
   });
   ctxNota = 'Son cosas distintas y de distinto ámbito: el <b>precio de oferta</b> (idealista, Madrid capital) es lo que se pide; el <b>precio y las compraventas de operación cerrada</b> (Notariado, provincia de Madrid) son lo que se firma ante notario.';
 }
-const CONTRASTE = { label: ctxLabel, titular: ctxTitular, puntos: puntosCtx, nota: ctxNota };
+const CONTRASTE = { label: ctxLabel, titular: ctxTitular, puntos: puntosCtx, nota: ctxNota, marca: (NOTARIADO && NOTARIADO.fecha_informe) ? marca(NOTARIADO.fecha_informe) : '' };
 
 // --- ESPAÑA: nacional + comunidades (sin provincia) ---
 const ultEspana = delUltimoMes('espana').filter(r => r.tipo !== 'provincia');
@@ -643,7 +663,7 @@ ${renderNav('informes')}
   <h1 class="im-titulo">Informes de Mercado</h1>
   <p class="im-intro">Evolución de los precios de vivienda <b>en venta</b> (€/m²): el detalle por barrios de las zonas donde están mis oficinas —Chamberí, Chamartín y Malasaña-Universidad—, los 21 distritos de Madrid capital, los municipios más poblados de la Comunidad de Madrid y todas las comunidades autónomas.</p>
   <p class="im-aviso"><b>Fuente:</b> precios de <b>oferta publicada</b> en idealista, no de operación cerrada. El <b>€/m² Est. Venta</b> descuenta el <b>6,2 %</b> de margen medio de negociación entre precio publicado y precio final de venta (media nacional; Cátedra Grupo Tecnocasa–UPF, vía idealista, feb. 2026).</p>
-  <p class="im-actualizado">Última actualización: <b>${esc(mesUltimo.label)}</b>.</p>
+  <p class="im-actualizado">Última actualización: <b>${esc(mesUltimo.label)}</b>${marca(mesUltISO)}.</p>
   <p class="im-cross" style="margin-top:6px"><a href="/noticias/">Titulares inmobiliarios de la semana →</a></p>
 
   ${bloqueContraste(CONTRASTE)}
@@ -783,6 +803,7 @@ try {
   const vigente = dj && dj.activa === true && (!dj.fecha_fin || hoy <= String(dj.fecha_fin));
   if (vigente) {
     const rec = esc(dj.recorte || 'center 50%');
+    if (dj.fecha) regFuente('Noticia destacada', dj.fecha, '/noticias/');
     destacadaHTML =
       `<section class="nt-destacada-sec" aria-label="Noticia de especial relevancia">`
       + `<p class="eyebrow">Noticia de especial relevancia</p>`
@@ -791,7 +812,7 @@ try {
       + `<div class="nt-dest-texto">`
       + `<h2 class="nt-dest-titular">${esc(dj.titulo || '')}</h2>`
       + (dj.resumen ? `<p class="nt-dest-resumen">${esc(dj.resumen)}</p>` : '')
-      + `<p class="nt-dest-fuente">${esc(dj.fuente || '')}${(dj.fuente && dj.fecha) ? ' · ' : ''}${dj.fecha ? fechaDMY(dj.fecha) : ''}</p>`
+      + `<p class="nt-dest-fuente">${esc(dj.fuente || '')}${(dj.fuente && dj.fecha) ? ' · ' : ''}${dj.fecha ? fechaDMY(dj.fecha) : ''}${dj.fecha ? marca(dj.fecha) : ''}</p>`
       + (dj.url ? `<a class="btn btn-oro nt-dest-btn" href="${esc(dj.url)}" target="_blank" rel="noopener">Leer la noticia</a>` : '')
       + `</div></article></section>`;
   }
@@ -830,9 +851,10 @@ const ultimaSem = semanas[0] || null;
 const rangoUlt = ultimaSem ? rangoSemana(ultimaSem.desde, ultimaSem.hasta) : '';
 const anteriores = semanas.slice(1);
 const noticiasISO = (ultimaSem && ultimaSem.hasta) ? ultimaSem.hasta : new Date().toISOString().slice(0, 10);
+if (ultimaSem && ultimaSem.hasta) regFuente('Titulares de la semana', ultimaSem.hasta, '/noticias/');
 
 const cuerpoNoticias = ultimaSem
-  ? `<h2 class="nt-semana">${esc(rangoUlt)}</h2>${noticiasLista(ultimaSem)}`
+  ? `<h2 class="nt-semana">${esc(rangoUlt)}${marca(ultimaSem.hasta)}</h2>${noticiasLista(ultimaSem)}`
     + (anteriores.length
         ? `<details class="nt-anteriores"><summary>Semanas anteriores</summary>`
           + anteriores.map(s => `<section class="nt-sem-ant"><h3 class="nt-semana nt-semana-ant">${esc(rangoSemana(s.desde, s.hasta))}</h3>${noticiasLista(s)}</section>`).join('')
@@ -991,3 +1013,51 @@ console.log(`Bloque "En contexto": ${CONTRASTE && CONTRASTE.puntos.length ? CONT
 console.log(`Noticias: ${semanas.length} semana(s) · última: ${ultimaSem ? ultimaSem.semana + ' (' + rangoUlt + ')' : '—'} → noticias/index.html`);
 console.log(`Generado: informes-mercado/index.html  +  noticias/index.html  +  sitemap.xml   ·  última actualización: ${mesUltimo.label}`);
 console.log('─────────────────────────────────────────────────');
+
+// ============================================================
+// Vigilante de frescura: aviso a Alberto por Telegram (no fatal para el build).
+// ============================================================
+async function avisarFrescura() {
+  const viejos = fuentesFrescura
+    .map(f => ({ ...f, dias: diasDesde(f.fechaISO) }))
+    .filter(f => f.dias != null && f.dias > AVISO_DIAS);
+  if (!viejos.length) { console.log('Frescura: todas las fuentes al día (≤45 días).'); return; }
+
+  // El aviso sale por el Worker cabas-bot (POST /aviso-web), que es quien guarda el
+  // TELEGRAM_TOKEN como secreto. Aquí NO hay token: basta el chat-id admin (público)
+  // como clave 'k', que se lee de ~/cabas-bot/wrangler.toml (primer id de la lista).
+  const WORKER = 'https://cabas-bot.alberto-f06.workers.dev/aviso-web';
+  let k = null;
+  try { const wt = fs.readFileSync(path.resolve(REPO, '..', 'cabas-bot', 'wrangler.toml'), 'utf8'); const m = wt.match(/ALBERTO_CHAT_ID\s*=\s*"([^",]+)/); if (m) k = m[1].trim(); } catch (e) {}
+
+  // Dedupe: un aviso por dato y día (estado local, gitignored).
+  const stateFile = path.join(__dirname, '.frescura-avisos.json');
+  let estado = {}; try { estado = JSON.parse(fs.readFileSync(stateFile, 'utf8')) || {}; } catch (e) {}
+  const hoyISO = HOY.toISOString().slice(0, 10);
+  const clave = f => `${f.nombre}|${f.fechaISO}|${hoyISO}`;
+  const pend = viejos.filter(f => !estado[clave(f)]);
+  if (!pend.length) { console.log(`Frescura: ${viejos.length} fuente(s) >45 días, ya avisadas hoy (sin repetir).`); return; }
+  if (!k) {
+    console.log(`⚠ Frescura: ${pend.length} fuente(s) >45 días pero SIN avisar (no se pudo leer el chat-id admin en ~/cabas-bot/wrangler.toml): ${pend.map(f => f.nombre + ' (' + f.dias + 'd)').join(' · ')}`);
+    return;
+  }
+  for (const f of pend) {
+    const txt = `⚠️ <b>Dato desactualizado en la web</b>\n`
+      + `📄 ${f.nombre}\n`
+      + `📅 Fecha del dato: ${f.fechaISO}  (${f.dias} días)\n`
+      + `🌐 Aparece en: https://www.cabas.es${f.pagina}`;
+    let ok = false;
+    try {
+      const r = await fetch(`${WORKER}?k=${encodeURIComponent(k)}`, {
+        method: 'POST', headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ text: txt }),
+      });
+      const j = await r.json().catch(() => ({}));
+      ok = !!(r.ok && j && j.ok);
+    } catch (e) {}
+    if (ok) estado[clave(f)] = true;
+    console.log(`Frescura: aviso ${ok ? 'ENVIADO' : 'FALLÓ'} · ${f.nombre} (${f.dias} d)`);
+  }
+  try { fs.writeFileSync(stateFile, JSON.stringify(estado, null, 2)); } catch (e) {}
+}
+try { await avisarFrescura(); } catch (e) { console.log('Frescura: error no fatal → ' + String(e).slice(0, 120)); }

@@ -1,2 +1,5 @@
 .DS_Store
 **/.DS_Store
+
+# Estado local del vigilante de frescura (dedupe de avisos de Telegram, solo Mac)
+informes-mercado/.frescura-avisos.json

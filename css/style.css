@@ -629,3 +629,10 @@ a.cifra:hover span{color:#161310}
    oscuro legible. El !important es necesario para ganar a los style="color:var(--gris)"
    inline heredados (gris claro pensado para fondo negro). */
 .calc small{color:#6b6356 !important}
+
+/* Vigilante de frescura: marca junto a una fecha con más de 60 días. Píldora
+   roja apagada, legible sobre fondo oscuro, sobre el oro del bloque en contexto
+   y sobre las tarjetas claras. */
+.im-stale{display:inline-block;background:#b23c17;color:#fff;font-size:.68em;font-weight:700;
+  padding:1px 8px;border-radius:999px;letter-spacing:.02em;vertical-align:middle;
+  margin-left:6px;white-space:nowrap;text-transform:none}
