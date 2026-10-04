@@ -75,7 +75,7 @@
       vende_ya:          { es: 'Ya está a la venta' },
       vende_noaun:       { es: 'Todavía no' },
       vende_donde_preg:  { es: '¿Dónde está la vivienda que vendes? Dime <b>provincia, ciudad y dirección</b>.' },
-      vende_donde_ph:    { es: 'Ej. Madrid, Madrid, C/ Bravo Murillo 23' },
+      vende_donde_ph:    { es: 'Ej. Madrid, Madrid, C/ Galileo 46' },
       vende_enlace_preg: { es: '¿Tienes el <b>enlace del anuncio</b> (tuyo o de una agencia)?' },
       vende_enlace_si:   { es: '🔗 Sí, lo pego' },
       vende_enlace_no:   { es: 'No tengo' },
@@ -162,9 +162,9 @@
       opt_varios:   { es: 'Varios inmuebles' },
       ccaa_preg:    { es: '¿En qué <b>comunidad autónoma</b> está?' },
       dir_preg:     { es: '¿Cuál es la <b>dirección</b>? (calle y número, o la zona)' },
-      dir_ph:       { es: 'Ej. C/ Bravo Murillo 23, Madrid' },
+      dir_ph:       { es: 'Ej. C/ Galileo 46, Madrid' },
       varios_preg:  { es: '¿<b>Dónde están</b> y cuántos son? Dime las direcciones o zonas.' },
-      varios_ph:    { es: 'Ej. 2 pisos: Bravo Murillo 23 (Madrid) y Toledo centro' },
+      varios_ph:    { es: 'Ej. 2 pisos: Galileo 46 (Madrid) y Toledo centro' },
       // Textos internos del lead (van a Cabas). AHORA como plantillas:
       lead_resumen_uno:     { es: 'VALORACIÓN · 1 inmueble · {ccaa} · {dir}' },
       lead_resumen_varios:  { es: 'VALORACIÓN · Varios inmuebles · {dir}' },
@@ -190,7 +190,7 @@
       l_intereses: { es: 'Intereses totales' },
       l_total_dev: { es: 'Total a devolver' },
       l_cuota:     { es: 'Cuota mensual' },
-      disc:        { es: 'Sistema francés, cuota constante. No incluye comisiones, seguros ni productos vinculados. Las condiciones y la edad máxima dependen de cada banco.' },
+      disc:        { es: 'Sistema francés, cuota constante. No incluye gastos bancarios, seguros ni productos vinculados. Las condiciones y la edad máxima dependen de cada banco.' },
 
       // Avisos: FRASES COMPLETAS con huecos (nunca trozos pegados)
       aviso_edad_ok:          { es: 'Con {edad} años, el plazo de {plazo} años entra dentro del criterio de edad habitual de las entidades.' },
@@ -561,7 +561,7 @@
       tenencia_ph:   { es: 'Ej. 150' },
       venta_preg:    { es: '¿A qué <b>precio</b> esperas venderla?' },
       venta_ph:      { es: 'Ej. 290000' },
-      hon_venta_preg:{ es: '¿<b>Comisión / honorarios de venta</b>? (intermediación al vender; si no, ninguno)' },
+      hon_venta_preg:{ es: '¿<b>Honorarios de venta</b>? (intermediación al vender; si no, ninguno)' },
       tin_preg_fl:   { es: '¿<b>TIN</b>? Si no lo sabes, un 4% es referencia.' },
       tin_ph_fl:     { es: 'Ej. 4' },
       gfin_preg:     { es: '¿<b>Gastos financieros</b> (apertura, tasación, cancelación)? Si no, 0.' },

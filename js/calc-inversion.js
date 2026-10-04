@@ -224,8 +224,7 @@
       $('pdfi-hipotesis').innerHTML = `<strong>Hipótesis:</strong> ${r.ccaaNombre}. Gastos de compra estimados (${r.impLabel} + notaría, registro y gestoría). ROI anualizado: ${pct(r.roiAnualizado)}. <strong>El beneficio es ANTES de impuestos</strong>: la tributación depende de si la operación es puntual (ganancia patrimonial en IRPF) o habitual (actividad económica / Sociedades).`;
     }
     if (oficina) {
-      $('pdfi-oficina-nombre').textContent = oficina.nombre;
-      $('pdfi-oficina-contacto').textContent = `${oficina.direccion} · ${oficina.telefono} · ${oficina.email}`;
+      // El pie del informe es fijo (marca Cabas Realtor), estático en el HTML de la hoja — ver css/informe.css.
     }
     if (typeof imprimirInforme === 'function') imprimirInforme(); else window.print();
   });

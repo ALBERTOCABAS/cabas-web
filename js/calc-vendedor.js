@@ -242,8 +242,7 @@ document.getElementById('v-descargar-pdf').addEventListener('click', () => {
     `<strong>Hipótesis del cálculo:</strong> Vivienda en ${ccaaNombre}. Plusvalía municipal calculada con los coeficientes máximos estatales (RDL 8/2023) y un tipo de gravamen del ${c.tipoIIVTNUpct.toFixed(1).replace(/\.0$/, '').replace('.', ',')}% (estimado para la capital de la comunidad). ` +
     `IRPF calculado sobre la base del ahorro estatal (19-30%), igual en toda España. ${c.mayor65 ? 'Ganancia exenta por mayor de 65 años en vivienda habitual.' : c.reinv ? 'Exención por reinversión en vivienda habitual aplicada.' : ''}`;
 
-  document.getElementById('pdfv-oficina-nombre').textContent = oficina.nombre;
-  document.getElementById('pdfv-oficina-contacto').textContent = `${oficina.direccion} · ${oficina.telefono} · ${oficina.email}`;
+  // El pie del informe es fijo (marca Cabas Realtor), estático en el HTML de la hoja — ver css/informe.css.
 
   imprimirInforme();
 });

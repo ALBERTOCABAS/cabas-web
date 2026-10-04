@@ -325,10 +325,10 @@ document.getElementById('h-descargar-pdf').addEventListener('click', () => {
     `Gastos estimados: ${impLabelSinCCAA} (${eur2(c.impuestos)}), notaría ${eur2(c.gastos.notaria)}, registro ${eur2(c.gastos.registro)}, gestoría ${eur2(c.gastos.gestoria)}` +
     (c.conHipoteca ? ` y tasación ${eur2(c.gastos.tasacion)}` : '') +
     (c.honorarios > 0 ? `, honorarios de intermediación ${eur2(c.honorarios)}` : '') +
-    (c.conHipoteca ? `. Sistema francés, cuotas constantes y TIN sin comisiones, seguros ni productos vinculados.` : '.');
+    (c.conHipoteca ? `. Sistema francés, cuotas constantes y TIN sin gastos bancarios, seguros ni productos vinculados.` : '.');
 
-  document.getElementById('pdf-oficina-nombre').textContent = oficina.nombre;
-  document.getElementById('pdf-oficina-contacto').textContent = `${oficina.direccion} · ${oficina.telefono} · ${oficina.email}`;
+  // El pie del informe es fijo (marca Cabas Realtor), estático en el HTML de la
+  // hoja y común a las cinco calculadoras y a /informes-mercado/ — ver css/informe.css.
 
   document.getElementById('pdf-disclaimer').textContent = c.conHipoteca
     ? 'Simulación orientativa. La aprobación y las condiciones finales de la hipoteca dependen de la entidad, la tasación, la estabilidad de ingresos y otras deudas. No constituye oferta vinculante ni asesoramiento financiero.'

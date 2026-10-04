@@ -113,7 +113,7 @@ document.getElementById('f-generar').addEventListener('click', () => {
   const avisosDiv = document.getElementById('f-avisos');
   avisosDiv.innerHTML = '';
   if (!oficinaSlug) {
-    avisosDiv.innerHTML = '<div class="aviso aviso-rojo">Selecciona tu oficina Cabas Realtor — es obligatorio, sus datos aparecen en el pie del informe.</div>';
+    avisosDiv.innerHTML = '<div class="aviso aviso-rojo">Selecciona tu oficina Cabas Realtor — es obligatorio para preparar el informe.</div>';
     return;
   }
   if (!precio || !aportaciones.length || !tins.length) {
@@ -211,12 +211,9 @@ document.getElementById('f-generar').addEventListener('click', () => {
     `<strong style="color:#1A1712">Hipótesis del cálculo:</strong> Vivienda ${tipoViv === 'nueva' ? 'de obra nueva' : 'usada'} en ${r.gastos.ccaaNombre}. ` +
     `Gastos estimados: ${r.gastos.impLabel} (${eur2(r.gastos.impuestos)}), notaría ${eur2(r.gastos.notaria)}, registro ${eur2(r.gastos.registro)}, gestoría ${eur2(r.gastos.gestoria)} y tasación ${eur2(r.gastos.tasacion)}` +
     (r.honorarios > 0 ? `, honorarios de intermediación ${eur2(r.honorarios)}` : '') +
-    `. Sistema francés, cuotas constantes y TIN sin comisiones, seguros ni productos vinculados.`;
+    `. Sistema francés, cuotas constantes y TIN sin gastos bancarios, seguros ni productos vinculados.`;
 
-  // ---- Pie de página: datos de la oficina seleccionada ----
-  const oficina = OFICINAS[oficinaSlug];
-  document.getElementById('i-footer-oficina').textContent = oficina.nombre;
-  document.getElementById('i-footer-contacto').textContent = `${oficina.direccion} · ${oficina.telefono} · ${oficina.email}`;
+  // El pie del informe es fijo (marca Cabas Realtor), estático en el HTML de la hoja — ver css/informe.css.
 
   // ---- Cambiar de pantalla ----
   document.getElementById('pantalla-form').style.display = 'none';
