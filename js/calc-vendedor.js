@@ -244,5 +244,7 @@ document.getElementById('v-descargar-pdf').addEventListener('click', () => {
 
   // El pie del informe es fijo (marca Cabas Realtor), estático en el HTML de la hoja — ver css/informe.css.
 
-  imprimirInforme();
+  const nombreCli = (document.getElementById('v-lead-nombre') || {}).value || '';
+  if (typeof descargarInforme === 'function') descargarInforme('Informe venta' + (nombreCli.trim() ? ' - ' + nombreCli.trim() : ''), imprimirInforme);
+  else imprimirInforme();
 });

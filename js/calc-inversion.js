@@ -226,6 +226,9 @@
     if (oficina) {
       // El pie del informe es fijo (marca Cabas Realtor), estático en el HTML de la hoja — ver css/informe.css.
     }
-    if (typeof imprimirInforme === 'function') imprimirInforme(); else window.print();
+    const _fb = (typeof imprimirInforme === 'function') ? imprimirInforme : function () { window.print(); };
+    const _nom = (document.getElementById('inv-lead-nombre') || {}).value || '';
+    if (typeof descargarInforme === 'function') descargarInforme('Informe inversion' + (_nom.trim() ? ' - ' + _nom.trim() : ''), _fb);
+    else _fb();
   });
 })();

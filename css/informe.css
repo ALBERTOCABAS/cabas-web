@@ -135,6 +135,46 @@ body.modo-impresion-informe .hoja-imprimible-wrap{display:block !important}
   table.i-tabla td{padding:.32rem .55rem;font-size:.8rem}
 }
 
+/* Segunda hoja del informe comparativo (3 plazos): en pantalla va separada;
+   al imprimir empieza en una cara nueva, con su propia cabecera y pie. */
+.hoja-cont{margin-top:2rem}
+@media print{ .hoja-cont{page-break-before:always} }
+
+/* Informe comparativo (informe-compra, hoja #hoja + su continuación .hoja-cont):
+   compactar fuerte para DOS caras — todas las tablas menos la última en la
+   primera, y la última tabla + las conclusiones en la segunda. Scoped por #hoja
+   y .hoja-cont: no afecta a las otras hojas. */
+@media print{
+  #hoja .i-header, .hoja-cont .i-header{padding:.4rem .85rem}
+  #hoja .i-logo-box img, .hoja-cont .i-logo-box img{width:40px}
+  #hoja .i-titulo, .hoja-cont .i-titulo{font-size:1.05rem;margin:.02rem 0 .06rem}
+  #hoja .i-subtitulo, .hoja-cont .i-subtitulo{font-size:.74rem}
+  #hoja .i-vivienda, .hoja-cont .i-vivienda{font-size:.72rem;margin-top:.15rem}
+  #hoja .i-body{padding-top:.5rem}
+  #hoja .i-stat-valor{font-size:.92rem}
+  #hoja .i-stat-label{min-height:0;font-size:.58rem}
+  #hoja .i-stat-cap{display:none}
+  #hoja .i-seccion-titulo, .hoja-cont .i-seccion-titulo{margin:.25rem 0 .14rem}
+  #hoja .i-tabla-cab, .hoja-cont .i-tabla-cab{margin:.18rem 0 .06rem}
+  #hoja table.i-tabla th, .hoja-cont table.i-tabla th{padding:.1rem .5rem;font-size:.6rem}
+  #hoja table.i-tabla td, .hoja-cont table.i-tabla td{padding:.045rem .5rem;font-size:.66rem}
+  #hoja .i-tabla-grupo, .hoja-cont .i-tabla-grupo{margin-bottom:.06rem}
+  #hoja .i-footer, .hoja-cont .i-footer{padding:.5rem .85rem}
+  #hoja .i-footer-clon{padding:.5rem .85rem}
+  /* Conclusiones (2ª cara): compactar lectura, caja y callout para que quepan
+     con la última tabla. */
+  .hoja-cont .i-tabla-nota{margin:.15rem 0 .4rem;font-size:.7rem}
+  .hoja-cont .i-dos-col{margin-top:.4rem;gap:.7rem}
+  .hoja-cont .i-lectura li{margin-bottom:.22rem;font-size:.72rem;line-height:1.32}
+  .hoja-cont .i-equilibrado{padding:.5rem .8rem}
+  .hoja-cont .i-equilibrado .cifra{font-size:1.4rem;margin:.05rem 0}
+  .hoja-cont .i-equilibrado .cap{margin-bottom:.3rem}
+  .hoja-cont .i-equilibrado .fila{padding-top:.28rem;font-size:.72rem}
+  .hoja-cont .i-callout{margin-top:.5rem;padding:.5rem .9rem;font-size:.76rem}
+  .hoja-cont .i-hipotesis{margin-top:.5rem;font-size:.66rem;line-height:1.4}
+  .hoja-cont .i-disclaimer{font-size:.64rem;margin-top:.3rem}
+}
+
 /* En móvil, la tabla comparativa (7 columnas) no debe desbordar la hoja
    ni empujar la página: se desplaza horizontalmente dentro de su grupo. */
 @media(max-width:700px){

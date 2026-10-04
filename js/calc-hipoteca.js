@@ -334,5 +334,6 @@ document.getElementById('h-descargar-pdf').addEventListener('click', () => {
     ? 'Simulación orientativa. La aprobación y las condiciones finales de la hipoteca dependen de la entidad, la tasación, la estabilidad de ingresos y otras deudas. No constituye oferta vinculante ni asesoramiento financiero.'
     : 'Simulación orientativa de los gastos e impuestos de la compra al contado. Los importes reales pueden variar según la gestoría, la notaría elegida y bonificaciones aplicables. No constituye asesoramiento fiscal.';
 
-  imprimirInforme();
+  if (typeof descargarInforme === 'function') descargarInforme('Informe compra' + (nombreCliente ? ' - ' + nombreCliente : ''), imprimirInforme);
+  else imprimirInforme();
 });

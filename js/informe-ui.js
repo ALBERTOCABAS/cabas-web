@@ -88,8 +88,55 @@ function generarLectura(r, ctx) {
   return bullets;
 }
 
+// ---------- Paginado para impresión en 2 caras ----------
+// Con 3 plazos el informe es largo: dos tablas en la primera cara y la tercera
+// tabla + las conclusiones en la segunda, cada cara con su cabecera y su pie.
+// Se construye una segunda hoja moviendo nodos; desPaginarInforme() lo deshace
+// antes de regenerar para no perder esos nodos.
+function desPaginarInforme() {
+  const h2 = document.getElementById('hoja2');
+  if (!h2) return;
+  const hoja1 = document.getElementById('hoja');
+  const body1 = hoja1.querySelector('.i-body');
+  h2.querySelectorAll('.i-tabla-grupo').forEach(g => document.getElementById('i-tablas').appendChild(g));
+  const nota = document.getElementById('i-tabla-nota'); if (nota) body1.appendChild(nota);
+  const dosCol = h2.querySelector('.i-dos-col'); if (dosCol) body1.appendChild(dosCol);
+  const callout = document.getElementById('i-efecto-box'); if (callout) body1.appendChild(callout);
+  const cierre = h2.querySelector('.i-cierre'); if (cierre) hoja1.appendChild(cierre);
+  hoja1.querySelector('.i-footer-clon')?.remove();
+  h2.remove();
+}
+function paginarInforme() {
+  const grupos = [...document.querySelectorAll('#i-tablas .i-tabla-grupo')];
+  if (grupos.length < 3) return;   // 1–2 plazos caben en una cara: sin segunda hoja
+  const hoja1 = document.getElementById('hoja');
+  const titulo = (document.querySelector('#hoja .i-titulo')?.textContent) || 'Compra de vivienda';
+  const fecha = document.getElementById('i-fecha')?.textContent || '';
+  const para = document.getElementById('i-para')?.textContent || '';
+  const h2 = document.createElement('div');
+  h2.className = 'hoja hoja-cont';
+  h2.id = 'hoja2';
+  h2.innerHTML =
+    '<div class="i-header"><div class="i-logo-box"><img src="assets/logo-sello-informe.png" alt="Cabas Realtor"></div>'
+    + '<div class="i-header-main"><div class="i-eyebrow">Simulación financiera</div>'
+    + '<h1 class="i-titulo">' + titulo + '</h1>'
+    + '<div class="i-subtitulo">Comparativa de financiación · continuación</div></div>'
+    + '<div class="i-fecha"><strong>' + fecha + '</strong><span>' + para + '</span></div></div>'
+    + '<div class="i-body" id="hoja2-body"></div>';
+  const body2 = h2.querySelector('#hoja2-body');
+  body2.appendChild(grupos[grupos.length - 1]);                              // última tabla → 2ª cara (con las conclusiones)
+  const nota = document.getElementById('i-tabla-nota'); if (nota) body2.appendChild(nota);
+  const dosCol = document.querySelector('#hoja .i-dos-col'); if (dosCol) body2.appendChild(dosCol);
+  const callout = document.getElementById('i-efecto-box'); if (callout) body2.appendChild(callout);
+  const cierre = document.querySelector('#hoja .i-cierre'); if (cierre) h2.appendChild(cierre);   // hipótesis + pie original
+  const footOrig = h2.querySelector('.i-footer');                            // la hoja 1 pierde su pie → clonarlo
+  if (footOrig) { const clon = footOrig.cloneNode(true); clon.classList.add('i-footer-clon'); hoja1.appendChild(clon); }
+  hoja1.after(h2);
+}
+
 // ---------- Generar informe ----------
 document.getElementById('f-generar').addEventListener('click', () => {
+  desPaginarInforme();   // deshacer cualquier paginado previo antes de regenerar
   const oficinaSlug = document.getElementById('f-oficina').value;
   const precio = num('f-precio');
   const ccaaSlug = document.getElementById('f-ccaa').value;
@@ -215,6 +262,9 @@ document.getElementById('f-generar').addEventListener('click', () => {
 
   // El pie del informe es fijo (marca Cabas Realtor), estático en el HTML de la hoja — ver css/informe.css.
 
+  // ---- Paginar a 2 caras si hay 3 plazos ----
+  paginarInforme();
+
   // ---- Cambiar de pantalla ----
   document.getElementById('pantalla-form').style.display = 'none';
   document.getElementById('pantalla-informe').style.display = 'block';
@@ -227,4 +277,8 @@ document.getElementById('btn-editar').addEventListener('click', () => {
   window.scrollTo(0, 0);
 });
 
-document.getElementById('btn-pdf').addEventListener('click', () => window.print());
+document.getElementById('btn-pdf').addEventListener('click', () => {
+  const c = (document.getElementById('f-cliente') || {}).value || '';
+  if (typeof descargarInforme === 'function') descargarInforme('Informe compra' + (c.trim() ? ' - ' + c.trim() : ''), () => window.print());
+  else window.print();
+});
