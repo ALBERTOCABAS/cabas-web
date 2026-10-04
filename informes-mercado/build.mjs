@@ -40,13 +40,15 @@ const RE = {
   madrid: /^datos_madrid_[a-zñáéíóú]+_\d{4}\.csv$/i,
   espana: /^datos_espana_[a-zñáéíóú]+_\d{4}\.csv$/i,
   zonas:  /^datos_(?!madrid_|espana_)[a-zñáéíóú]+_\d{4}\.csv$/i,
-  contraste: /^contraste_[a-zñáéíóú]+_\d{4}\.json$/i,   // bloque "En contexto"
+  // Bloque "En contexto": operación cerrada del Notariado (fichero con fecha ISO).
+  // El antiguo contraste_*.json (INE/idealista) YA NO se lee.
+  notariado: /^notariado_madrid_\d{4}-\d{2}-\d{2}\.json$/i,
   // Titulares de la semana: SOLO el fichero limpio "…_AAAA_SS.json";
   // los renombrados "…_anterior_HHMM.json" y los .txt quedan fuera.
   titulares: /^Titulares_inmobiliarios_semana_\d{4}_\d{2}\.json$/i,
 };
 const esDato     = f => RE.madrid.test(f) || RE.espana.test(f) || RE.zonas.test(f);
-const esCopiable = f => esDato(f) || RE.contraste.test(f);   // lo que el build baja de Drive
+const esCopiable = f => esDato(f) || RE.notariado.test(f);   // lo que el build baja de Drive
 const familiaDe = f => RE.madrid.test(f) ? 'madrid' : RE.espana.test(f) ? 'espana' : 'zonas';
 
 // ---------- meses ----------
@@ -137,42 +139,19 @@ const meses = [...mesesSet.values()].sort((a, b) => a.key - b.key);
 const mesUltimo = meses[meses.length - 1];
 const N_MESES = meses.length;
 
-// Bloque "En contexto". Prioridad: el contraste_*.json MÁS RECIENTE que baja de
-// Drive (automático). Si no hay JSON válido, el contraste.md manual (respaldo).
-function parseContrasteJSON(obj) {
-  return {
-    titular: obj.titular || '', lectura: obj.lectura || '', mes: obj.mes || '',
-    puntos: (obj.indicadores || []).map(i => ({
-      tipo: /oferta/i.test(i.tipo_dato || '') ? 'oferta' : 'cerrada',
-      etiqueta: i.etiqueta || '', valor: i.valor || '',
-      fuente: [i.fuente, i.periodo].filter(Boolean).join(', '),
-    })).filter(p => p.etiqueta),
-  };
-}
-function parseContrasteMD(txt) {   // formato tolerante: "titular:", "lectura:" y "tipo | etiqueta | valor | fuente"
-  const c = { titular: '', lectura: '', mes: '', puntos: [] };
-  for (const raw of txt.split('\n')) {
-    const line = raw.trim();
-    if (!line || line.startsWith('#')) continue;
-    const low = line.toLowerCase();
-    if (low.startsWith('titular:')) c.titular = line.slice(line.indexOf(':') + 1).trim();
-    else if (low.startsWith('lectura:')) c.lectura = line.slice(line.indexOf(':') + 1).trim();
-    else if (line.includes('|')) {
-      const p = line.split('|').map(s => s.trim());
-      if (p.length >= 4 && p[1]) c.puntos.push({ tipo: p[0].toLowerCase().includes('cerr') ? 'cerrada' : 'oferta', etiqueta: p[1], valor: p[2], fuente: p[3] });
-    }
+// Bloque "En contexto": operación cerrada del Notariado (provincia de Madrid), del
+// notariado_madrid_<fecha>.json MÁS RECIENTE que baja de Drive. El antiguo
+// contraste_*.json (INE/idealista) ya NO se lee; la tarjeta de oferta se recalcula
+// de los CSV propios. El objeto CONTRASTE se arma tras la sección Madrid (necesita
+// la variación anual de Madrid capital).
+let NOTARIADO = null, notariadoOrigen = '—';
+{
+  const jsonsNot = fs.readdirSync(DATA_DIR).filter(f => RE.notariado.test(f)).sort();  // fecha ISO en el nombre → orden cronológico
+  if (jsonsNot.length) {
+    const ult = jsonsNot[jsonsNot.length - 1];
+    try { NOTARIADO = JSON.parse(fs.readFileSync(path.join(DATA_DIR, ult), 'utf8')); notariadoOrigen = ult; }
+    catch (e) { NOTARIADO = null; }
   }
-  return c;
-}
-const mesDeArchivo = f => mesInfo(f.replace(/^contraste_/i, '').replace(/\.json$/i, '').replace(/_/g, ' ')).key;
-let CONTRASTE = null, contrasteOrigen = '—';
-const jsonsContraste = fs.readdirSync(DATA_DIR).filter(f => RE.contraste.test(f)).sort((a, b) => mesDeArchivo(a) - mesDeArchivo(b));
-if (jsonsContraste.length) {
-  const ult = jsonsContraste[jsonsContraste.length - 1];
-  try { CONTRASTE = parseContrasteJSON(JSON.parse(fs.readFileSync(path.join(DATA_DIR, ult), 'utf8'))); contrasteOrigen = ult; } catch (e) { CONTRASTE = null; }
-}
-if (!CONTRASTE || !CONTRASTE.puntos.length) {
-  try { CONTRASTE = parseContrasteMD(fs.readFileSync(path.join(__dirname, 'contraste.md'), 'utf8')); contrasteOrigen = 'contraste.md (respaldo)'; } catch (e) { /* sin bloque */ }
 }
 
 // ============================================================
@@ -237,27 +216,21 @@ const botonPDFv = (cardId, label, titulo, sub, file) => `<button type="button" c
 const bloque = (id, cap, cuerpo, titulo, sub, file) => tablaEnvuelta(cap, cuerpo, id) + botonPDF(id, titulo, sub, file);
 
 // Bloque destacado "En contexto" (NO es una tabla; estilo propio). Distingue
-// visualmente precio de OFERTA (idealista) de OPERACIÓN CERRADA (INE).
+// visualmente precio de OFERTA (idealista, capital) de OPERACIÓN CERRADA (Notariado,
+// provincia). Cada tarjeta trae su propia fuente; no se comparan en la misma frase.
 function bloqueContraste(c) {
-  if (!c || !c.titular || !c.puntos.length) return '';
-  // Etiqueta por indicador: oferta (idealista), compraventas firmadas (INE
-  // Transmisiones) o precio de operación cerrada (INE IPV) — las dos del INE
-  // miden cosas distintas y no deben rotularse igual.
-  const etiquetaTipo = p => p.tipo !== 'cerrada'
-    ? { cls: 'oferta', txt: 'Precio de oferta' }
-    : (/transmisi|compraventa/i.test(p.fuente) ? { cls: 'cerrada', txt: 'Compraventas firmadas' }
-                                               : { cls: 'cerrada', txt: 'Precio de operación cerrada' });
-  const puntos = c.puntos.map(p => { const t = etiquetaTipo(p); return `<div class="im-c-punto ${t.cls}">`
-    + `<span class="im-c-tag ${t.cls}">${t.txt}</span>`
-    + `<div class="im-c-dato">${esc(coma(p.valor))}</div>`
+  if (!c || !c.puntos.length) return '';
+  const puntos = c.puntos.map(p =>
+    `<div class="im-c-punto ${p.cls}">`
+    + `<span class="im-c-tag ${p.cls}">${esc(p.tag)}</span>`
+    + `<div class="im-c-dato">${esc(p.valor)}</div>`
     + `<div class="im-c-etq">${esc(p.etiqueta)}</div>`
-    + `<div class="im-c-fte">${esc(p.fuente)}</div></div>`; }).join('');
+    + `<div class="im-c-fte">${esc(p.fuente)}</div></div>`).join('');
   return `<aside class="im-contraste" aria-label="El mercado en contexto">`
-    + `<span class="im-c-eyebrow">En contexto · ${esc(c.mes || mesUltimo.label)}</span>`
-    + `<h2 class="im-c-titular">${esc(c.titular)}</h2>`
+    + `<span class="im-c-eyebrow">En contexto · ${esc(c.label || mesUltimo.label)}</span>`
+    + (c.titular ? `<h2 class="im-c-titular">${esc(c.titular)}</h2>` : '')
     + `<div class="im-c-grid">${puntos}</div>`
-    + (c.lectura ? `<p class="im-c-lectura"><b>Lectura:</b> ${esc(c.lectura)}</p>` : '')
-    + `<p class="im-c-nota">No se comparan en la misma tabla: <b>idealista</b> mide <b>precio de oferta</b> (lo que se pide) y el <b>INE</b> mide <b>operaciones cerradas</b> (lo que se firma). Son magnitudes distintas.</p>`
+    + (c.nota ? `<p class="im-c-nota">${c.nota}</p>` : '')
     + `</aside>`;
 }
 
@@ -331,6 +304,41 @@ const botonesMadrid = `<p class="im-pdf im-pdf-multi"><span class="im-pdf-lbl">D
   + (mPueblos.length ? botonPDFv('card-madrid', 'Informe completo', 'Madrid — capital, distritos y municipios', 'Capital, distritos y municipios más poblados', 'Cabas_Madrid_capital_distritos_municipios') : '')
   + `</p>`;
 const htmlMadrid = `<div class="im-card" id="card-madrid">${tablaMadrid}${tablaPueblos}</div>` + botonesMadrid;
+
+// ---- "En contexto": oferta (idealista, Madrid capital, de los CSV propios) +
+// operación cerrada (Notariado, provincia de Madrid). Si no hay Notariado válido,
+// solo se muestra la tarjeta de oferta; NUNCA datos congelados del contraste viejo.
+const puntosCtx = [];
+const ofertaVar = (mPadre && mPadre.var_anual) ? coma(String(mPadre.var_anual).trim()) : '';
+if (ofertaVar) puntosCtx.push({
+  cls: 'oferta', tag: 'Precio de oferta', valor: ofertaVar,
+  etiqueta: 'Madrid capital · variación anual del precio pedido',
+  fuente: `idealista · ${mesUltimo.label}`,
+});
+let ctxLabel = mesUltimo.label;
+let ctxTitular = 'El precio de oferta en Madrid';
+let ctxNota = 'Precio de <b>oferta</b> (lo que se pide), Madrid capital, según idealista.';
+if (NOTARIADO) {
+  const n = NOTARIADO;
+  const fi = String(n.fecha_informe || '');
+  const dmy = /^\d{4}-\d{2}-\d{2}$/.test(fi) ? `${fi.slice(8, 10)}/${fi.slice(5, 7)}/${fi.slice(0, 4)}` : fi;
+  ctxLabel = `${n.periodo || 'Notariado'}${dmy ? ' · informe del ' + dmy : ''}`;
+  ctxTitular = 'Oferta y operación cerrada en Madrid';
+  if (n.precio_medio_m2) puntosCtx.push({
+    cls: 'cerrada', tag: 'Operación cerrada',
+    valor: `${miles(n.precio_medio_m2)} €/m²`,
+    etiqueta: `Precio de operación cerrada (Madrid provincia)${n.variacion_2025_pct != null ? ' · +' + String(n.variacion_2025_pct).replace('.', ',') + ' % en 2025' : ''}`,
+    fuente: 'Notariado (provincia de Madrid)',
+  });
+  if (n.compraventas) puntosCtx.push({
+    cls: 'cerrada', tag: 'Operación cerrada',
+    valor: miles(n.compraventas),
+    etiqueta: 'Compraventas firmadas (Madrid provincia, últimos 12 meses)',
+    fuente: 'Notariado (provincia de Madrid)',
+  });
+  ctxNota = 'Son cosas distintas y de distinto ámbito: el <b>precio de oferta</b> (idealista, Madrid capital) es lo que se pide; el <b>precio y las compraventas de operación cerrada</b> (Notariado, provincia de Madrid) son lo que se firma ante notario.';
+}
+const CONTRASTE = { label: ctxLabel, titular: ctxTitular, puntos: puntosCtx, nota: ctxNota };
 
 // --- ESPAÑA: nacional + comunidades (sin provincia) ---
 const ultEspana = delUltimoMes('espana').filter(r => r.tipo !== 'provincia');
@@ -979,7 +987,7 @@ console.log(driveOk ? `Drive leído OK. CSV nuevos copiados: ${copiados.length ?
 console.log(`CSV en data/: ${locales.length}  ·  meses en serie: ${N_MESES} (${meses.map(m => m.label).join(' → ')})`);
 console.log(`Filas · zonas:${filas.zonas.length}  madrid:${filas.madrid.length}  espana:${filas.espana.length}`);
 console.log(`Gráficos: ${N_MESES >= 3 ? 'SÍ (>=3 meses)' : 'aún no (aparecen con 3 meses)'}`);
-console.log(`Bloque "En contexto": ${CONTRASTE && CONTRASTE.puntos.length ? contrasteOrigen + ' · ' + CONTRASTE.puntos.length + ' indicadores' : 'sin datos (no aparece)'}`);
+console.log(`Bloque "En contexto": ${CONTRASTE && CONTRASTE.puntos.length ? CONTRASTE.puntos.length + ' tarjeta(s) · Notariado: ' + notariadoOrigen : 'sin datos (no aparece)'}`);
 console.log(`Noticias: ${semanas.length} semana(s) · última: ${ultimaSem ? ultimaSem.semana + ' (' + rangoUlt + ')' : '—'} → noticias/index.html`);
 console.log(`Generado: informes-mercado/index.html  +  noticias/index.html  +  sitemap.xml   ·  última actualización: ${mesUltimo.label}`);
 console.log('─────────────────────────────────────────────────');

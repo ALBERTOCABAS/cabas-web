@@ -1,0 +1,75 @@
+{
+  "fuente": "Portal Estadístico del Notariado (Consejo General del Notariado · Centro Tecnológico del Notariado)",
+  "ambito": "Provincia de Madrid · tipo de finca: todos · tipo de construcción: todos",
+  "fecha_informe": "2026-10-02",
+  "periodo": "escrituras de agosto 2025 a julio 2026",
+  "precio_medio_m2": 3742,
+  "compraventas": 75726,
+  "importe_medio": 401591,
+  "superficie_media": 107,
+  "variacion_2025_pct": 13.36,
+  "mediana_m2": 3070,
+  "edad_comprador": 44,
+  "serie": [
+    {
+      "mes": "ago 2025",
+      "precio_m2": 3087,
+      "compraventas": 3031
+    },
+    {
+      "mes": "sep 2025",
+      "precio_m2": 3595,
+      "compraventas": 6894
+    },
+    {
+      "mes": "oct 2025",
+      "precio_m2": 3563,
+      "compraventas": 6768
+    },
+    {
+      "mes": "nov 2025",
+      "precio_m2": 3498,
+      "compraventas": 6496
+    },
+    {
+      "mes": "dic 2025",
+      "precio_m2": 3598,
+      "compraventas": 7949
+    },
+    {
+      "mes": "ene 2026",
+      "precio_m2": 3837,
+      "compraventas": 5880
+    },
+    {
+      "mes": "feb 2026",
+      "precio_m2": 3733,
+      "compraventas": 6422
+    },
+    {
+      "mes": "mar 2026",
+      "precio_m2": 3837,
+      "compraventas": 7759
+    },
+    {
+      "mes": "abr 2026",
+      "precio_m2": 3880,
+      "compraventas": 6373
+    },
+    {
+      "mes": "may 2026",
+      "precio_m2": 3907,
+      "compraventas": 6080
+    },
+    {
+      "mes": "jun 2026",
+      "precio_m2": 4100,
+      "compraventas": 6970
+    },
+    {
+      "mes": "jul 2026",
+      "precio_m2": 4064,
+      "compraventas": 5104
+    }
+  ]
+}
