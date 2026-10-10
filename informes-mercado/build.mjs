@@ -60,15 +60,18 @@ function mesInfo(mesStr) {                       // "julio 2026" -> {key, label,
   const idx = MESES.indexOf(sinAcentos(partes[0]));
   const anio = parseInt(partes[1], 10) || 0;
   return { key: anio * 12 + (idx < 0 ? 0 : idx), idx, anio,
-           label: mesStr.trim(),
+           label: String(mesStr).trim().replace(/_/g, ' '),   // "septiembre_2026" → "septiembre 2026"
            iso: `${anio}-${String((idx < 0 ? 0 : idx) + 1).padStart(2, '0')}-01` };
 }
 
 // ---------- CSV ----------
-// Parser tolerante a campos ENTRECOMILLADOS con comas dentro (p. ej. "-1,2%").
-// El generador de Madrid ampliado usa decimales con coma y por eso entrecomilla;
-// los CSV antiguos (sin comillas) siguen funcionando igual.
-function parseLineaCSV(l) {
+// Parser tolerante al SEPARADOR (',' antiguo o ';' desde septiembre 2026) y a
+// campos ENTRECOMILLADOS con comas dentro (p. ej. "-1,2%"). El separador se
+// detecta por la cabecera de cada archivo, así conviven los dos formatos:
+//  · antiguo:  coma como separador, decimales entrecomillados ("-1,2%")
+//  · nuevo:    punto y coma como separador, decimales con coma SIN comillas (-0,2%)
+function parseLineaCSV(l, sep) {
+  sep = sep || ',';
   const out = []; let cur = '', q = false;
   for (let i = 0; i < l.length; i++) {
     const c = l[i];
@@ -76,7 +79,7 @@ function parseLineaCSV(l) {
       if (c === '"') { if (l[i + 1] === '"') { cur += '"'; i++; } else q = false; }
       else cur += c;
     } else if (c === '"') { q = true; }
-    else if (c === ',') { out.push(cur); cur = ''; }
+    else if (c === sep) { out.push(cur); cur = ''; }
     else cur += c;
   }
   out.push(cur);
@@ -85,9 +88,10 @@ function parseLineaCSV(l) {
 function parseCSV(texto) {
   const lineas = texto.replace(/\r/g, '').split('\n').filter(l => l.trim().length);
   if (!lineas.length) return [];
-  const cab = parseLineaCSV(lineas[0]);
+  const sep = lineas[0].includes(';') ? ';' : ',';   // ';' = formato nuevo (sep. 2026+)
+  const cab = parseLineaCSV(lineas[0], sep);
   return lineas.slice(1).map(l => {
-    const celdas = parseLineaCSV(l);
+    const celdas = parseLineaCSV(l, sep);
     const o = {};
     cab.forEach((h, i) => { o[h] = (celdas[i] || '').trim(); });
     return o;
@@ -130,6 +134,24 @@ for (const f of locales) {
   const fam = familiaDe(f);
   for (const r of parseCSV(fs.readFileSync(path.join(DATA_DIR, f), 'utf8'))) filas[fam].push(r);
 }
+
+// ---- Normalizaciones de lectura (NO se tocan los CSV de Drive) ----
+// (a) fecha_max: "julio de 2026" → "julio 2026" (España trae el "de"; Madrid no).
+for (const fam of ['zonas', 'madrid', 'espana'])
+  for (const r of filas[fam])
+    if (r.fecha_max) r.fecha_max = String(r.fecha_max).replace(/\s+de\s+/gi, ' ').replace(/\s+/g, ' ').trim();
+
+// (b) Barrios de las zonas de oficina: desde septiembre el CSV trae nombres cortos;
+//     se muestran con el nombre de idealista, como en agosto (ya con acentos).
+const BARRIO_IDEALISTA = {
+  'Ríos Rosas': 'Nuevos Ministerios-Ríos Rosas',
+  'Rios Rosas': 'Nuevos Ministerios-Ríos Rosas',
+  'Hispanoamérica': 'Bernabéu-Hispanoamérica',
+  'Hispanoamerica': 'Bernabéu-Hispanoamérica',
+  'Universidad': 'Malasaña-Universidad',
+};
+for (const r of filas.zonas)
+  if (r.tipo === 'barrio' && BARRIO_IDEALISTA[r.ambito]) r.ambito = BARRIO_IDEALISTA[r.ambito];
 
 // meses disponibles (global, ordenados)
 const mesesSet = new Map();
@@ -268,7 +290,8 @@ function serieDe(fam, filtro) {
     if (r.tipo === 'municipio' && amb === 'Madrid') amb = 'Madrid capital';   // etiqueta consistente entre meses (formato viejo/nuevo)
     const precio = parseInt(String(r.precio_m2).replace(/[^\d]/g, ''), 10);
     if (isNaN(precio)) continue;
-    (out[amb] = out[amb] || []).push({ k: mesInfo(r.mes).key, mes: r.mes, precio });
+    const mi = mesInfo(r.mes);
+    (out[amb] = out[amb] || []).push({ k: mi.key, mes: mi.label, precio });   // label limpio (sin "_")
   }
   for (const amb in out) out[amb].sort((a, b) => a.k - b.k);
   return out;
@@ -294,8 +317,13 @@ const ultZonas = delUltimoMes('zonas');
 const filasZona = z => ultZonas.filter(r => r.zona === z);
 const cuerpoDistrito = fs => { const p = fs.find(r => r.tipo === 'distrito') || fs[0]; return filaTabla(p, true) + fs.filter(r => r !== p).map(r => filaTabla(r, false)).join(''); };
 
+// Malasaña-Universidad: el dato de la zona es el BARRIO (idealista «Malasaña-Universidad»,
+// p. ej. 7.924), no el distrito Centro (7.771) que el CSV trae desde septiembre solo como
+// contexto. Se muestra ese barrio como fila destacada al final del bloque de Chamberí.
+const filasMU = filasZona('Malasana-Universidad');
+const filaMU = filasMU.find(r => r.tipo === 'barrio') || filasMU[0];
 const cuerpoCham = cuerpoDistrito(filasZona('Chamberi'))
-  + filasZona('Malasana-Universidad').map(r => filaTabla(r, false, true)).join('');
+  + (filaMU ? filaTabla(filaMU, false, true) : '');
 let htmlZonas = `<h3 class="im-zona">Chamberí y Malasaña</h3>`
   + bloque('card-cham', 'Chamberí y Malasaña-Universidad', cuerpoCham, 'Chamberí y Malasaña', 'Chamberí y Malasaña-Universidad · barrio a barrio', 'Cabas_Chamberi_Malasana');
 htmlZonas += `<h3 class="im-zona">Chamartín</h3>`

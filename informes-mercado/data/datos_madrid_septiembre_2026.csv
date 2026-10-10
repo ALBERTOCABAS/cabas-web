@@ -1,0 +1,56 @@
+mes;ambito;tipo;precio_m2;var_mensual;var_trimestral;var_anual;max_historico;fecha_max;dist_max
+septiembre_2026;Madrid;municipio;6458;-0,2%;-1,8%;+2,4%;6619;abril 2026;-2,4%
+septiembre_2026;Arganzuela;distrito;6384;+0,6%;0,0%;+6,4%;6410;mayo 2026;-0,4%
+septiembre_2026;Barajas;distrito;4971;-3,9%;-1,6%;+8,8%;5171;agosto 2026;-3,9%
+septiembre_2026;Barrio de Salamanca;distrito;10865;+0,2%;-0,9%;-1,2%;11328;marzo 2026;-4,1%
+septiembre_2026;Carabanchel;distrito;3829;-0,3%;0,0%;+9,4%;3842;agosto 2026;-0,3%
+septiembre_2026;Centro;distrito;7771;+0,3%;0,0%;+3,7%;7794;mayo 2026;-0,3%
+septiembre_2026;Chamartín;distrito;8127;-1,2%;-2,1%;+4,6%;8343;mayo 2026;-2,6%
+septiembre_2026;Chamberí;distrito;9159;-0,5%;-1,0%;+2,6%;9359;marzo 2026;-2,1%
+septiembre_2026;Ciudad Lineal;distrito;5242;+0,8%;-1,5%;+8,0%;5327;mayo 2026;-1,6%
+septiembre_2026;Fuencarral;distrito;5593;-0,3%;-0,5%;+5,5%;5645;julio 2026;-0,9%
+septiembre_2026;Hortaleza;distrito;5440;-0,8%;-2,6%;+7,0%;5586;junio 2026;-2,6%
+septiembre_2026;Latina;distrito;4045;0,0%;+1,2%;+6,5%;4045;septiembre 2026;0,0%
+septiembre_2026;Moncloa;distrito;6317;-0,2%;-0,5%;+1,3%;6401;abril 2026;-1,3%
+septiembre_2026;Moratalaz;distrito;4522;-0,9%;-0,7%;+11,3%;4563;agosto 2026;-0,9%
+septiembre_2026;Puente de Vallecas;distrito;3535;+1,6%;+3,6%;+17,9%;3535;septiembre 2026;0,0%
+septiembre_2026;Retiro;distrito;8515;+0,8%;+0,3%;-0,7%;8579;septiembre 2025;-0,7%
+septiembre_2026;San Blas;distrito;4146;+0,7%;+0,2%;+5,2%;4146;septiembre 2026;0,0%
+septiembre_2026;Tetuán;distrito;6161;-0,5%;-1,3%;+6,6%;6245;junio 2026;-1,3%
+septiembre_2026;Usera;distrito;3628;0,0%;+0,4%;+15,9%;3628;septiembre 2026;0,0%
+septiembre_2026;Vicálvaro;distrito;4036;+1,4%;-0,3%;+10,5%;4050;junio 2026;-0,3%
+septiembre_2026;Villa de Vallecas;distrito;3852;+0,2%;0,0%;+12,0%;3869;julio 2026;-0,4%
+septiembre_2026;Villaverde;distrito;3365;+1,9%;+3,4%;+23,7%;3365;septiembre 2026;0,0%
+septiembre_2026;Alcalá de Henares;pueblo;3014;+1,5%;+3,6%;+17,1%;3014;septiembre 2026;0,0%
+septiembre_2026;Alcobendas;pueblo;4111;+0,4%;-0,8%;+1,1%;4146;junio 2026;-0,8%
+septiembre_2026;Alcorcón;pueblo;3537;+0,6%;+2,5%;+12,4%;3537;septiembre 2026;0,0%
+septiembre_2026;Aranjuez;pueblo;2384;-0,4%;+3,6%;+19,0%;2395;junio 2008;-0,5%
+septiembre_2026;Arganda del Rey;pueblo;2676;-1,1%;+1,3%;+13,9%;2707;agosto 2026;-1,1%
+septiembre_2026;Arroyomolinos;pueblo;2693;-0,5%;-0,3%;+17,4%;2713;mayo 2026;-0,7%
+septiembre_2026;Boadilla del Monte;pueblo;4384;-1,7%;+1,5%;+15,2%;4461;agosto 2026;-1,7%
+septiembre_2026;Ciempozuelos;pueblo;2190;-2,9%;+4,0%;+16,3%;2364;agosto 2008;-7,4%
+septiembre_2026;Collado Villalba;pueblo;2904;+0,2%;-1,2%;+7,4%;2941;mayo 2026;-1,3%
+septiembre_2026;Colmenar Viejo;pueblo;3151;-0,3%;-3,5%;+14,5%;3266;junio 2026;-3,5%
+septiembre_2026;Coslada;pueblo;3281;-1,2%;-1,4%;+14,7%;3344;julio 2026;-1,9%
+septiembre_2026;Fuenlabrada;pueblo;2887;+0,7%;-0,3%;+11,7%;2894;junio 2026;-0,2%
+septiembre_2026;Galapagar;pueblo;2840;+2,5%;+5,4%;+17,6%;2840;septiembre 2026;0,0%
+septiembre_2026;Getafe;pueblo;3335;+1,0%;+1,9%;+11,1%;3335;septiembre 2026;0,0%
+septiembre_2026;Las Rozas de Madrid;pueblo;4026;-0,8%;-2,3%;+6,0%;4139;abril 2026;-2,7%
+septiembre_2026;Leganés;pueblo;3234;+0,3%;+0,7%;+7,8%;3234;septiembre 2026;0,0%
+septiembre_2026;Majadahonda;pueblo;4868;+0,1%;-0,1%;+14,1%;4957;julio 2026;-1,8%
+septiembre_2026;Mejorada del Campo;pueblo;2573;+0,8%;+3,2%;+16,8%;2573;septiembre 2026;0,0%
+septiembre_2026;Móstoles;pueblo;3047;+0,7%;+1,3%;+12,0%;3047;septiembre 2026;0,0%
+septiembre_2026;Navalcarnero;pueblo;2416;0,0%;-1,3%;+7,8%;2457;abril 2026;-1,7%
+septiembre_2026;Paracuellos de Jarama;pueblo;3012;+3,6%;+2,5%;+17,2%;3012;septiembre 2026;0,0%
+septiembre_2026;Parla;pueblo;2457;+1,8%;+1,8%;+13,4%;2473;abril 2008;-0,6%
+septiembre_2026;Pinto;pueblo;2930;+2,0%;+2,9%;+13,1%;2930;septiembre 2026;0,0%
+septiembre_2026;Pozuelo de Alarcón;pueblo;4964;-1,0%;-2,0%;+0,7%;5078;mayo 2026;-2,2%
+septiembre_2026;Rivas-Vaciamadrid;pueblo;3310;+2,5%;+2,1%;+2,7%;3310;septiembre 2026;0,0%
+septiembre_2026;San Fernando de Henares;pueblo;2886;-2,6%;-3,7%;+7,0%;3019;marzo 2026;-4,4%
+septiembre_2026;San Sebastián de los Reyes;pueblo;4170;-0,8%;-1,9%;+10,0%;4249;junio 2026;-1,9%
+septiembre_2026;Torrejón de Ardoz;pueblo;3119;-0,3%;+1,0%;+12,8%;3127;agosto 2026;-0,3%
+septiembre_2026;Torrelodones;pueblo;2968;+1,1%;-0,8%;+2,2%;2992;junio 2026;-0,8%
+septiembre_2026;Tres Cantos;pueblo;4136;+1,3%;-0,2%;+6,2%;4142;junio 2026;-0,1%
+septiembre_2026;Valdemoro;pueblo;2522;+0,2%;-1,2%;+5,4%;2553;junio 2026;-1,2%
+septiembre_2026;Villanueva de la Cañada;pueblo;2941;+1,6%;-3,6%;+9,3%;3049;junio 2026;-3,5%
+septiembre_2026;Villaviciosa de Odón;pueblo;3602;+1,1%;+3,8%;+21,5%;3602;septiembre 2026;0,0%
